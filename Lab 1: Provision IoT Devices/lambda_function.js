@@ -1,14 +1,13 @@
 console.log('Loading function');
-var fs = require('fs');
+//var fs = require('fs');
 var AWS = require('aws-sdk');
 var iot = new AWS.Iot();
-var s3 = new AWS.S3();
+var secretsmanager = new AWS.SecretsManager();
+
 
 exports.handler = function(event, context) {
 
 	console.log('Received event:', JSON.stringify(event, null, 2));
-
-	var bucketName = 'billing-phamh'; //need to get output from s3 name
 
   	function sleep(milliseconds) {
     	var start = new Date().getTime();
@@ -31,7 +30,7 @@ exports.handler = function(event, context) {
   		]
   	};
 
-  	var paramsThingGroup = {
+  var paramsThingGroup = {
   	  thingGroupName: 'TemparatureSensors', /* required */
   	  thingGroupProperties: {
   	    attributePayload: {
@@ -42,7 +41,7 @@ exports.handler = function(event, context) {
   	  }
   	};
 
-  	var paramsThing = {
+  var paramsThing = {
 	  thingName: 'IoT-Temparature-Device', /* required */
 	  attributePayload: {
 	    attributes: {
@@ -103,15 +102,28 @@ exports.handler = function(event, context) {
   	  	  			          		console.log(data);           // successful response
   	  	  			        	});
 
-  	  	  			  			//put cert and keys to S3 
-  	  	  			  			var stringdata = JSON.stringify(data);
-  	  	  			 			var paramsUploadS3 = {Bucket: bucketName, Key: 'KeyAndCerts',Body: stringdata};
-  	  	  			 			
-  	  	  			  			s3.putObject(paramsUploadS3, function (err, data){
-  	  	  			  				if (err) console.log(err)
-  	  	  			  				else console.log("Successfully saved key and certs to bucket " + bucketName);
+   	  	  			  			var stringdata = JSON.stringify(data);
 
-  	  	  			  				});
+                        //put cert and keys in Secret manager
+
+                        var paramsStoreCert = {
+                          Name: 'Cert_and_Keys_IoT_Device', /* required */
+                          Description: 'Certificate and keys for IoT Device',
+                          SecretString: stringdata,
+                          Tags: [
+                            {
+                              Key: 'Project',
+                              Value: 'IoT'
+                            },
+                            /* more items */
+                          ]
+                        };
+                        secretsmanager.createSecret(paramsStoreCert, function(err, data) {
+                          if (err) console.log(err, err.stack); // an error occurred
+                          else     console.log("Successfully store certs and keys in secretsmanager");           // successful response
+                        });
+
+  	  	  			  				
   	  	  			  			
   	  	  			  			console.log(data);           // successful response
   	  	  				});
@@ -127,13 +139,23 @@ exports.handler = function(event, context) {
 	iot.describeEndpoint(paramsGetEndPoint, function(err, data) {
 	  	if (err) console.log(err, err.stack); // an error occurred
 	  	else
-	  		var paramsEndpoint = {Bucket: bucketName, Key: 'Endpoint', Body: data.endpointAddress};
-
-	  		s3.putObject(paramsEndpoint, function (err, data){
-  				if (err) console.log(err)
-  				else console.log("Successfully saved Endpoint to bucket " + bucketName);
-
-			});
+        
+        var paramsStoreEndpoint = {
+          Name: 'DeviceEndpoint', /* required */
+          Description: 'Endpoint of IoT Device',
+          SecretString: data.endpointAddress,
+          Tags: [
+            {
+              Key: 'Project',
+              Value: 'IoT'
+            },
+            /* more items */
+          ]
+        };
+        secretsmanager.createSecret(paramsStoreEndpoint, function(err, data) {
+          if (err) console.log(err, err.stack); // an error occurred
+          else     console.log("Successfully store certs and keys in secretsmanager");           // successful response
+        });
 		console.log(data);           // successful response
 	});
 
