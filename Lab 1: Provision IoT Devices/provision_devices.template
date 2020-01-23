@@ -1,27 +1,136 @@
 AWSTemplateFormatVersion: 2010-09-09
 
-Description: This template deploys an t3a.nano EC2 instance in a VPC with one public subnet. It also deploys a Lambda function to create device certificates, and a S3 bucket to store certificates.
-
-Parameters:
-
-  KeyName:
-    Description: Name for new SSH key for EC2 instance
-    Type: 'AWS::EC2:KeyPair::KeyName'
-
-  SSHLocation:
-    Description: The IP address range that can be used to SSH to EC2 instance
-    Type: String
-    MinLength: '9'
-    MaxLength: '18'
-    Default: '0.0.0.0/0'
-    AllowedPattern: '(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})'
-    ConstraintDescription: 'must be a valid IP CIDR range of the form x.x.x.x/x.'
+Description: This template deploys an t3a.nano EC2 instance in a VPC with one public subnet. It also deploys a Lambda function to create device certificates and register device to AWS IoT.
 
 Resources:
-  LambdaFunction:
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties: 
+      BucketName: myec2keypairstorage
+
+  S3WaitHandle:
+      Type: AWS::CloudFormation::WaitConditionHandle
+
+  S3WaitCondition:
+      Type: AWS::CloudFormation::WaitCondition
+      DependsOn: S3Bucket
+      Properties: 
+        Handle: !Ref S3WaitHandle
+        Timeout: "600"
+        Count: 1
+
+  CreateKeyPairCustomResource:
+    Type: 'Custom::CreateKeyPair'
+    Properties:
+      ServiceToken: !GetAtt CreateKeyPair.Arn
+
+        
+  CreateKeyPair:
     Type: 'AWS::Lambda::Function'
-    Properties: {}
-    
+    Properties:
+      Description: Create Key Pair for EC2 instance
+      FunctionName: CreateKeyPair
+      Environment:
+        Variables:
+          BUCKETNAME: myec2keypairstorage
+          KEYNAME: myEC2KeyPair
+      Handler: create_key_pair.handler
+      Role: !GetAtt CreateKeyPairExecutionRole.Arn
+      Runtime: nodejs12.x
+      Code:
+        S3Bucket: billing-phamh
+        S3Key: createKeyPair.zip 
+
+  CreateKeyPairExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+
+  CreateKeyPairRolePolicies: 
+    Type: "AWS::IAM::Policy"
+    Properties: 
+      PolicyName: CreateKeyPairRolePolicies
+      PolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - Effect: "Allow"
+            Action: 
+            - 'logs:CreateLogGroup'
+            - 'logs:CreateLogStream'
+            - 'logs:PutLogEvents'
+            - 's3:PutObject'
+            - 's3:GetObject'
+            - 'ec2:CreateKeyPair'
+            Resource: "*"
+      Roles: 
+        - !Ref CreateKeyPairExecutionRole     
+
+  CreateIoTThingCustomResource:
+    Type: 'Custom::CreateIoTThing'
+    Properties:
+      ServiceToken: !GetAtt CreateIoTThing.Arn
+
+
+  CreateIoTThing:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Description: Create IoT Thing and it's associated cert
+      FunctionName: CreateIoTThing
+      MemorySize: 128
+      Timeout: 5
+      Handler: lambda_function.handler
+      Role: !GetAtt CreateIoTThingExecutionRole.Arn
+      Runtime: nodejs12.x
+      Code:
+        S3Bucket: billing-phamh
+        S3Key: createIoTThing.zip
+        
+
+  CreateIoTThingExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+
+  CreateIoTThingRolePolicies: 
+    Type: "AWS::IAM::Policy"
+    Properties: 
+      PolicyName: CreateIoTThingRolePolicies
+      PolicyDocument: 
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action: 
+            - 'logs:CreateLogGroup'
+            - 'logs:CreateLogStream'
+            - 'logs:PutLogEvents'
+            - 's3:GetObject'
+            - 'secretsmanager:*'
+            - 'kms:Decrypt'
+            - 'iot:*'
+            Resource: "*"
+      Roles: 
+        - !Ref CreateIoTThingExecutionRole      
+
   VPC:
     Type: 'AWS::EC2::VPC'
     Properties:
@@ -29,15 +138,20 @@ Resources:
       EnableDnsSupport: true
       EnableDnsHostnames: true
   
-  InternetGW:
-    Type: 'AWS::EC2::InternetGateway'
-    Properties: {}
+  myInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Project
+        Value: IoT
 
-  InternetGWAttachment:
+  AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
-      InternetGatewayId: !Ref InternetGW
-      VpcId: !Ref VPC
+      VpcId:
+        Ref: VPC
+      InternetGatewayId:
+        Ref: myInternetGateway
 
   PublicSubnet:
     Type: 'AWS::EC2::Subnet'
@@ -53,11 +167,11 @@ Resources:
 
   DefaultPublicRoute:
     Type: AWS::EC2::Route
-    DependsOn: InternetGWAttachment
+    DependsOn: AttachGateway
     Properties:
       RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref InternetGateway
+      GatewayId: !Ref myInternetGateway
 
   PublicSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -72,39 +186,69 @@ Resources:
       GroupDescription: "Security group controls traffic to EC2 instances"
       SecurityGroupIngress:
       - IpProtocol: tcp
-        FromPort: 80
-        ToPort: 80
+        FromPort: 0
+        ToPort: 65535
         CidrIp: 0.0.0.0/0
+      
       - IpProtocol: tcp
-        FromPort: 443
-        ToPort: 443
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: SSH
         FromPort: 22
         ToPort: 22
-        CidrIp: !Ref SSHLocation
+        CidrIp: 0.0.0.0/0
 
       VpcId: !Ref VPC    
             
-  Instance:
+  MyInstance:
     Type: 'AWS::EC2::Instance'
     Properties:
       ImageID: 'ami-01e24be29428c15b2'
       InstanceType: 't3a.nano'
-      KeyName: !Ref KeyName
-
+      KeyName: myEC2KeyPair
+      IamInstanceProfile: !Ref MyEC2InstanceProfile
       NetworkInterfaces:
         AssociatePublicIpAddress: 'true'
         DeviceIndex: '0'
         GroupSet: !Ref EC2SecurityGroup
         SubnetId: !Ref PublicSubnet
         DeleteOntermination: 'true'
-    
-  S3bucket:
-    Type: 'AWS::S3::Bucket'
-    Properties: {}
-    
-  S3bucketPolicy:
-    Type: 'AWS::S3::BucketPolicy'
-    Properties: {}
-    
+  
+  MyEC2Role: 
+    Type: "AWS::IAM::Role"
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - Effect: "Allow"
+            Principal: 
+              Service: 
+                - "ec2.amazonaws.com"
+            Action: 
+              - "sts:AssumeRole"
+      Path: "/"
+
+  MyEC2RolePolicies: 
+    Type: "AWS::IAM::Policy"
+    Properties: 
+      PolicyName: "MyEC2RolePolicies"
+      PolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - Effect: "Allow"
+            Action: 
+            - 'secretsmanager:ListSecrets'
+            - 'kms:Decrypt'
+            - 'secretsmanager:DescribeSecret'
+            - 'secretsmanager:GetSecretValue'
+            Resource: "*"
+      Roles: 
+        - !Ref MyEC2Role
+
+  MyEC2InstanceProfile: 
+    Type: "AWS::IAM::InstanceProfile"
+    Properties: 
+      Path: "/"
+      Roles: 
+        - !Ref MyEC2Role 
+
+
+
+

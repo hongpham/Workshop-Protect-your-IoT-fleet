@@ -1,22 +1,13 @@
 console.log('Loading function');
-//var fs = require('fs');
 var AWS = require('aws-sdk');
 var iot = new AWS.Iot();
 var secretsmanager = new AWS.SecretsManager();
 
 
 exports.handler = function(event, context) {
+//TODO: parameter device name and thing name
 
 	console.log('Received event:', JSON.stringify(event, null, 2));
-
-  	function sleep(milliseconds) {
-    	var start = new Date().getTime();
-    	for (var i = 0; i < 1e7; i++) {
-      		if ((new Date().getTime() - start) > milliseconds){
-        		break;
-      		}
-    	}
-  	};
 
 //Declare All params
 
@@ -82,7 +73,7 @@ exports.handler = function(event, context) {
   	  	  			  	// if success, attach Thing to Thing group
   	  	  			  	iot.addThingToThingGroup(paramsAddThing, function(err, data) {
   	  	  			  	  if (err) console.log(err, err.stack); // an error occurred
-  	  	  			  	  else     console.log(data);           // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Iot.html#addThingToThingGroup-property
+  	  	  			  	  else     console.log("Added thing to thinggroup");           // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Iot.html#addThingToThingGroup-property
   	  	  			  	});
 
   	  	  			  	//then create cert and attach to thing
@@ -94,12 +85,11 @@ exports.handler = function(event, context) {
   	  	  			          		principal: data.certificateArn, /* required */
   	  	  			          		thingName: 'IoT-Temparature-Device' /* required */
   	  	  			        	};
-  	  	  			        	console.log(data.CertificateArn);
 
   	  	  			        	iot.attachThingPrincipal(paramsPrincipalAttachement, function(err, data) {
   	  	  			         	if (err) console.log(err, err.stack); // an error occurred
   	  	  			          	else     
-  	  	  			          		console.log(data);           // successful response
+  	  	  			          		console.log("Successfully attach thing");           // successful response
   	  	  			        	});
 
    	  	  			  			var stringdata = JSON.stringify(data);
@@ -107,32 +97,20 @@ exports.handler = function(event, context) {
                         //put cert and keys in Secret manager
 
                         var paramsStoreCert = {
-                          Name: 'Cert_and_Keys_IoT_Device', /* required */
+                          Name: 'Cert_and_Keys', /* required */
                           Description: 'Certificate and keys for IoT Device',
-                          SecretString: stringdata,
-                          Tags: [
-                            {
-                              Key: 'Project',
-                              Value: 'IoT'
-                            },
-                            /* more items */
-                          ]
+                          SecretString: stringdata
                         };
+
                         secretsmanager.createSecret(paramsStoreCert, function(err, data) {
                           if (err) console.log(err, err.stack); // an error occurred
                           else     console.log("Successfully store certs and keys in secretsmanager");           // successful response
                         });
 
-  	  	  			  				
-  	  	  			  			
-  	  	  			  			console.log(data);           // successful response
   	  	  				});
 
-  	  	  			  	console.log(data);           // successful response
   	  	  			});
-  	  	  			console.log(data);           // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Iot.html#createThingType-property
   	  		});
-  	  	console.log(data);           // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Iot.html#createThingGroup-property
   	});
 
 
@@ -141,7 +119,7 @@ exports.handler = function(event, context) {
 	  	else
         
         var paramsStoreEndpoint = {
-          Name: 'DeviceEndpoint', /* required */
+          Name: 'IoTEndPoint', /* required */
           Description: 'Endpoint of IoT Device',
           SecretString: data.endpointAddress,
           Tags: [
@@ -156,9 +134,7 @@ exports.handler = function(event, context) {
           if (err) console.log(err, err.stack); // an error occurred
           else     console.log("Successfully store certs and keys in secretsmanager");           // successful response
         });
-		console.log(data);           // successful response
 	});
-
 //*********
 
 }
