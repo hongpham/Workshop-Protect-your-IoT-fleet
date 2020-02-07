@@ -54,10 +54,39 @@ Resources:
                 - 'kms:Decrypt'
                 - 'iot:*'
                 Resource: "*"
+ 
+  Thing01:
+    Type: AWS::IoT::Thing
+    Properties: 
+      ThingName: 'SensorDevice01'
+      AttributePayload: 
+        Attributes: 
+          SensorType: 'DHT22'
+
+  Thing02:
+    Type: AWS::IoT::Thing
+    Properties: 
+      ThingName: 'SensorDevice02'
+      AttributePayload: 
+        Attributes: 
+          SensorType: 'DHT22'
+
+  AttachCertToDevice01: 
+    Type: AWS::IoT::ThingPrincipalAttachment
+    Properties: 
+      ThingName: 'SensorDevice01'
+      Principal: !GetAtt MyCertificate.certARN
+
+  AttachCertToDevice02: 
+    Type: AWS::IoT::ThingPrincipalAttachment
+    Properties: 
+      ThingName: 'SensorDevice02'
+      Principal: !GetAtt MyCertificate.certARN
+
   DeviceIAMPolicy:
     Type: AWS::IoT::Policy
     Properties:
-      PolicyName: DevicePolicy
+      PolicyName: !Sub 'DevicePolicy${AWS::StackName}'
       PolicyDocument: {
         'Version': '2012-10-17',
         'Statement': [{
@@ -70,25 +99,10 @@ Resources:
             ] 
         }]
       }
- 
-  Thing01:
-    Type: AWS::IoT::Thing
-    Properties: 
-      ThingName: SensorDevice01
-      AttributePayload: 
-        Attributes: 
-          SensorType: 'DHT22'
-
-  AttachCertToDevice01: 
-    Type: AWS::IoT::ThingPrincipalAttachment
-    Properties: 
-      ThingName: SensorDevice01
-      Principal: !GetAtt MyCertificate.certARN
-
   AttachPolicyToCert: 
     Type: AWS::IoT::PolicyPrincipalAttachment
     Properties: 
-      PolicyName: "DevicePolicy"  
+      PolicyName: !Sub 'DevicePolicy${AWS::StackName}' 
       Principal: !GetAtt MyCertificate.certARN
 
   Device01:
@@ -96,33 +110,38 @@ Resources:
     Properties:
       Code:
         S3Bucket: my-ohio-bucket-phamh
-        S3Key: device01.zip 
+        S3Key: device.zip 
       Runtime: python3.7
       FunctionName: Device01
       Environment:
         Variables:
           CFNstackname: !Ref AWS::StackName
+          topicname: 'temperature-device-01'
+          devicename: 'SensorDevice01'
       Timeout: 5
       MemorySize: 512
-      Handler: device01.lambda_handler
-      Role: !GetAtt Device01Role.Arn
+      Handler: device.lambda_handler
+      Role: !GetAtt DeviceFunctionRole.Arn
 
-  AllowDeviceToConnect:
-    Type: AWS::IAM::ManagedPolicy
+  Device02:
+    Type: AWS::Lambda::Function
     Properties:
-      PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          -
-            Sid: AllowDeviceToConnect
-            Effect: Allow
-            Action:
-              - secretsmanager:*
-              - kms:Decrypt
-              - iot:*
-            Resource: "*"
+      Code:
+        S3Bucket: my-ohio-bucket-phamh
+        S3Key: device.zip 
+      Runtime: python3.7
+      FunctionName: Device02
+      Environment:
+        Variables:
+          CFNstackname: !Ref AWS::StackName
+          topicname: 'temperature-device-02'
+          devicename: 'SensorDevice02'
+      Timeout: 5
+      MemorySize: 512
+      Handler: device.lambda_handler
+      Role: !GetAtt DeviceFunctionRole.Arn
 
-  Device01Role:
+  DeviceFunctionRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -137,7 +156,22 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
-        - !Ref AllowDeviceToConnect
+        - !Ref AllowDeviceToConnectRole
+
+  AllowDeviceToConnectRole:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Sid: AllowDeviceToConnect
+            Effect: Allow
+            Action:
+              - secretsmanager:*
+              - kms:Decrypt
+              - iot:*
+            Resource: "*"
 
   Iterator:
     Type: AWS::Lambda::Function
@@ -150,8 +184,12 @@ Resources:
               client = boto3.client('lambda')
               def lambda_handler(event, context):
                   index = event['iterator']['index'] + 1
-                  response = client.invoke(
+                  invokedevice1 = client.invoke(
                       FunctionName='${Device01}',
+                      InvocationType='Event'
+                  )
+                  invokedevice2 = client.invoke(
+                      FunctionName='${Device02}',
                       InvocationType='Event'
                   )
                   return {
@@ -194,6 +232,10 @@ Resources:
                 Effect: Allow
                 Action: lambda:InvokeFunction
                 Resource: !GetAtt Device01.Arn
+              - 
+                Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: !GetAtt Device02.Arn
 
   StateMachine:
     Type: AWS::StepFunctions::StateMachine
@@ -314,6 +356,12 @@ Outputs:
   Device01:
     Description: 'Name of Lambda function acting as Device 01'
     Value: !Ref Device01
+  Thing02:
+    Description: 'Thing name for second device'
+    Value: !Ref Thing02
+  Device02:
+    Description: 'Name of Lambda function acting as Device 02'
+    Value: !Ref Device02
 
 
 
