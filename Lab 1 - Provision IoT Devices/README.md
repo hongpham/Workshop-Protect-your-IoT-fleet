@@ -7,4 +7,4 @@ In this lab, you will run a CloudFormation Template to provide these neccessary 
 
 ## Architecture Diagram:
 Below is the architecture diagram for our Infrastructure 
-![](../images/IoTSecurityWorkshopInfra reduced.png)
+![](../images/IoTSecurityWorkshopInfra%20reduced.png)
