@@ -6,5 +6,6 @@ In this lab, you will run a CloudFormation Template to provide these neccessary 
 2. 1 X.509 Certificate and it's private key
 
 ## Architecture Diagram:
-Below is the architecture diagram for our Infrastructure 
-![](../images/IoTSecurityWorkshopInfra%20reduced.png)
+
+
+![](../images/IoTSecurityWorkshopInfraSmall.png)
