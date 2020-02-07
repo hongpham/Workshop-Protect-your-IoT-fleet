@@ -8,4 +8,4 @@ In this lab, you will run a CloudFormation Template to provide these neccessary 
 ## Architecture Diagram:
 
 
-![](../images/IoTSecurityWorkshopInfraSmall.png)
+![](../images/IoTSecurityWorkshopInfra.png)
