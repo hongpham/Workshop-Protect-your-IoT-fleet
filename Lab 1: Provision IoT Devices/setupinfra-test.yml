@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Provision an IoT Device and connect to AWS IoT
+
+Resources:
+
+  MyCertificate:
+    Type: 'Custom::CreateCertificate'
+    Properties:
+      ServiceToken: !GetAtt CreateCertificate.Arn
+   
+  CreateCertificate:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Description: Create Cerfiticate for IoT Thing
+      FunctionName: createCert
+      Handler: create_cert.handler
+      Role: !GetAtt CreateCertExecutionRole.Arn
+      Environment:
+        Variables:
+          CFNstackname: !Ref AWS::StackName
+      Runtime: nodejs12.x
+      Code:
+        S3Bucket: my-ohio-bucket-phamh
+        S3Key: registerDevice.zip 
+
+  CreateCertExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+
+  CreateCertRolePolicies: 
+    Type: "AWS::IAM::Policy"
+    Properties: 
+      PolicyName: CreateCertRolePolicies
+      PolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - Effect: "Allow"
+            Action: 
+            - 'logs:CreateLogGroup'
+            - 'logs:CreateLogStream'
+            - 'logs:PutLogEvents'
+            - 's3:GetObject'
+            - 'secretsmanager:*'
+            - 'kms:Decrypt'
+            - 'iot:*'
+            Resource: "*"
+      Roles: 
+        - !Ref CreateCertExecutionRole 
+
+Outputs:
+  CertARN:
+    Description: 'ARN of new Cert'
+    Value: !GetAtt MyCertificate.certARN
+
+
+
+
+
+
+
+
