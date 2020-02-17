@@ -27,7 +27,7 @@ First, the function will retrieve [AWS IoT Endpoint](https://docs.aws.amazon.com
 
 Two IoT Devices above are already registered to AWS IoT. Let's look at how we use AWS IoT to manage these devices. From the IoT Management Console, click on Manage, click on Things:
 
-<img src="../images/IoTThings.png" width="600" height="439"/>
+<img src="../images/IoTThings.png" width="600" height="261"/>
 
 Click on SensorDevice01 to view more information about this Thing. Now let's look at how this Thing is authenticated to communicate with AWS IoT. On the left column, click on Security:
 
