@@ -41,3 +41,4 @@ On the left side, click on Policies to examine what type of permission the IoT T
 
 <img src="../images/DevicePolicy.png" width="600" height="439"/>
 
+What do you think about this policy? What would you do to only give appropriate permisison for the Thing associated to this certificate? To get some idea, you can look at [example AWS IoT policies here](https://docs.aws.amazon.com/iot/latest/developerguide/example-iot-policies.html)
