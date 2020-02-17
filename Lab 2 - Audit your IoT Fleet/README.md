@@ -34,4 +34,5 @@ Under **Non-compliant checks**, you can see which checks has failed, and why. To
 
 Now we have a list of non-compliant checks, let's create automation to mitigate these failed checks
 
-## 2. Take actions to mitigate issues found during Audit 
+## 2. Mitigate actions
+
