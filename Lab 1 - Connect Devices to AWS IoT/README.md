@@ -43,9 +43,9 @@ On the left side, click on Policies to examine what type of permission the IoT T
 
 What do you think about this policy? What would you do to only give appropriate permisison for the Thing associated to this certificate? To get some idea, you can look at [example AWS IoT policies here](https://docs.aws.amazon.com/iot/latest/developerguide/example-iot-policies.html)
 
-### 3. How to view the telemetry data?
+### 3. Check if your devices are sending data to AWS IoT
 Devices publish messages on topics to which AWS IoT or your applications can respond. You can use the AWS IoT MQTT client to subscribe to these topics to see the content of these messages or publish messages on these topics to update device state. From IoT management console, click on "Test", "Subscribe to a topic", then type in the topic name that your IoT Devices send telemetry data to, and click "Subscribe to topic". In this workshop, the topic names will be "temperature-device-01" and "temperature-device-02"
 
 <img src="../images/mqttclient.png"/>
 
-
+Seeing the temperature records? Yay! Your devices are connected and sending data to AWS IoT. That's exciting. Let's move to Lab 2 to find out how you can audit your devices configuration. 
