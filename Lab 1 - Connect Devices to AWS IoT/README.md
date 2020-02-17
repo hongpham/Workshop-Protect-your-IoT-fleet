@@ -15,7 +15,13 @@ In this lab, AWS resources are already created for you in advance:
 
 ### 1. IoT devices
 
-In this workshop, we will use 2 Lambda functions acting as 2 seperate IoT Devices: Device01 and Device02, respectively. Each device will send temperature telemetry to AWS IoT every 10 seconds. You can look at the code of Lambda function by going to Lambda management console, and click on function Device01 or Device02:
+In this workshop, we will use 2 Lambda functions acting as 2 seperate IoT Devices: Device01 and Device02, respectively. Each device will send temperature telemetry to AWS IoT every 10 seconds. Let's look at the code of Lambda functions (writen in Python) by going to Lambda management console, and click on function Device01 or Device02:
 
 
 <img src="../images/Lambdadevice.png"/>
+
+
+First, the function will retrieve AWS IoT Endpoint so that it know which endpoint to send telemetry data to. To connect with AWS IoT Endpoint, IoT device needs to have  device certificate, private key, and root CA certificate installed. The next step is to have Lambda function checks if these files are already available in /tmp. If not, it will retrieve these files from AWS Secrets Manager. Finally, it generates random temperature telemetry data and sends it to AWS IoT Endpoint
+
+
+
