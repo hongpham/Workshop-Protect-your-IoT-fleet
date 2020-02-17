@@ -31,7 +31,7 @@ Two IoT Devices above are already registered to AWS IoT. Let's look at how we us
 
 Click on SensorDevice01 to view more information about this Thing. Now let's look at how this Thing is authenticated to communicate with AWS IoT. On the left column, click on Security:
 
-<img src="../images/ThingSecurity.png"/>
+<img src="../images/ThingSecurity.png" width="400" height="347"/>
 
 You will see a X.509 certificate is associated with this thing. When the device initiates connection to AWS IoT, it needs to present to AWS IoT this certificate, and the associated private key, as well as AWS IoT RootCA certificate as it's credentials. This certificate is currently valid and activated.
 
@@ -39,5 +39,5 @@ Now let's click on the certificate to get more details. You can see the ARN (Ama
 
 On the left side, click on Policies to examine what type of permission the IoT Thing that has this cert can perform. You will see a Policy named DevicePolicy* attached to this cert. This is [AWS IoT policies](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) that allow you to control access to the AWS IoT data plane. They follow the same conventions as IAM policies. Click on this Policy and you will see the policy document specifies priviledges of the request that your IoT Devices send to AWS IoT.
 
-<img src="../images/DevicePolicy.png"/>
+<img src="../images/DevicePolicy.png" width="600" height="439"/>
 
