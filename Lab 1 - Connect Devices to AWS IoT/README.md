@@ -23,11 +23,11 @@ In this workshop, we will use 2 Lambda functions acting as 2 seperate IoT Device
 
 First, the function will retrieve [AWS IoT Endpoint](https://docs.aws.amazon.com/iot/latest/developerguide/iot-custom-endpoints.html) so that it know which endpoint to send telemetry data to. To connect with AWS IoT Endpoint, IoT device needs to have  device certificate, private key, and root CA certificate installed. The next step is to have Lambda function checks if these files are already available in /tmp. If not, it will retrieve these files from AWS Secrets Manager. Finally, it generates random temperature telemetry data and sends it to AWS IoT Endpoint
 
-### AWS IoT Things
+### 2. AWS IoT Things
 
 Two IoT Devices above are already registered to AWS IoT. Let's look at how we use AWS IoT to manage these devices. From the IoT Management Console, click on Manage, click on Things:
 
-<img src="../images/IoTThings.png"/>
+<img src="../images/IoTThings.png" width="600" height="439"/>
 
 Click on SensorDevice01 to view more information about this Thing. Now let's look at how this Thing is authenticated to communicate with AWS IoT. On the left column, click on Security:
 
@@ -42,3 +42,10 @@ On the left side, click on Policies to examine what type of permission the IoT T
 <img src="../images/DevicePolicy.png" width="600" height="439"/>
 
 What do you think about this policy? What would you do to only give appropriate permisison for the Thing associated to this certificate? To get some idea, you can look at [example AWS IoT policies here](https://docs.aws.amazon.com/iot/latest/developerguide/example-iot-policies.html)
+
+### 3. How to view the telemetry data?
+Devices publish messages on topics to which AWS IoT or your applications can respond. You can use the AWS IoT MQTT client to subscribe to these topics to see the content of these messages or publish messages on these topics to update device state. From IoT management console, click on "Test", "Subscribe to a topic", then type in the topic name that your IoT Devices send telemetry data to, and click "Subscribe to topic". In this workshop, the topic names will be "temperature-device-01" and "temperature-device-02"
+
+<img src="../images/mqttclient.png"/>
+
+
