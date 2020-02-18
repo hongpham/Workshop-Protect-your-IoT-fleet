@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 
-Description: Provision IoT Things
+Description: Provision an IoT Device and connect to AWS IoT
 
 Resources:
 
@@ -54,6 +54,10 @@ Resources:
                 - 'kms:Decrypt'
                 - 'iot:*'
                 Resource: "*"
+  StartIoTAudit:
+    Type: 'Custom::IoTAudit'
+    Properties:
+      ServiceToken: !GetAtt TriggerAudit.Arn   
   
   StartIoTAudit:
     Type: 'Custom::IoTAudit'
@@ -222,6 +226,180 @@ Resources:
               - iot:*
             Resource: "*"
 
+  Iterator:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile:
+          !Sub
+            - |-
+              # replace with functionname
+              import boto3
+              client = boto3.client('lambda')
+              def lambda_handler(event, context):
+                  index = event['iterator']['index'] + 1
+                  invokedevice1 = client.invoke(
+                      FunctionName='${Device01}',
+                      InvocationType='Event'
+                  )
+                  invokedevice2 = client.invoke(
+                      FunctionName='${Device02}',
+                      InvocationType='Event'
+                  )
+                  return {
+                      'index': index,
+                      'continue': index < event['iterator']['count'],
+                      'count': event['iterator']['count']
+                  }
+            -  {StreamName: !Ref Device01}
+      Runtime: python3.7
+      FunctionName: IteratorFunction
+      Timeout: 5
+      MemorySize: 512
+      Handler: index.lambda_handler
+      TracingConfig:
+        Mode: Active
+      Role: !GetAtt IteratorExecutionRole.Arn
+
+  IteratorExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - 
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+      Policies:
+        -
+          PolicyName: InvokeLambda
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - 
+                Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: !GetAtt Device01.Arn
+              - 
+                Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: !GetAtt Device02.Arn
+
+  StateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      StateMachineName: 'LambdaSubMinute'
+      DefinitionString: 
+        !Sub
+          - |-
+            {
+              "Comment": "Invoke Lambda every 10 seconds",
+              "StartAt": "ConfigureCount",
+              "States": {
+                "ConfigureCount": {
+                  "Type": "Pass",
+                  "Result": {
+                    "index": 0,
+                    "count": 6
+                  },
+                  "ResultPath": "$.iterator",
+                  "Next": "Iterator"
+                },
+                "Iterator": {
+                  "Type": "Task",
+                  "Resource": "${IteratorArn}",
+                  "ResultPath": "$.iterator",
+                  "Next": "IsCountReached"
+                },
+                "IsCountReached": {
+                  "Type": "Choice",
+                  "Choices": [
+                    {
+                      "Variable": "$.iterator.continue",
+                      "BooleanEquals": true,
+                      "Next": "Wait"
+                    }
+                  ],
+                  "Default": "Done"
+                },
+                "Wait": {
+                  "Type": "Wait",
+                  "Seconds": 10,
+                  "Next": "Iterator"
+                },
+                "Done": {
+                  "Type": "Pass",
+                  "End": true
+                }
+              }
+            }
+          -  {IteratorArn: !GetAtt Iterator.Arn}
+      RoleArn: !GetAtt StateMachineExecutionRole.Arn
+
+  StateMachineExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - 
+            Effect: Allow
+            Principal:
+              Service: !Join ["", ["states.", !Ref "AWS::Region", ".amazonaws.com"]]
+            Action: sts:AssumeRole
+      Path: /service-role/
+      Policies:
+        -
+          PolicyName: StepFunctionsInvokeLambda
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - 
+                Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: !GetAtt Iterator.Arn
+
+  Cron:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Executes Step Functions every minute
+      ScheduleExpression: rate(1 minute)
+      State: ENABLED
+      Targets:
+        -
+          Arn: !Ref StateMachine
+          Id: 'LambdaSubMinute'
+          RoleArn: !GetAtt CronExecutionRole.Arn
+
+  CronExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - 
+            Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /service-role/
+      Policies:
+        -
+          PolicyName: CloudWatchEventsStartStepFunctions
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - 
+                Effect: Allow
+                Action: states:StartExecution
+                Resource: !Ref StateMachine
+
 Outputs:
   CertARN:
     Description: 'ARN of new Cert'
@@ -238,3 +416,11 @@ Outputs:
   Device02:
     Description: 'Name of Lambda function acting as Device 02'
     Value: !Ref Device02
+
+
+
+
+
+
+
+
