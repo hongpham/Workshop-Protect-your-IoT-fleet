@@ -2,11 +2,16 @@ Before deploying IoT Devices into Production, you need to make sure approriate d
 
 You have identify multiple bad device configurations. You would like to Audit device configurations for security vulnerabilities and get notified if any of the devices don't pass all the checks. In this Lab, we will walk through steps to identify device's bad configuration, as well as to create mitigation actions using AWS IoT Device Defender. Here is what we will do:
 
-1. Audit your IoT Fleet
+1. [Audit your IoT Fleet](https://github.com/hongpham/IoT-Security-Workshop/blob/master/Lab%202%20-%20Audit%20your%20IoT%20Fleet/README.md#1-audit-your-iot-fleet)
+
     1.1 [Check Audit settings](https://github.com/hongpham/IoT-Security-Workshop/blob/master/Lab%202%20-%20Audit%20your%20IoT%20Fleet/README.md#11-check-audit-settings)
+    
     1.2 [Run an On-Demand Audit](https://github.com/hongpham/IoT-Security-Workshop/blob/master/Lab%202%20-%20Audit%20your%20IoT%20Fleet/README.md#12-run-an-on-demand-audit)
+
 2. [Take actions to mitigate audit findings](https://github.com/hongpham/IoT-Security-Workshop/blob/master/Lab%202%20-%20Audit%20your%20IoT%20Fleet/README.md#2-take-actions-to-mitigate-audit-findings)
+
     2.1 [Define mitigation actions](https://github.com/hongpham/IoT-Security-Workshop/blob/master/Lab%202%20-%20Audit%20your%20IoT%20Fleet/README.md#21-define-mitigation-actions)
+    
     2.2 [Apply mitigation actions to audit findings](https://github.com/hongpham/IoT-Security-Workshop/blob/master/Lab%202%20-%20Audit%20your%20IoT%20Fleet/README.md#22-apply-mitigation-actions-to-audit-findings)
 
 
