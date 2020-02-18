@@ -78,5 +78,22 @@ Now, you'll need to give Device Defender permisison to perform this mitigation a
 
 <img src="../images/ma-permission.png"/>
 
+Leave everything else as it is and click **Save**. 
+
+Now we can apply this mitigation actions to the audit findings.
+
 ### 2.2 Apply mitigation actions to audit findings
 
+To apply mitigation actions to the audit findings, navigate to **Audit**, **Results**. Click on **IoTDeviceDefenderOnDemandAudit** to view the list of findings (Note: we started this audit yesterday so you might see non-compliant checks that not available in the new on-demand audit that you created in previous steps). 
+
+Under **Non-compliant checks**, click on **IoT policies overly permissive**. Device Defender detects the IAM policy associated to one of IoT resources has more permission that it should have. When you click on this check, you will see the problem is with IAM policy associated to the cerfiticate of SensorDevice01 and SensorDevice02.
+
+To apply mitigation actions, check the box next to finding ID, and click **Start Mitigation Action** on the top right corner.
+
+<img src="../images/startma.png"/>
+
+Give a name for this task, then click **Select options for IoT policies overly permissive** to see the drop down lists of actions, and choose the mitigation action you created in the previous step. Then click **Confirm**
+
+<img src="../images/choosema.png"/>
+
+To view the status of mitigation actions task, click on **Defend**, **Action results** It can take a few minutes for the task to complete.
