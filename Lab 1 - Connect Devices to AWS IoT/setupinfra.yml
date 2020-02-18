@@ -416,11 +416,3 @@ Outputs:
   Device02:
     Description: 'Name of Lambda function acting as Device 02'
     Value: !Ref Device02
-
-
-
-
-
-
-
-

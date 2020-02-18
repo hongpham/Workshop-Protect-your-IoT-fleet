@@ -6,6 +6,7 @@ exports.handler = function(event, context) {
   // For Delete requests, immediately send a SUCCESS response.TODO: delete resources
 
   if (event.RequestType == "Delete") {
+    
     sendResponse(event, context, "SUCCESS");
     return;
   }

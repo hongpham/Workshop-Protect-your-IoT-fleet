@@ -11,9 +11,10 @@ exports.handler = function(event, context) {
   var stackname = process.env.CFNstackname;
 
   //setting up cfn-response 
-  // For Delete requests, immediately send a SUCCESS response.TODO: delete resources
+  // For Delete requests, immediately send a SUCCESS response and delete custom resource
 
   if (event.RequestType == "Delete") {
+
     sendResponse(event, context, "SUCCESS");
     return;
   }
