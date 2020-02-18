@@ -70,7 +70,7 @@ Now we have a list of non-compliant checks, let's create automation to mitigate 
 
 From IoT management console, click **Defend**, **Mitigation Actions**. From the top right conner, click **Create** to create a new Mitigation Actions.
 
-In this Lab, let's create a Mitigation Actions that will update the certificate of the devices because one of the findings indicate that 2 devices are sharing the same device certificate.
+To see the list of supported actions, you can look at [this document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-mitigation-actions.html). In this Lab, let's create a Mitigation Actions that will update the certificate of the devices because one of the findings indicate that 2 devices are sharing the same device certificate.
 
 <img src="../images/ma-updatedev.png"/>
 
