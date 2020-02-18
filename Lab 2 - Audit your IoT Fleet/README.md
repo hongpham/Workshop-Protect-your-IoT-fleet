@@ -68,6 +68,15 @@ Now we have a list of non-compliant checks, let's create automation to mitigate 
 
 ### 2.1 Define mitigation actions
 
+From IoT management console, click **Defend**, **Mitigation Actions**. From the top right conner, click **Create** to create a new Mitigation Actions.
+
+In this Lab, let's create a Mitigation Actions that will update the certificate of the devices because one of the findings indicate that 2 devices are sharing the same device certificate.
+
+<img src="../images/ma-updatedev.png"/>
+
+Now, you'll need to give Device Defender permisison to perform this mitigation action. To do so, you create an IAM role or select an existing role that allow action **"iot:UpdateCertificate"** . Since we don't have a role with this permisison, let's create a new one. Click **Create Role** and enter a role name. 
+
+<img src="../images/ma-permisison.png"/>
 
 ### 2.2 Apply mitigation actions to audit findings
 
