@@ -30,8 +30,11 @@ To run any type of audit check, you will need it to be enabled. To enable or dis
 $aws iot update-account-audit-configuration \
     --audit-check-configurations "{\"AUTHENTICATED_COGNITO_ROLE_OVERLY_PERMISSIVE_CHECK\":{\"enabled\":true}}"
 ```
-
 After all audit checks are already enabled, we can create an on-demand audit.
+
+<aside class="notice">
+Note: we already created an on-demand audit in advance for you because we would like to show you example results. In this Lab, you will not go through neccessary steps to give permisison to Device Defender to collect data, and to choose SNS topic to send notification. Outside of this Lab, you should follow [instruction in this document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-HowToProceed.html) when you run Audit the very first time. 
+</aside>
 
 From the IoT management console, click on **Defend**, **Audit**, **Schedules**. You will then see the current list of scheduled Audits. Click **Create** button on the top right to create a new Audit. From the **Available checks** list, you can enable or disble the checks that you would like to run agains your devices. Click on the question mark next to each check to understand what it will do. In this lab, let's keep all the checks enabled.
 
@@ -43,7 +46,7 @@ You have options to run Audit daily, weekly, bi-weekly, or monthly. With these o
 
 When you enable a check, data collection starts immediately. If there is a large amount of data in your account to collect, results of the check might not be available for some time after you enabled it.
 
-For your convenience, we created an on-demand audit a day in advance to help you see how the audit result will look like. To see audit results, click on **Defend**, **Audit**, **Results** 
+To see audit results, click on **Defend**, **Audit**, **Results** 
 
 <img src="../images/Auditresult.png"/>
 
