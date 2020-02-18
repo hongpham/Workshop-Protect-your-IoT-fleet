@@ -14,6 +14,25 @@ TODO: need to write a use case here
 
 To get start, you need to identify what type of check you would like to run against your devices. Conveniently, AWS IoT Device Defender has built in audit checks that you can quickly enable. Let's create an audit with these checks.
 
+First, you need to configure  Device Defender audit settings in your AWS accout. Settings include how audit notifications are sent and which audit checks are enabled or disabled.  To check current audit settings, run describe-account-audit-configuration command from your terminal:
+
+```
+$ aws iot  describe-account-audit-configuration
+```
+
+The return output is a json object showing you list of available audit checks, and if these checks are enabled or disabled. 
+
+<img src="../images/auditsetting.png"/>
+
+To run any type of audit check, you will need it to be enabled. To enable or disable an audit check, run update-account-audit-configuration command in your terminal:
+
+```
+$aws iot update-account-audit-configuration \
+    --audit-check-configurations "{\"AUTHENTICATED_COGNITO_ROLE_OVERLY_PERMISSIVE_CHECK\":{\"enabled\":true}}"
+```
+
+After all audit checks are already enabled, we can create an on-demand audit.
+
 From the IoT management console, click on **Defend**, **Audit**, **Schedules**. You will then see the current list of scheduled Audits. Click **Create** button on the top right to create a new Audit. From the **Available checks** list, you can enable or disble the checks that you would like to run agains your devices. Click on the question mark next to each check to understand what it will do. In this lab, let's keep all the checks enabled.
 
 <img src="../images/Auditlist.png" width="600" height="557"/>
