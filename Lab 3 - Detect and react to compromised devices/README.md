@@ -28,11 +28,17 @@ Now you need to attach this security profile to a target. A target can be a thin
 
 Click **Next** to view summary of this Security Profile. When you confirm everything is correct, then click **Save**
 
-## 2. Simulate a compromised device 
+## 2. Respond to a violation
+
+- Create IoT Thing Group with deny all permission
+- Create Lambda function to move device into thing group
+_ Configure SNS to trigger lambda 
+
+## 3. Simulate a compromised device 
 
 In this step, we will update Device02 to similate a situation that it is compromised, and it is sending way too much data and way too often as it should be. 
 
-### 2.1 Update message size
+### 3.1 Update message size
 
 To update the amount of data Device02 is sending to AWS IoT, go to Lambda management console, click on function **Device02**. Scroll down to edit the code that generate random temperature telemetry data (line 55):
 
@@ -46,11 +52,13 @@ This telemetry data is usually 150bytes. Let's replace the line of code above wi
 
 Click on **Save** on the top right corner to save this change. After that when this Lambda function run, it will send bigger message to AWS IoT
 
-### 2.2 Update connection frequency
+### 3.2 Update connection frequency
 
 In this Lab, we use Step function to trigger Lambda function Device02 to establish connection and send data to AWS IoT every 10 seconds. To edit the frequency, let's change the **Definition** of Stage machines **LambdaSubMinute**
 
 
-It will take time for Device Defender to collect datapoints. It also depends in the number of IoT devices and the Duration that you specify in the Security Profile. In this Lab, we expect you will see a violation under **Detect**, **Violations** within 15 minutes after you have update lambda function Device02
+It will take time for Device Defender to collect datapoints. It also depends in the number of IoT devices and the Duration that you specify in the Security Profile. In this Lab, we expect you will see a violation under **Detect**, **Violations** within 15 minutes after you have update lambda function Device02.
+ 
+If your automation in step 2 works, you will see Device02 is moved to Forensic ThingGroups.
 
-## 2. Respond to the violations
+Congratulations! You have succesfully complete this Lab. We hope you can apply what you have done today to your IoT resources.
