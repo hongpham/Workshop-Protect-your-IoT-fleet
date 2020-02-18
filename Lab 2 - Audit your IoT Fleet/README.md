@@ -76,7 +76,7 @@ In this Lab, let's create a Mitigation Actions that will update the certificate 
 
 Now, you'll need to give Device Defender permisison to perform this mitigation action. To do so, you create an IAM role or select an existing role that allow action **"iot:UpdateCertificate"** . Since we don't have a role with this permisison, let's create a new one. Click **Create Role** and enter a role name. 
 
-<img src="../images/ma-permisison.png"/>
+<img src="../images/ma-permission.png"/>
 
 ### 2.2 Apply mitigation actions to audit findings
 
