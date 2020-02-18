@@ -28,7 +28,30 @@ Now you need to attach this security profile to a target. A target can be a thin
 
 Click **Next** to view summary of this Security Profile. When you confirm everything is correct, then click **Save**
 
+## 2. Simulate a compromised device 
+
+In this step, we will update Device02 to similate a situation that it is compromised, and it is sending way too much data and way too often as it should be. 
+
+### 2.1 Update message size
+
+To update the amount of data Device02 is sending to AWS IoT, go to Lambda management console, click on function **Device02**. Scroll down to edit the code that generate random temperature telemetry data (line 55):
+
+```
+	deviceTemperature = round(random.uniform(15.1,29.9),2)
+```
+This telemetry data is usually 150bytes. Let's replace the line of code above with a very long big text to purposely increase it's size
+
+```
+  deviceTemperature = "AWS IoT Device Defender is a security service that allows you to audit the configuration of your devices, monitor connected devices to detect abnormal behavior, and mitigate security risks. It gives you the ability to enforce consistent security policies across your AWS IoT device fleet and respond quickly when devices are compromised. IoT fleets can consist of large numbers of devices that have diverse capabilities, are long-lived, and are geographically distributed. These characteristics make fleet setup complex and error-prone. And because devices are often constrained in computational power, memory, and storage capabilities, this limits the use of encryption and other forms of security on the devices themselves. Also, devices often use software with known vulnerabilities. These factors make IoT fleets an attractive target for hackers and make it difficult to secure your device fleet on an ongoing basis.AWS IoT Device Defender addresses these challenges by providing tools to identify security issues and deviations from best practices. AWS IoT Device Defender can audit device fleets to ensure they adhere to security best practices and detect abnormal behavior on devices. "
+```
+
+Click on **Save** on the top right corner to save this change. After that when this Lambda function run, it will send bigger message to AWS IoT
+
+### 2.2 Update connection frequency
+
+In this Lab, we use Step function to trigger Lambda function Device02 to establish connection and send data to AWS IoT every 10 seconds. To edit the frequency, let's change the **Definition** of Stage machines **LambdaSubMinute**
 
 
+It will take time for Device Defender to collect datapoints. It also depends in the number of IoT devices and the Duration that you specify in the Security Profile. In this Lab, we expect you will see a violation under **Detect**, **Violations** within 15 minutes after you have update lambda function Device02
 
 ## 2. Respond to the violations
