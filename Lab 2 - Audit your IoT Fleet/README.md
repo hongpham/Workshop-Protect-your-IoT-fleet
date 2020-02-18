@@ -20,7 +20,7 @@ From the IoT management console, click on **Defend**, **Audit**, **Schedules**. 
 
 You have options to run Audit daily, weekly, bi-weekly, or monthly. With these options, IoT Device Defender will choose a time to start the audit for you. In this lab, let's choose **Run audit now(once)**. Then click **Create** to start the audit immediately
 
-<img src="../images/Auditschedule.png" width="500" height="138"/>
+<img src="../images/Auditschedule.png"/>
 
 When you enable a check, data collection starts immediately. If there is a large amount of data in your account to collect, results of the check might not be available for some time after you enabled it.
 
