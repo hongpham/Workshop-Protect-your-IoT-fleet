@@ -21,7 +21,11 @@ You have identify multiple bad device configurations. You would like to Audit de
 
 To get start, you need to identify what type of check you would like to run against your devices. Conveniently, AWS IoT Device Defender has built in audit checks that you can quickly enable. Let's create an audit with these checks.
 
-First, you need to configure  Device Defender audit settings in your AWS accout. Settings include how audit notifications are sent and which audit checks are enabled or disabled.  To check current audit settings, run describe-account-audit-configuration command from your terminal:
+First, you need to configure  Device Defender Audit settings in your AWS accout. Settings include SNS alerts configuration and which Audit checks are enabled or disabled.  To view settings and enable/disable Audit checks, click **Defend**, **Setting**
+
+<img src="../images/enableaudit.png"/>
+
+If you want to use CLI instead of using management console, run describe-account-audit-configuration command from your terminal to check current audit settings.
 
 ```
 $ aws iot  describe-account-audit-configuration
@@ -31,14 +35,14 @@ The return output is a json object showing you list of available audit checks, a
 
 <img src="../images/auditsetting.png"/>
 
-To run any type of audit check, you will need it to be enabled. To enable or disable an audit check, run update-account-audit-configuration command in your terminal:
+To enable or disable an audit check, run update-account-audit-configuration command in your terminal:
 
 ```
 $aws iot update-account-audit-configuration \
     --audit-check-configurations "{\"AUTHENTICATED_COGNITO_ROLE_OVERLY_PERMISSIVE_CHECK\":{\"enabled\":true}}"
 ```
-After all audit checks are already enabled, we can create an on-demand audit.
 
+After all audit checks are already enabled, we can create an on-demand audit.
 
 > Note: we already created an on-demand audit in advance for you because we would like to show you example results. In this Lab, you will not go through neccessary steps to give permisison to Device Defender to collect data, and to choose SNS topic to send notification. Outside of this Lab, you should follow [instruction in this document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-HowToProceed.html) when you run Audit the very first time. 
 
