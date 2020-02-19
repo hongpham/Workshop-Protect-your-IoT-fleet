@@ -70,9 +70,7 @@ Under **Non-compliant checks**, you should see 3 checks:
 - [IoT policies overly permissive](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-iot-policy-permissive.html)
 - [Logging disabled](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-logging-disabled.html)
 
-<img src="../images/checkresult.png"/>
-
-To view which resources associate which each findings, click on the check name. For example, click on **Device certificate shared** and you will see the Certificate ID that is being shared between Device01 and Device02
+To view which resources associate which each findings, click on the check name. For example, click on **Device certificate shared** and you will see the Certificate ID that is being shared between SensorDevice01 and SensorDevice02
 
 <img src="../images/sharedcert.png"/>
 
@@ -84,11 +82,11 @@ Now we have a list of non-compliant checks, next step we will need to remediate 
 
 From IoT management console, click **Defend**, **Mitigation Actions**. From the top right conner, click **Create** to create a new Mitigation Actions.
 
-To see the list of supported actions, you can look at [this document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-mitigation-actions.html). In this Lab, let's create a Mitigation Actions that will update the certificate of the devices because one of the findings indicate that 2 devices are sharing the same device certificate.
+To see the list of supported actions, you can look at [this document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-mitigation-actions.html). In this Lab, let's create a Mitigation Actions **Update device certificate** that will take action to deactivate the certificate.
 
 <img src="../images/ma-updatedev.png"/>
 
-Now, you'll need to give Device Defender permisison to perform this mitigation action. To do so, you create an IAM role or select an existing role that allow action **"iot:UpdateCertificate"** . Since we don't have a role with this permisison, let's create a new one. Click **Create Role** and enter a role name. 
+Now, you'll need to give Device Defender permisison to perform this mitigation action. To do so, you create an IAM role or select an existing role that allow action **"iot:UpdateCertificate"** . Since we don't have a role with this permisison, let's ask AWS IoT to create a new one. Click **Create Role** and enter a role name. 
 
 <img src="../images/ma-permission.png"/>
 
@@ -98,9 +96,9 @@ Now we can apply this mitigation actions to the audit findings.
 
 ### 2.2 Apply mitigation actions to audit findings
 
-To apply mitigation actions to the audit findings, navigate to **Audit**, **Results**. Click on **IoTDeviceDefenderOnDemandAudit** to view the list of findings (Note: we started this audit yesterday so you might see non-compliant checks that not available in the new on-demand audit that you created in previous steps). 
+To apply mitigation actions to the audit findings, navigate to **Audit**, **Results**. Click on the **On-demand** audit to view the list of findings.
 
-Under **Non-compliant checks**, click on **IoT policies overly permissive**. Device Defender detects the IAM policy associated to one of IoT resources has more permission that it should have. When you click on this check, you will see the problem is with IAM policy associated to the cerfiticate of SensorDevice01 and SensorDevice02.
+Under **Non-compliant checks**, click on **Device certificate shared**. Device Defender detects multiple devices are sharing one X.509 certificate. When you click on this check, you will see cerfiticate ID associated to both SensorDevice01 and SensorDevice02.
 
 To apply mitigation actions, check the box next to finding ID, and click **Start Mitigation Action** on the top right corner.
 
@@ -110,4 +108,9 @@ Give a name for this task, then click **Select options for IoT policies overly p
 
 <img src="../images/choosema.png"/>
 
-To view the status of mitigation actions task, click on **Defend**, **Action results** It can take a few minutes for the task to complete.
+To view the status of mitigation actions task, click on **Defend**, **Action results** It can take a few minutes for the task to complete. Since we use mitigation action **Update device certificate**, Device Defender will deactivate the Certificate. To double check, go to **Secure**, **Certificates**. You should see the certificate is **Inactivate**.
+
+<img src="../images/inactivecert.png"/>
+
+Congratulations! You have mitigated a non-compliant findings in your device configuration. Let's move to the next Lab where you will build automation to detect if a device is compromised.
+
