@@ -56,17 +56,27 @@ You have options to run Audit daily, weekly, bi-weekly, or monthly. With these o
 
 <img src="../images/Auditschedule.png"/>
 
-When you enable a check, data collection starts immediately. If there is a large amount of data in your account to collect, results of the check might not be available for some time after you enabled it.
+It will take a few minutes for the audit to complete.  
+
+> Note: since we already create an audit for you, and there aren't many IoT devices in this lab, so the new on-demand Audit should complete quickly. In real life, Audit can take longer time to show you results. 
 
 To see audit results, click on **Defend**, **Audit**, **Results** 
 
 <img src="../images/Auditresult.png"/>
 
-Under **Non-compliant checks**, you can see which checks has failed, and why. To view resources associated to these findings, click on the check name.
+Under **Non-compliant checks**, you should see 3 checks:
+
+- [Device certificate shared](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-device-cert-shared.html)
+- [IoT policies overly permissive](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-iot-policy-permissive.html)
+- [Logging disabled](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-logging-disabled.html)
 
 <img src="../images/checkresult.png"/>
 
-Now we have a list of non-compliant checks, let's create automation to mitigate these failed checks
+To view which resources associate which each findings, click on the check name. For example, click on **Device certificate shared** and you will see the Certificate ID that is being shared between Device01 and Device02
+
+<img src="../images/sharedcert.png"/>
+
+Now we have a list of non-compliant checks, next step we will need to remediate these non-compliant findings
 
 ## 2. Take actions to mitigate audit findings
 
