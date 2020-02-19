@@ -112,5 +112,7 @@ To view the status of mitigation actions task, click on **Defend**, **Action res
 
 <img src="../images/inactivecert.png"/>
 
+> Note: If you will work on next lab [Lab 3 - Detect and react to compromised devices](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Lab%203%20-%20Detect%20and%20react%20to%20compromised%20devices), then you will need to re-activate this certificate.
+
 Congratulations! You have mitigated a non-compliant findings in your device configuration. Let's move to the next Lab where you will build automation to detect if a device is compromised.
 
