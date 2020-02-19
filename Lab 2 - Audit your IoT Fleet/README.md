@@ -62,7 +62,7 @@ It will take a few minutes for the audit to complete.
 
 To see audit results, click on **Defend**, **Audit**, **Results** 
 
-<img src="../images/Auditresult.png"/>
+<img src="../images/checkresult.png"/>
 
 Under **Non-compliant checks**, you should see 3 checks:
 
