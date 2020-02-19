@@ -30,8 +30,25 @@ Click **Next** to view summary of this Security Profile. When you confirm everyt
 
 ## 2. Respond to a violation
 
-- Create IoT Thing Group with deny all permission
-- Create Lambda function to move device into thing group
+In this example, we will create a simple automation that will move violated device to a thing group specifically for investigation. We attach a **Deny all** IAM policies to this thing group so that the devices do not have any permision to perform any iot actions.
+
+### 2.1 Create IoT Thing Group with deny all permission
+
+From IoT management console, click **Manage**, **Thing groups**, **Create**, **Create Thing Group** . Name your thing group and click **Create thing group**
+
+<img src="../images/CreateThingGroup.png"/>
+
+Now let's create a policy that deny all actions. Click on **Secure, Policies, Create**. Name your new policy. Under Add statements, type **iot:*** for **Action**, and **'\*'** for **Resource ARN**. Check **Deny** box, and click **Create**
+
+<img src="../images/DenyAll.png"/>
+
+Next, you will associate this policy with Thing Group that we create earlier. Go to **Manage, Thing groups, Security, Edit**. Select the policy that you create earlier, and click **Save**
+
+<img src="../images/AttachDenyAll.png"/>
+
+When finished, any device in this Thing Group will not have permission to send data to AWS IoT.
+
+### 2.2 Create Lambda function to move device into thing group
 _ Configure SNS to trigger lambda 
 
 ## 3. Simulate a compromised device 
