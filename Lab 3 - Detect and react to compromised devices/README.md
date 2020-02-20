@@ -18,7 +18,8 @@ Next step is to select a SNS topic for alerts when Device Defender alerts a viol
 
 <img src="../images/snsdetect.png"/>
 
-You will need to create IAM role in advance. Make sure that the IAM role will need to grant permission for Device Defender to publish to this topic. Attach **AWSIoTDeviceDefenderPublishFindingsToSNSMitigationAction** managed policy to this role should be efficient.
+> You will need to create IAM role in advance. Make sure that the IAM role will need to grant permission for Device Defender to publish to this topic. Attach **AWSIoTDeviceDefenderPublishFindingsToSNSMitigationAction** managed policy to this role should be efficient.
+> Don't forget to subscribe your email to this new SNS topic so that you will receive an email when Device Defender finds a violation.
 
 Now you need to attach this security profile to a target. A target can be a thing, or a thing group. For simplicity, we will attach this security profile with **All things** for now.
 
