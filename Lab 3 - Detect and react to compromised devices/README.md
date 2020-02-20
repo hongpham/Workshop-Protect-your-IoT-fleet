@@ -69,11 +69,12 @@ var iot = new AWS.Iot();
 
 exports.handler = function(event, context) {
 
-	var thing = event.thingName
+	var Thing = event.thingName
 
 	var params = {
 	  thingGroupName: 'IsolatedDevices',
-	  thingName: thing
+	  thingGroupArn: 'ARN of your thing group',
+	  thingName: Thing
 	};
 	iot.addThingToThingGroup(params, function(err, data) {
 	  if (err) console.log(err, err.stack); 
@@ -112,9 +113,8 @@ To update the amount of data SensorDevice02 is sending to AWS IoT, go to Lambda 
 This telemetry data is usually 120bytes. Let's replace the line of code above with a very long big text to purposely increase it's size
 
 
-```python
-deviceTemperature = "AWS IoT Device Defender is a security service that allows you to audit the configuration of your devices, monitor connected devices to detect abnormal behavior, and mitigate security risks. It gives you the ability to enforce consistent security policies across your AWS IoT device fleet and respond quickly when devices are compromised. IoT fleets can consist of large numbers of devices that have diverse capabilities, are long-lived, and are geographically distributed. These characteristics make fleet setup complex and error-prone. And because devices are often constrained in computational power, memory, and storage capabilities, this limits the use of encryption and other forms of security on the devices themselves. Also, devices often use software with known vulnerabilities. These factors make IoT fleets an attractive target for hackers and make it difficult to secure your device fleet on an ongoing basis.AWS IoT Device Defender addresses these challenges by providing tools to identify security issues and deviations from best practices. AWS IoT Device Defender can audit device fleets to ensure they adhere to security best practices and detect abnormal behavior on devices. "
-```
+> deviceTemperature = "AWS IoT Device Defender is a security service that allows you to audit the configuration of your devices, monitor connected devices to detect abnormal behavior, and mitigate security risks. It gives you the ability to enforce consistent security policies across your AWS IoT device fleet and respond quickly when devices are compromised. IoT fleets can consist of large numbers of devices that have diverse capabilities, are long-lived, and are geographically distributed. These characteristics make fleet setup complex and error-prone. And because devices are often constrained in computational power, memory, and storage capabilities, this limits the use of encryption and other forms of security on the devices themselves. Also, devices often use software with known vulnerabilities. These factors make IoT fleets an attractive target for hackers and make it difficult to secure your device fleet on an ongoing basis.AWS IoT Device Defender addresses these challenges by providing tools to identify security issues and deviations from best practices. AWS IoT Device Defender can audit device fleets to ensure they adhere to security best practices and detect abnormal behavior on devices. "
+
 
 Click on **Save** on the top right corner to save this change. After this change, each message Lambda function sent to AWS IoT will be ~1.3KB
 
