@@ -69,11 +69,11 @@ var iot = new AWS.Iot();
 
 exports.handler = function(event, context) {
 
-	violateThing = event.thingName
+	var thing = event.thingName
 
 	var params = {
 	  thingGroupName: 'IsolatedDevices',
-	  thingName: violateThing
+	  thingName: thing
 	};
 	iot.addThingToThingGroup(params, function(err, data) {
 	  if (err) console.log(err, err.stack); 
