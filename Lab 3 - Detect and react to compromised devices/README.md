@@ -1,3 +1,7 @@
+1. [Define unusual behaviors of your devices](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Lab%203%20-%20Detect%20and%20react%20to%20compromised%20devices#1-define-unusual-behaviors-of-your-devices)
+2. [Respond to a violation](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Lab%203%20-%20Detect%20and%20react%20to%20compromised%20devices#2-respond-to-a-violation)
+3. [Simulate a compromised device](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Lab%203%20-%20Detect%20and%20react%20to%20compromised%20devices#3-simulate-a-compromised-device)
+
 After you have identify potential external threats to your IoT devices, it's crucial to implement a solution to quickly detec if the devices are compromised, and take action to stop the attack. In this lab, your task is to detect if the device participate in a DDoS attack and becomes the source of the actack.
 
 To do so, you will need to define when the devices' behaviors will be considered abnormal and need a human attention to check if it's actually compromised. So let's use AWS IoT Device Defender Detect for that.
@@ -96,29 +100,26 @@ Now let's do the fun part: test this automation
 
 ## 3. Simulate a compromised device 
 
-In this step, we will update Device02 to similate a situation that it is compromised, and it is sending way too much data and way too often as it should be. 
+In this step, we will update SensorDevice02's code to similate a situation that it is compromised, and it is sending way too much data as it should be. 
 
 ### 3.1 Update message size
 
-To update the amount of data Device02 is sending to AWS IoT, go to Lambda management console, click on function **Device02**. Scroll down to edit the code that generate random temperature telemetry data (line 55):
+To update the amount of data SensorDevice02 is sending to AWS IoT, go to Lambda management console, click on function **Device02**. Scroll down to edit the code that generate random temperature telemetry data (line 55):
 
 ```
 	deviceTemperature = round(random.uniform(15.1,29.9),2)
 ```
-This telemetry data is usually 150bytes. Let's replace the line of code above with a very long big text to purposely increase it's size
+This telemetry data is usually 120bytes. Let's replace the line of code above with a very long big text to purposely increase it's size
 
 
->  deviceTemperature = "AWS IoT Device Defender is a security service that allows you to audit the configuration of your devices, monitor connected devices to detect abnormal behavior, and mitigate security risks. It gives you the ability to enforce consistent security policies across your AWS IoT device fleet and respond quickly when devices are compromised. IoT fleets can consist of large numbers of devices that have diverse capabilities, are long-lived, and are geographically distributed. These characteristics make fleet setup complex and error-prone. And because devices are often constrained in computational power, memory, and storage capabilities, this limits the use of encryption and other forms of security on the devices themselves. Also, devices often use software with known vulnerabilities. These factors make IoT fleets an attractive target for hackers and make it difficult to secure your device fleet on an ongoing basis.AWS IoT Device Defender addresses these challenges by providing tools to identify security issues and deviations from best practices. AWS IoT Device Defender can audit device fleets to ensure they adhere to security best practices and detect abnormal behavior on devices. "
+```python
+deviceTemperature = "AWS IoT Device Defender is a security service that allows you to audit the configuration of your devices, monitor connected devices to detect abnormal behavior, and mitigate security risks. It gives you the ability to enforce consistent security policies across your AWS IoT device fleet and respond quickly when devices are compromised. IoT fleets can consist of large numbers of devices that have diverse capabilities, are long-lived, and are geographically distributed. These characteristics make fleet setup complex and error-prone. And because devices are often constrained in computational power, memory, and storage capabilities, this limits the use of encryption and other forms of security on the devices themselves. Also, devices often use software with known vulnerabilities. These factors make IoT fleets an attractive target for hackers and make it difficult to secure your device fleet on an ongoing basis.AWS IoT Device Defender addresses these challenges by providing tools to identify security issues and deviations from best practices. AWS IoT Device Defender can audit device fleets to ensure they adhere to security best practices and detect abnormal behavior on devices. "
+```
 
-Click on **Save** on the top right corner to save this change. After that when this Lambda function run, it will send bigger message to AWS IoT
+Click on **Save** on the top right corner to save this change. After this change, each message Lambda function sent to AWS IoT will be ~1.3KB
 
-### 3.2 Update connection frequency
+Now we wait for a few minutes until you receive email from SNS. 
 
-In this Lab, we use Step function to trigger Lambda function Device02 to establish connection and send data to AWS IoT every 10 seconds. To edit the frequency, let's change the **Definition** of Stage machines **LambdaSubMinute**
-
-
-It will take time for Device Defender to collect datapoints. It also depends in the number of IoT devices and the Duration that you specify in the Security Profile. In this Lab, we expect you will see a violation under **Detect**, **Violations** within 15 minutes after you have update lambda function Device02.
- 
-If your automation in step 2 works, you will see Device02 is moved to Forensic ThingGroups.
+If your automation in step 2 works, you will see SensorDevice02 is moved to Forensic ThingGroups.
 
 Congratulations! You have succesfully complete this Lab. We hope you can apply what you have done today to your IoT resources.
