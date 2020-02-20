@@ -59,29 +59,25 @@ In this step, we create a Lambda function to move offending device to **Isolated
 
 Go to Lambda management console, click **Create function**. Choose **Author from scratch**, and give a name to your function. Choose Runtime as **Node.js 12.x** and leave Permission as default - **Create a new role with basic Lambda permissions** (we will need to update this role later). When ready, click **Create function**
 
-<img src="../images/createfunction.png"/>
+<img src="../images/addthing.png"/>
 
 Replace default code in index.js by the block of code below. Remembe to click **Save** to save this change:
 
-```javascript
-var AWS = require('aws-sdk');
-var iot = new AWS.Iot();
+```python
+import boto3
+import json
 
-exports.handler = function(event, context) {
+iot = boto3.client('iot')
 
-	var Thing = event.thingName
+def lambda_handler(event, context):
+	message = event['Records'][0]['Sns']['Message']
+	d = json.loads(message)
+	thing = d['thingName']
 
-	var params = {
-	  thingGroupName: 'IsolatedDevices',
-	  thingGroupArn: 'ARN of your thing group',
-	  thingName: Thing
-	};
-	iot.addThingToThingGroup(params, function(err, data) {
-	  if (err) console.log(err, err.stack); 
-	  else     console.log(data);           
-	});
-
-}
+	addThing = iot.add_thing_to_thing_group(
+    	thingGroupName='IsolatedDevices',
+	thingName=thing
+	)
 ```
 Now let's update the execution role of this Lambda function. We need to allow this function to attach a Thing to a Thing Group. Scroll down to **Execution Role**. Under **Existing role**, you will see the role name associated to this function.
 
