@@ -12,7 +12,7 @@ You realizes that you can use 2 device metrics to detect if the devices are acti
 
 From the IoT management console, click **Defend**,**Detect**, **Security Profiles**, **Create your first security profile**. Name this security profile as **LargeMessageSize**.
 
-Create a behavior named **messageSize**. We ask Device Defender to observe **Message size** metric and alert us if the size of the message going out of the device is greater than 5000 bytes - which is larger than the regular message size that SensorDevice01 and SensorDevice02 usually send to AWS IoT in 5 minutes. We ask Device Defender to aggregate metric every 5 minutes as one datapoint. And if a device is in violation of this behavior for two datapoints, then the alarm will be trigger. For **Datapoints to Clear**, we choose to clear the alarm if the offending device is no longer in violation of this behavior for 2 conservative datapoints.
+Create a behavior named **messageSize**. We ask Device Defender to observe **Message size** metric and alert us if the size of the message going out of the device is greater than 30000 bytes - which is larger than the regular message size that SensorDevice01 and SensorDevice02 usually send to AWS IoT in 5 minutes. We ask Device Defender to aggregate metric every 5 minutes as one datapoint. And if a device is in violation of this behavior for two datapoints, then the alarm will be trigger. For **Datapoints to Clear**, we choose to clear the alarm if the offending device is no longer in violation of this behavior for 2 conservative datapoints.
 
 <img src="../images/behaviors.png"/>
 
