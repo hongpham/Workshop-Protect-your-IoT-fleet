@@ -59,7 +59,7 @@ In this step, we create a Lambda function to move offending device to **Isolated
 
 Go to Lambda management console, click **Create function**. Choose **Author from scratch**, and give a name to your function. Choose Runtime as **Node.js 12.x** and leave Permission as default - **Create a new role with basic Lambda permissions** (we will need to update this role later). When ready, click **Create function**
 
-<img src="../images/addthing.png"/>
+<img src="../images/AddThing.png"/>
 
 Replace default code in index.js by the block of code below. Remembe to click **Save** to save this change:
 
@@ -114,8 +114,9 @@ This telemetry data is usually 120bytes. Let's replace the line of code above wi
 
 Click on **Save** on the top right corner to save this change. After this change, each message Lambda function sent to AWS IoT will be ~1.3KB
 
-Now we wait for a few minutes until you receive email from SNS. 
+Now we wait for a few minutes until you receive email from SNS. After that you can go to **Manage, Thing Groups, IsolatedDevices, Things** to see that **SensorDevice02** should be added to this group. Now let's check if this device has stopped sending telemetry data by going to **Test, Subscribe to a topic**, enter the topic **temperature-device-02**. 
 
-If your automation in step 2 works, you will see SensorDevice02 is moved to Forensic ThingGroups.
+If your automation in step 2 works. You shouldn't see any message there because we have associated **DenyAll** policy to Thing Group **IsolatedDevices**
 
-Congratulations! You have succesfully complete this Lab. We hope you can apply what you have done today to your IoT resources.
+
+Congratulations! You have succesfully completed this Lab. 
