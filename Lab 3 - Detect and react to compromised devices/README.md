@@ -19,7 +19,7 @@ Next step is to select a SNS topic for alerts when Device Defender alerts a viol
 <img src="../images/snsdetect.png"/>
 
 > You will need to create IAM role in advance. Make sure that the IAM role will need to grant permission for Device Defender to publish to this topic. Attach **AWSIoTDeviceDefenderPublishFindingsToSNSMitigationAction** managed policy to this role should be efficient.
-> Don't forget to subscribe your email to this new SNS topic so that you will receive an email when Device Defender finds a violation.
+> Don't forget to subscribe your email to this new SNS topic to receive an email when Device Defender alerts a violation.
 
 Now you need to attach this security profile to a target. A target can be a thing, or a thing group. For simplicity, we will attach this security profile with **All things** for now.
 
@@ -45,10 +45,54 @@ Next, you will associate this policy with Thing Group that we create earlier. Go
 
 <img src="../images/AttachDenyAll.png"/>
 
-When finished, any device in this Thing Group will not have permission to send data to AWS IoT.
+Any device in this Thing Group will not have permission to send data to AWS IoT.
 
 ### 2.2 Create Lambda function to move device into thing group
-_ Configure SNS to trigger lambda 
+
+In this step, we create a Lambda function to move offending device to **IsolatedDevices** thing group for forensic. When Device Defender finds a violation and sends alerts to SNS topic that you created earlier, SNS will trigger this Lambda function.
+
+> Note: in this Lab, we expect to have 1 violation, which mean the Lambda function will be trigger once. Before implemenet this solution, we recommend you to test thoroughly to make sure this is an appropriate solution for you.
+
+Go to Lambda management console, click **Create function**. Choose **Author from scratch**, and give a name to your function. Choose Runtime as **Node.js 12.x** and leave Permission as default - **Create a new role with basic Lambda permissions** (we will need to update this role later). When ready, click **Create function**
+
+<img src="../images/createfunction.png"/>
+
+Replace default code in index.js by the block of code below. Remembe to click **Save** to save this change:
+
+```javascript
+var AWS = require('aws-sdk');
+var iot = new AWS.Iot();
+
+exports.handler = function(event, context) {
+
+	violateThing = event.thingName
+
+	var params = {
+	  thingGroupName: 'IsolatedDevices',
+	  thingName: violateThing
+	};
+	iot.addThingToThingGroup(params, function(err, data) {
+	  if (err) console.log(err, err.stack); 
+	  else     console.log(data);           
+	});
+
+}
+```
+Now let's update the execution role of this Lambda function. We need to allow this function to attach a Thing to a Thing Group. Scroll down to **Execution Role**. Under **Existing role**, you will see the role name associated to this function.
+
+<img src="../images/lambdarole.png"/>
+
+Click on the link below to view this role in IAM console. Click **Attach policies**, search for **AWSIoTFullAccess** and attach this managed policy to the role. You can choose to scope down permission by create a customer manage policy and attach it to the role if you're very comfortable with building IAM policy.
+
+After updating your IAM role, let's subscribe this function to SNS topic. From SNS console, click **Topics**. From the list of topics, click the topic that you create earlier. Click **Create subscription**
+
+<img src="../images/snssublambda.png"/>
+
+Choose **AWS Lambda** for Protocal. For Endpoint, choose the Lambda function that you just created. Click **Create subscription**
+
+<img src="../images/createsnslambda.png"/>
+
+Now let's do the fun part: test this automation
 
 ## 3. Simulate a compromised device 
 
