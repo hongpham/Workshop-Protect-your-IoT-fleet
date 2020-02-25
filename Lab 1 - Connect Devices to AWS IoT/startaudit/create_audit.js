@@ -2,8 +2,8 @@ var AWS = require('aws-sdk');
 var iot = new AWS.Iot();
 
 exports.handler = function(event, context) {
-  //setting up cfn-response 
-  // For Delete requests, immediately send a SUCCESS response.TODO: delete resources
+  //Need to retrieve AWS IoT Device Defender role ARN as variable
+  const AuditRoleArn = process.env.AuditRoleArn;
 
   if (event.RequestType == "Delete") {
     
@@ -14,34 +14,89 @@ exports.handler = function(event, context) {
   var responseStatus = "FAILED";
   var responseData = {};
   
-  //start an on demand Audit
-  var params = {
-    targetCheckNames: [
-        'AUTHENTICATED_COGNITO_ROLE_OVERLY_PERMISSIVE_CHECK',
-        'CA_CERTIFICATE_KEY_QUALITY_CHECK',
-        'IOT_POLICY_OVERLY_PERMISSIVE_CHECK',
-        'DEVICE_CERTIFICATE_KEY_QUALITY_CHECK',
-        'CONFLICTING_CLIENT_IDS_CHECK',
-        'IOT_ROLE_ALIAS_OVERLY_PERMISSIVE_CHECK',
-        'IOT_ROLE_ALIAS_ALLOWS_ACCESS_TO_UNUSED_SERVICES_CHECK',
-        'DEVICE_CERTIFICATE_SHARED_CHECK',
-        'REVOKED_DEVICE_CERTIFICATE_STILL_ACTIVE_CHECK',
-        'DEVICE_CERTIFICATE_EXPIRING_CHECK',
-        'REVOKED_CA_CERTIFICATE_STILL_ACTIVE_CHECK',
-        'LOGGING_DISABLED_CHECK',
-        'UNAUTHENTICATED_COGNITO_ROLE_OVERLY_PERMISSIVE_CHECK',
-        'CA_CERTIFICATE_EXPIRING_CHECK'
-    ]
+
+  var paramsEnableAudit = {
+    auditCheckConfigurations: {
+      'AUTHENTICATED_COGNITO_ROLE_OVERLY_PERMISSIVE_CHECK': {
+        enabled: true
+      },
+      'CA_CERTIFICATE_KEY_QUALITY_CHECK': {
+        enabled: true
+      },
+      'IOT_POLICY_OVERLY_PERMISSIVE_CHECK': {
+        enabled: true
+      },
+      'DEVICE_CERTIFICATE_KEY_QUALITY_CHECK': {
+        enabled: true
+      },
+      'CONFLICTING_CLIENT_IDS_CHECK': {
+        enabled: true
+      },
+      'IOT_ROLE_ALIAS_OVERLY_PERMISSIVE_CHECK': {
+        enabled: true
+      },
+      'IOT_ROLE_ALIAS_ALLOWS_ACCESS_TO_UNUSED_SERVICES_CHECK': {
+        enabled: true
+      },
+      'DEVICE_CERTIFICATE_SHARED_CHECK': {
+        enabled: true
+      },
+      'REVOKED_DEVICE_CERTIFICATE_STILL_ACTIVE_CHECK': {
+        enabled: true
+      },
+      'DEVICE_CERTIFICATE_EXPIRING_CHECK': {
+        enabled: true
+      },
+      'REVOKED_CA_CERTIFICATE_STILL_ACTIVE_CHECK': {
+        enabled: true
+      },
+      'LOGGING_DISABLED_CHECK': {
+        enabled: true
+      },
+      'UNAUTHENTICATED_COGNITO_ROLE_OVERLY_PERMISSIVE_CHECK': {
+        enabled: true
+      },
+      'CA_CERTIFICATE_EXPIRING_CHECK': {
+        enabled: true
+      },
+    },
+    roleArn: AuditRoleArn
   };
 
-  iot.startOnDemandAuditTask(params, function(err, data) {
-    if (err) console.log(err, err.stack); 
-    else {
-        responseStatus = "SUCCESS";
-        responseData["TaskID"] = data.taskId
-        console.log('Audit started successfully with taskId: ', data.tastId)
-        sendResponse(event, context, responseStatus, responseData);
-    }          
+
+  iot.updateAccountAuditConfiguration(paramsEnableAudit, function(err, data) {
+    if (err) 
+        console.log(err, err.stack); // an error occurred
+    else     
+        //start an on demand Audit
+        var paramsStartAudit = {
+          targetCheckNames: [
+              'AUTHENTICATED_COGNITO_ROLE_OVERLY_PERMISSIVE_CHECK',
+              'CA_CERTIFICATE_KEY_QUALITY_CHECK',
+              'IOT_POLICY_OVERLY_PERMISSIVE_CHECK',
+              'DEVICE_CERTIFICATE_KEY_QUALITY_CHECK',
+              'CONFLICTING_CLIENT_IDS_CHECK',
+              'IOT_ROLE_ALIAS_OVERLY_PERMISSIVE_CHECK',
+              'IOT_ROLE_ALIAS_ALLOWS_ACCESS_TO_UNUSED_SERVICES_CHECK',
+              'DEVICE_CERTIFICATE_SHARED_CHECK',
+              'REVOKED_DEVICE_CERTIFICATE_STILL_ACTIVE_CHECK',
+              'DEVICE_CERTIFICATE_EXPIRING_CHECK',
+              'REVOKED_CA_CERTIFICATE_STILL_ACTIVE_CHECK',
+              'LOGGING_DISABLED_CHECK',
+              'UNAUTHENTICATED_COGNITO_ROLE_OVERLY_PERMISSIVE_CHECK',
+              'CA_CERTIFICATE_EXPIRING_CHECK'
+          ]
+        };
+
+        iot.startOnDemandAuditTask(paramsStartAudit, function(err, data) {
+          if (err) console.log(err, err.stack); 
+          else {
+              responseStatus = "SUCCESS";
+              responseData["TaskID"] = data.taskId
+              console.log('Audit started successfully with taskId: ', data.tastId)
+              sendResponse(event, context, responseStatus, responseData);
+          }          
+        });
   });
 
 }

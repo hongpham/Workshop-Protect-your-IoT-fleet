@@ -21,7 +21,7 @@ Resources:
       Role: !GetAtt CreateCertExecutionRole.Arn
       Runtime: nodejs12.x
       Code:
-        S3Bucket: my-ohio-bucket-phamh
+        S3Bucket: example-bucket
         S3Key: registerDevice.zip 
 
   CreateCertExecutionRole:
@@ -54,10 +54,21 @@ Resources:
                 - 'kms:Decrypt'
                 - 'iot:*'
                 Resource: "*"
-  StartIoTAudit:
-    Type: 'Custom::IoTAudit'
+
+  IoTAuditRole:
+    Type: AWS::IAM::Role
     Properties:
-      ServiceToken: !GetAtt TriggerAudit.Arn   
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - 
+            Effect: Allow
+            Principal:
+              Service: iot.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSIoTDeviceDefenderAudit
   
   StartIoTAudit:
     Type: 'Custom::IoTAudit'
@@ -73,10 +84,11 @@ Resources:
       Environment:
         Variables:
           CFNstackname: !Ref AWS::StackName
+          AuditRoleArn: !GetAtt IoTAuditRole.Arn
       Role: !GetAtt TriggerAuditExecutionRole.Arn
       Runtime: nodejs12.x
       Code:
-        S3Bucket: my-ohio-bucket-phamh
+        S3Bucket: example-bucket
         S3Key: startaudit.zip 
 
   TriggerAuditExecutionRole:
@@ -162,7 +174,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: my-ohio-bucket-phamh
+        S3Bucket: example-bucket
         S3Key: device.zip 
       Runtime: python3.7
       FunctionName: Device01
@@ -180,7 +192,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: my-ohio-bucket-phamh
+        S3Bucket: example-bucket
         S3Key: device.zip 
       Runtime: python3.7
       FunctionName: Device02
