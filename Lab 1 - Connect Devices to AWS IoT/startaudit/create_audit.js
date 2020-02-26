@@ -3,7 +3,10 @@ var iot = new AWS.Iot();
 
 exports.handler = function(event, context) {
   //Need to retrieve AWS IoT Device Defender role ARN as variable
+  console.log(event);
+
   const AuditRoleArn = process.env.AuditRoleArn;
+  console.log(AuditRoleArn);
 
   if (event.RequestType == "Delete") {
     

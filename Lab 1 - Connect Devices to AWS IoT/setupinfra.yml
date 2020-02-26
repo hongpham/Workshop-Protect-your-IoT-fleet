@@ -85,6 +85,7 @@ Resources:
         Variables:
           CFNstackname: !Ref AWS::StackName
           AuditRoleArn: !GetAtt IoTAuditRole.Arn
+
       Role: !GetAtt TriggerAuditExecutionRole.Arn
       Runtime: nodejs12.x
       Code:
@@ -118,6 +119,7 @@ Resources:
                 - 'logs:PutLogEvents'
                 - 's3:GetObject'
                 - 'iot:*'
+                - 'iam:PassRole'
                 Resource: "*"
 
   Thing01:
