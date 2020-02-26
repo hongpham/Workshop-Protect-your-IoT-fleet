@@ -1,4 +1,4 @@
-0. Create SNS topic and IAM role for notification
+0. [Create SNS topic and IAM role for notification](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Lab%203%20-%20Detect%20and%20react%20to%20compromised%20devices#0-create-sns-topic-for-notification)
 1. [Define unusual behaviors of your devices](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Lab%203%20-%20Detect%20and%20react%20to%20compromised%20devices#1-define-unusual-behaviors-of-your-devices)
 2. [Respond to a violation](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Lab%203%20-%20Detect%20and%20react%20to%20compromised%20devices#2-respond-to-a-violation)
 3. [Simulate a compromised device](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Lab%203%20-%20Detect%20and%20react%20to%20compromised%20devices#3-simulate-a-compromised-device)
@@ -30,7 +30,7 @@ You realizes that you can use 2 device metrics to detect if the devices are acti
 
 From the IoT management console, click **Defend**,**Detect**, **Security Profiles**, **Create your first security profile**. Name this security profile as **LargeMessageSize**.
 
-Create a behavior named **messageSize**. We ask Device Defender to observe **Message size** metric and alert us if the size of the message going out of the device is greater than 30000 bytes - which is larger than the regular message size that SensorDevice01 and SensorDevice02 usually send to AWS IoT in 5 minutes. We ask Device Defender to aggregate metric every 5 minutes as one datapoint. And if a device is in violation of this behavior for two datapoints, then the alarm will be trigger. For **Datapoints to Clear**, we choose to clear the alarm if the offending device is no longer in violation of this behavior for 2 conservative datapoints.
+Create a behavior named **messageSize**. We ask Device Defender to observe **Message size** metric and alert us if the size of the message going out of the device is greater than 35000 bytes - which is larger than the regular message size that SensorDevice01 and SensorDevice02 usually send to AWS IoT. And if a device is in violation of this behavior for two datapoints, then the alarm will be trigger. For **Datapoints to Clear**, we choose to clear the alarm if the offending device is no longer in violation of this behavior for 2 conservative datapoints.
 
 <img src="../images/behaviors.png"/>
 
