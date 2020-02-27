@@ -1,8 +1,16 @@
 # Module 1: Environment build
 
-<details><summary>Cool Dropdown</summary><br>
-blah blah blah blah you found me!
+Depending on how you're doing this workshop, expand one of the following dropdowns to start.
+
+<details><summary>Click here if you're at an AWS event where the Event Engine is being used</summary><br>
+If you are at an AWS Sponsored event, skip down to the [Validate environment setup]() step.
 </details>
+
+<details><summary>Click here if you are using your own AWS account (whether you are at an AWS event, a separate event or online)</summary><br>
+You will need to create a CloudFormation stack to provision nessesary AWS resources for this lab:
+  1. 
+</details>
+
 
 ## What will be provided:
 In this lab, AWS resources are already created for you in advance:
@@ -15,7 +23,7 @@ In this lab, AWS resources are already created for you in advance:
 
 <img src="../images/IoTSecurityWorkshopInfra.jpg" width="350" height="431"/>
 
-## AWS resources walk-through
+## Validate environment setup
 
 ### 1. IoT devices
 
