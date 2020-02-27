@@ -19,7 +19,7 @@ You have identify multiple bad device configurations. You would like to Audit de
 
 ### 1.1 Check audit settings
 
-To get start, you need to identify what type of check you would like to run against your devices. Conveniently, AWS IoT Device Defender has built in audit checks that you can quickly enable. Let's create an audit with these checks.
+To get start, you need to identify what type of check you would like to run against your devices. AWS IoT Device Defender has built in audit checks that you can quickly enable. Let's create an audit with these checks.
 
 First, you need to configure  Device Defender Audit settings in your AWS accout. Settings include SNS alerts configuration and which Audit checks are enabled or disabled.  To view settings and enable/disable Audit checks, click **Defend**, **Setting**
 
