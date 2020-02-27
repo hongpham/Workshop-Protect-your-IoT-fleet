@@ -1,4 +1,8 @@
-# Lab 1 - Provision Infrastructure
+# Module 1: Environment build
+
+<details><summary>Cool Dropdown</summary><br>
+blah blah blah blah you found me!
+</details>
 
 ## What will be provided:
 In this lab, AWS resources are already created for you in advance:
