@@ -3,7 +3,7 @@
 Depending on how you're doing this workshop, expand one of the following dropdowns to start.
 
 <details><summary>Click here if you're at an AWS event where the Event Engine is being used</summary><br>
-If you are at an AWS Sponsored event, skip down to the [Validate environment setup](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Module%201:%20Environment%20build#validate-environment-setup) step.
+If you are at an AWS Sponsored event, skip down to the [Validate environment setup](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Module%201:%20Environment%20build#validate-environment-setup)
 </details>
 
 <details><summary>Click here if you are using your own AWS account (whether you are at an AWS event, a separate event or online)</summary><br>
