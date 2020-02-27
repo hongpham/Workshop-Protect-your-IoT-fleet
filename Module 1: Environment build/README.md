@@ -9,8 +9,35 @@ Validate environment setup</a>
 </details>
 
 <details><summary>Click here if you are using your own AWS account (whether you are at an AWS event, a separate event or online)</summary><br>
-You will need to create a CloudFormation stack to provision nessesary AWS resources for this lab:
-  1. 
+You will need to provision nessesary AWS resources for this lab following these steps:
+  
+  1.  From AWS Management console, choose a region that works best for you from the top right corner of the console. We recommend Ohio or Oregon if you're in America. 
+  2. Create a S3 bucket (or use an existing bucket) to store source code. In this workshop, we use CloudFormation to create multiple Lambda functions. We need to provide the S3Bucket name so that CloudFormation can pull the source code to create these Lambda functions. We recommend to use non-production S3 bucket.
+  3. Download CloudFormation template   <a href="https://github.com/hongpham/IoT-Security-Workshop/blob/master/Module%201:%20Environment%20build/setupinfra.yml">
+setupinfra.yml</a> to your local laptop.
+  4. Download these source code and upload it to S3 bucket
+  
+     a. <a href="https://github.com/hongpham/IoT-Security-Workshop/blob/master/Module%201:%20Environment%20build/registerDevice/registerDevice.zip">
+registerDevice.zip</a> --> this Lambda function creates X.509 certificate a IAM policies, store it in AWS Secrets Manager.
+
+      b. <a href="https://github.com/hongpham/IoT-Security-Workshop/blob/master/Module%201:%20Environment%20build/startaudit/startaudit.zip">
+staraudit.zip</a>r --> this Lambda function starts an on-demand Device Defender Audit 
+
+      c. <a href="https://github.com/hongpham/IoT-Security-Workshop/blob/master/Module%201:%20Environment%20build/device/device.zip">
+device.zip</a>r --> this Lambda function acts as IoT Device.
+
+  5. Create a new CloudFormation stack:
+  
+      a. From CloudFormation console, click **Create stacks, With new resources (standard)**
+      
+      b. Choose **Upload a new template**, and upload the CloudFormation template that you download to your local laptop earlier in step 3. Click **Next**
+      
+      c. Give a name for your CloudFormation stack. Then in Parameter, provide the name of the S3 bucket that you create in step 2. Click **Next**
+      
+      d. Leave everything by default in **Configure stack options**. Click **Next**
+      
+      e. Scroll down to **The following resource(s) require capabilities: [AWS::IAM::ManagedPolicy]**. Check the box next to **I acknowledge that AWS CloudFormation might create IAM resources.**. Click **Create stack**. The stack  will take 5-10 minutes to complete.
+      
 </details>
 
 
