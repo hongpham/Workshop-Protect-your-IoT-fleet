@@ -3,12 +3,11 @@
 Depending on how you're doing this workshop, expand one of the following dropdowns to start.
 
 <details><summary>Click here if you're at an AWS event where the Event Engine is being used</summary><br>
-  
-  1. If you are at an AWS Sponsored event, you will be provided with either an AWS account or a hash key for Event Engine. Please raise your hand to let Workshop Facilitators know if you need help
+  1. If you are at an AWS Sponsored event, you will be provided with either an AWS account or a hash key for Event Engine. Please raise your hand if you need help.
   
   2. To get start, go to the  <a href="https://github.com/hongpham/IoT-Security-Workshop/tree/master/Module%201:%20Environment%20build#validate-environment-setup">
 Validate environment setup</a>
-  
+
 </details>
 
 <details><summary>Click here if you are using your own AWS account (whether you are at an AWS event, a separate event or online)</summary><br>
