@@ -12,7 +12,7 @@ Depending on how you're doing this workshop, expand one of the following dropdow
 <details><summary>Click here if you are using your own AWS account (whether you are at an AWS event, a separate event or online)</summary><br>
 You will need to provision nessesary AWS resources for this lab following these steps:
   
-  1.  From AWS Management console, choose a region that works best for you from the top right corner of the console. We recommend Ohio or Oregon if you're in America. 
+  1.  From AWS Management console, choose a region that works best for you from the top right corner of the console. For example recommend Ohio or Oregon if you're in North America. 
   2. Create a S3 bucket (or use an existing bucket) to store source code. In this workshop, we use CloudFormation to create multiple Lambda functions. We need to provide the S3Bucket name so that CloudFormation can pull the source code to create these Lambda functions. We recommend to use non-production S3 bucket.
   3. Download CloudFormation template   <a href="https://github.com/hongpham/IoT-Security-Workshop/blob/master/Module%201:%20Environment%20build/setupinfra.yml">
 setupinfra.yml</a> to your local laptop.
