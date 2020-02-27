@@ -3,13 +3,14 @@
 Depending on how you're doing this workshop, expand one of the following dropdowns to start.
 
 <details><summary>Click here if you're at an AWS event where the Event Engine is being used</summary><br>
-  1. If you are at an AWS Sponsored event, you will be provided with either an AWS account or a hash key for Event Engine. Please raise your hand if you need help.
+  1. If you are at an AWS Sponsored event, you will be provided with either an AWS account or a hash key for Event Engine.
   
   2. To get start, go to the  <a href="https://github.com/hongpham/IoT-Security-Workshop/tree/master/Module%201:%20Environment%20build#validate-environment-setup"> Validate environment setup</a>
 
 </details>
 
 <details><summary>Click here if you are using your own AWS account (whether you are at an AWS event, a separate event or online)</summary><br>
+  
 You will need to provision nessesary AWS resources for this lab following these steps:
   
   1.  From AWS Management console, choose a region that works best for you from the top right corner of the console. For example recommend Ohio or Oregon if you're in North America. 
@@ -33,8 +34,10 @@ device.zip</a>r --> this Lambda function acts as IoT Device.
       
       b. Choose **Upload a new template**, and upload the CloudFormation template that you download to your local laptop earlier in step 3. Click **Next**
       
-      c. Give a name for your CloudFormation stack. Then in Parameter, provide the name of the S3 bucket that you create in step 2. Click **Next**
+      c. Give a name for your CloudFormation stack. Then in Parameter, provide the name of the S3 bucket that you create in step 2. Leave everything as default for other parameter. Click **Next**
       
+        <img src="../images/s3parameter.png"/>
+
       d. Leave everything by default in **Configure stack options**. Click **Next**
       
       e. Scroll down to **The following resource(s) require capabilities: [AWS::IAM::ManagedPolicy]**. Check the box next to **I acknowledge that AWS CloudFormation might create IAM resources.**. Click **Create stack**. The stack  will take 5-10 minutes to complete.
