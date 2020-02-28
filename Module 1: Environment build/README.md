@@ -76,7 +76,7 @@ You will see a X.509 certificate is associated with this thing. When the device 
 
 Now let's click on the certificate to get more details. You can see the ARN (Amazon Resource Name) of the certificate, as well as Create Date, Effective Date (when the cert is activated), and Expiration Date.
 
-On the left side, click on Policies to see permission that this any Thing attached to this certificate can perform. You will see a Policy named DevicePolicy* attached to this cert. This is [AWS IoT policies](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html). It allows you to control access to the AWS IoT data plane. They follow the same conventions as IAM policies. Click on this Policy and you will see the policy document specifies priviledges of the request that your IoT Devices send to AWS IoT.
+On the left side, click on Policies to see permission that this any Thing attached to this certificate can perform. You will see a Policy named DevicePolicy-[your-stack-name] attached to this cert. This is [AWS IoT policies](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html). It allows you to control access to the AWS IoT data plane. They follow the same conventions as IAM policies. Click on this Policy and you will see the policy document specifies priviledges of the request that your IoT Devices send to AWS IoT.
 
 <img src="../images/DevicePolicy.png" width="600" height="439"/>
 
