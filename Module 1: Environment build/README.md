@@ -18,14 +18,11 @@ You will need to provision nessesary AWS resources for this lab following these 
 setupinfra.yml</a> to your local laptop.
   4. Download these source code and upload it to S3 bucket
   
-     a. <a href="https://github.com/hongpham/IoT-Security-Workshop/blob/master/Module%201:%20Environment%20build/registerDevice/registerDevice.zip">
-registerDevice.zip</a> --> this Lambda function creates X.509 certificate a IAM policies, store it in AWS Secrets Manager.
+     a. [registerDevice.zip](registerDevice/registerDevice.zip)--> this Lambda function creates X.509 certificate a IAM policies, store it in AWS Secrets Manager.
 
-      b. <a href="https://github.com/hongpham/IoT-Security-Workshop/blob/master/Module%201:%20Environment%20build/startaudit/startaudit.zip">
-staraudit.zip</a>r --> this Lambda function starts an on-demand Device Defender Audit 
+      b. [staraudit.zip](startaudit/startaudit.zip)--> this Lambda function starts an on-demand Device Defender Audit 
 
-      c. <a href="https://github.com/hongpham/IoT-Security-Workshop/blob/master/Module%201:%20Environment%20build/device/device.zip">
-device.zip</a>r --> this Lambda function acts as IoT Device.
+      c. [device.zip](device/device.zip")--> this Lambda function acts as IoT Device.
 
   5. Create a new CloudFormation stack:
   
@@ -95,4 +92,4 @@ Devices publish messages to AWS IoT topic that you create. You can use the AWS I
 
 <img src="../images/mqttclient.png"/>
 
-Seeing the temperature records? Yay! Your devices are connected and sending data to AWS IoT. That's exciting. Let's move to Lab 2 to find out how you can audit your devices configuration. 
+Seeing the temperature records? Yay! Your devices are connected and sending data to AWS IoT. That's exciting. Let's move to [Module 2: Audit your IoT Fleet](Module 2: Audit your IoT Fleet/README.md)to find out how you can audit your devices configuration. 
