@@ -1,28 +1,10 @@
-0. [Create SNS topic and IAM role for notification](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Lab%203%20-%20Detect%20and%20react%20to%20compromised%20devices#0-create-sns-topic-for-notification)
-1. [Define unusual behaviors of your devices](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Lab%203%20-%20Detect%20and%20react%20to%20compromised%20devices#1-define-unusual-behaviors-of-your-devices)
+1. [Define unusual behaviors of your devices](#1.-define-unusual-behaviors-of-your-devices)
 2. [Respond to a violation](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Lab%203%20-%20Detect%20and%20react%20to%20compromised%20devices#2-respond-to-a-violation)
 3. [Simulate a compromised device](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Lab%203%20-%20Detect%20and%20react%20to%20compromised%20devices#3-simulate-a-compromised-device)
 
 After you have identify potential external threats to your IoT devices, it's crucial to implement a solution to quickly detec if the devices are compromised, and take action to stop the attack. In this lab, your task is to detect if the device participate in a DDoS attack and becomes the source of the actack.
 
 To do so, you will need to define when the devices' behaviors will be considered abnormal and need a human attention to check if it's actually compromised. So let's use AWS IoT Device Defender Detect for that.
-
-## 0. Create SNS topic for notification
-To receive notification and trigger automation when Device Defender detects a compromised devices, you will need to create a SNS topic in advance. You also will need to give Device Defender permission to send messages to SNS topic.
-
-From SNS management console, click **Topics, Create Topic**. Give the topic a name. In this Lab, let's name it **DeviceViolation**. Then click **Create topic**
-
-<img src="../images/SNStopic.png"/>
-
-Now let's subscribe your email to this new SNS topic. Click on the new topic **DeviceViolation** you just created, click **Create subscription**. Choose **Email** as protocal, and provide your email address. Click **Create subscription**
-
-<img src="../images/snssub.png"/>
-
-Great works so far! Now let's give Device Defender permission to send message to this topic. To do so, let's create a new IAM role with appropriate attached policies. From IAM management console, click on **Roles, Create role**. Choose **AWS service**, choose **IoT, IoT - Device Defender Mitigation Actions**
-
-<img src="../images/iotroleperm.png"/>
-
-After that, click **Next: Permission, Next: Tags, Next: Review**. Provide a name for this role, and click **Create role**
 
 ## 1. Define unusual behaviors of your devices
 
