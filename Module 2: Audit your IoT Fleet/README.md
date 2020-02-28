@@ -95,7 +95,7 @@ To view the status of mitigation actions task, click on **Defend**, **Action res
 
 <img src="../images/inactivecert.png"/>
 
-> Note: If you will work on next lab [Module 3: Detect and response to a compromised device](Module_3:_Detect_and_response_to_a_compromised_device), then you will need to re-activate this certificate.
+> Note: If you will work on next module [Module 3: Detect and response to a compromised device](../Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device), then you will need to re-activate this certificate.
 
-Congratulations! You have mitigated a non-compliant findings in your device configuration. Let's move to the next module [Module 3: Detect and response to a compromised device](Module_3:_Detect_and_response_to_a_compromised_device) where you will build automation to detect if a device is compromised.
+Congratulations! You have mitigated a non-compliant findings in your device configuration. Let's move to the next module [Module 3: Detect and response to a compromised device](../Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device) where you will build automation to detect if a device is compromised.
 
