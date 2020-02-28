@@ -1,6 +1,6 @@
 1. [Define unusual behaviors of your devices](#1-define-unusual-behaviors-of-your-devices)
 2. [Respond to a violation](#2-respond-to-a-violation)
-3. [Simulate a compromised device](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device#3-simulate-a-compromised-device)
+3. [Simulate a compromised device](#3-simulate-a-compromised-device)
 
 After you have identify potential external threats to your IoT devices, it's crucial to implement a solution to quickly detec if the devices are compromised, and take action to stop the attack. In this lab, your task is to detect if the device participate in a DDoS attack and becomes the source of the actack.
 
