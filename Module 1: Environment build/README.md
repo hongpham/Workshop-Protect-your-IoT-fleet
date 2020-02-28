@@ -92,4 +92,4 @@ Devices publish messages to AWS IoT topic that you create. You can use the AWS I
 
 <img src="../images/mqttclient.png"/>
 
-Seeing the temperature records? Yay! Your devices are connected and sending data to AWS IoT. That's exciting. Let's move to [Module 2: Audit your IoT Fleet](../Module 02: Audit your IoT Fleet) to find out how you can audit your devices configuration. 
+Seeing the temperature records? Yay! Your devices are connected and sending data to AWS IoT. That's exciting. Let's move to [Module 2: Audit your IoT Fleet](../Module%202:%20Audit%20your%20IoT%20Fleet) to find out how you can audit your devices configuration. 
