@@ -60,7 +60,7 @@ In this workshop, we will use 2 Lambda functions acting as 2 seperate IoT Device
 
 <img src="../images/Lambdadevice.png"/>
 
-First, the function will retrieve [AWS IoT Endpoint](https://docs.aws.amazon.com/iot/latest/developerguide/iot-custom-endpoints.html) to send telemetry data to. To connect with AWS IoT Endpoint, each IoT device needs to have  a X.509 device certificate, private key, and root CA certificate installed. You can register your root CA with AWS IoT. In this workshop, we will use the AWS IoT Root CA. Then Lambda function checks if these files are already available in /tmp. If not, it will retrieve these files from AWS Secrets Manager. Finally, it generates random temperature telemetry data and sends it to AWS IoT Endpoint
+First, the function will retrieve [AWS IoT Endpoint](https://docs.aws.amazon.com/iot/latest/developerguide/iot-custom-endpoints.html) to send telemetry data to. To connect with AWS IoT Endpoint, each IoT device needs to have  a X.509 device certificate, private key, and root CA certificate installed. You can register your root CA with AWS IoT. In this workshop, we will use the AWS IoT Root CA. Then Lambda function checks if these files are already available in /tmp ([local storage directory for Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html#function-code) . If not, it will retrieve these files from AWS Secrets Manager. Finally, it generates random temperature telemetry data and sends it to AWS IoT Endpoint
 
 ### 2. AWS IoT Things
 
