@@ -22,7 +22,7 @@ setupinfra.yml</a> to your local laptop.
 
       b. [staraudit.zip](startaudit/startaudit.zip)--> this Lambda function starts an on-demand Device Defender Audit 
 
-      c. [device.zip](device/device.zip")--> this Lambda function acts as IoT Device.
+      c. [device.zip](device/device.zip)--> this Lambda function acts as IoT Device.
 
   5. Create a new CloudFormation stack:
   
@@ -92,4 +92,4 @@ Devices publish messages to AWS IoT topic that you create. You can use the AWS I
 
 <img src="../images/mqttclient.png"/>
 
-Seeing the temperature records? Yay! Your devices are connected and sending data to AWS IoT. That's exciting. Let's move to [Module 2: Audit your IoT Fleet](Module 2: Audit your IoT Fleet/README.md)to find out how you can audit your devices configuration. 
+Seeing the temperature records? Yay! Your devices are connected and sending data to AWS IoT. That's exciting. Let's move to [Module 2: Audit your IoT Fleet](../Module 2: Audit your IoT Fleet/README.md)to find out how you can audit your devices configuration. 
