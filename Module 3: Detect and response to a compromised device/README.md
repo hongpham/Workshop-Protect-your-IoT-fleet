@@ -22,7 +22,6 @@ Next step is to select a SNS topic for alerts when Device Defender alerts a viol
 
 <img src="../images/snsdetect.png"/>
 
-> You will need to create IAM role in advance. Make sure that the IAM role will need to grant permission for Device Defender to publish to this topic. Attach **AWSIoTDeviceDefenderPublishFindingsToSNSMitigationAction** managed policy to this role should be efficient.
 > Don't forget to subscribe your email to this new SNS topic to receive an email when Device Defender alerts a violation.
 
 Now you need to attach this security profile to a target. A target can be a thing, or a thing group. For simplicity, we will attach this security profile with **All things** for now.
@@ -117,6 +116,5 @@ Click on **Save** on the top right corner to save this change. After this change
 Now we wait for a few minutes until you receive email from SNS. After that you can go to **Manage, Thing Groups, IsolatedDevices, Things** to see that **SensorDevice02** should be added to this group. Now let's check if this device has stopped sending telemetry data by going to **Test, Subscribe to a topic**, enter the topic **temperature-device-02**. 
 
 If your automation in step 2 works. You shouldn't see any message there because we have associated **DenyAll** policy to Thing Group **IsolatedDevices**
-
 
 Congratulations! You have succesfully completed this Lab. 
