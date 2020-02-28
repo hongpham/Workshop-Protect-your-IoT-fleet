@@ -2,17 +2,17 @@ Before deploying IoT Devices into Production, you need to make sure approriate d
 
 You have identify multiple bad device configurations. You would like to Audit device configurations for security vulnerabilities and get notified if any of the devices don't pass all the checks. In this Lab, we will walk through steps to identify device's bad configuration, as well as to create mitigation actions using AWS IoT Device Defender. Here is what we will do:
 
-1. [Audit your IoT Fleet](https://github.com/hongpham/IoT-Security-Workshop/blob/master/Lab%202%20-%20Audit%20your%20IoT%20Fleet/README.md#1-audit-your-iot-fleet)
+1. [Audit your IoT Fleet](#1-audit-your-iot-fleet)
 
-    1.1 [Check Audit settings](https://github.com/hongpham/IoT-Security-Workshop/blob/master/Lab%202%20-%20Audit%20your%20IoT%20Fleet/README.md#11-check-audit-settings)
+    1.1 [Check Audit settings](#11-check-audit-settings)
     
-    1.2 [Run an On-Demand Audit](https://github.com/hongpham/IoT-Security-Workshop/blob/master/Lab%202%20-%20Audit%20your%20IoT%20Fleet/README.md#12-run-an-on-demand-audit)
+    1.2 [Run an On-Demand Audit](#12-run-an-on-demand-audit)
 
-2. [Take actions to mitigate audit findings](https://github.com/hongpham/IoT-Security-Workshop/blob/master/Lab%202%20-%20Audit%20your%20IoT%20Fleet/README.md#2-take-actions-to-mitigate-audit-findings)
+2. [Take actions to mitigate audit findings](#2-take-actions-to-mitigate-audit-findings)
 
-    2.1 [Define mitigation actions](https://github.com/hongpham/IoT-Security-Workshop/blob/master/Lab%202%20-%20Audit%20your%20IoT%20Fleet/README.md#21-define-mitigation-actions)
+    2.1 [Define mitigation actions](#21-define-mitigation-actions)
     
-    2.2 [Apply mitigation actions to audit findings](https://github.com/hongpham/IoT-Security-Workshop/blob/master/Lab%202%20-%20Audit%20your%20IoT%20Fleet/README.md#22-apply-mitigation-actions-to-audit-findings)
+    2.2 [Apply mitigation actions to audit findings](#22-apply-mitigation-actions-to-audit-findings)
 
 
 ## 1. Audit your IoT Fleet
@@ -24,23 +24,6 @@ To get start, you need to identify what type of check you would like to run agai
 First, you need to configure  Device Defender Audit settings in your AWS accout. Settings include SNS alerts configuration and which Audit checks are enabled or disabled.  To view settings and enable/disable Audit checks, click **Defend**, **Setting**
 
 <img src="../images/enableaudit.png"/>
-
-If you want to use CLI instead of using management console, run describe-account-audit-configuration command from your terminal to check current audit settings.
-
-```
-$ aws iot  describe-account-audit-configuration
-```
-
-The return output is a json object showing you list of available audit checks, and if these checks are enabled or disabled. 
-
-<img src="../images/auditsetting.png"/>
-
-To enable or disable an audit check, run update-account-audit-configuration command in your terminal:
-
-```
-$aws iot update-account-audit-configuration \
-    --audit-check-configurations "{\"AUTHENTICATED_COGNITO_ROLE_OVERLY_PERMISSIVE_CHECK\":{\"enabled\":true}}"
-```
 
 After all audit checks are already enabled, we can create an on-demand audit.
 
@@ -112,7 +95,7 @@ To view the status of mitigation actions task, click on **Defend**, **Action res
 
 <img src="../images/inactivecert.png"/>
 
-> Note: If you will work on next lab [Lab 3 - Detect and react to compromised devices](https://github.com/hongpham/IoT-Security-Workshop/tree/master/Lab%203%20-%20Detect%20and%20react%20to%20compromised%20devices), then you will need to re-activate this certificate.
+> Note: If you will work on next lab [Module 3: Detect and response to a compromised device](Module_3:_Detect_and_response_to_a_compromised_device), then you will need to re-activate this certificate.
 
-Congratulations! You have mitigated a non-compliant findings in your device configuration. Let's move to the next Lab where you will build automation to detect if a device is compromised.
+Congratulations! You have mitigated a non-compliant findings in your device configuration. Let's move to the next module [Module 3: Detect and response to a compromised device](Module_3:_Detect_and_response_to_a_compromised_device) where you will build automation to detect if a device is compromised.
 
