@@ -2,8 +2,54 @@ AWSTemplateFormatVersion: 2010-09-09
 
 Description: Provision an IoT Device and connect to AWS IoT
 
-Resources:
+Metadata: 
+  AWS::CloudFormation::Interface: 
+    ParameterGroups: 
+      - 
+        Label:
+          default: "S3 bucket"
+        Parameters:
+          - MyS3bucket
+       - 
+        Label:
+          default: "Communication"
+        Parameters:
+          - MyEmail
+      - 
+        Label:
+          default: "IoT resources"
+        Parameters:
+          - ThingName01
+          - ThingName02
+          - IoTTopic01
+          - IoTTopic02
 
+Parameters:
+  MyS3bucket: 
+    Type: String 
+    Description: name of S3 bucket that store deployment packages for Lambda function
+  MyEmail: 
+    Type: String 
+    Default: my-email-address
+    Description: Email address to receive IoT Device Defender alerts
+  ThingName01:
+    Type: String
+    Default: SensorDevice01
+    Description: IoT Thing name for Device 01
+  ThingName02:
+    Type: String
+    Default: SensorDevice02
+    Description: IoT Thing name for Device 02
+  IoTTopic01:
+    Type: String
+    Default: temperature-device-01
+    Description: IoT Topic receives data from Device 01
+  IoTTopic02:
+    Type: String
+    Default: temperature-device-02
+    Description: IoT Topic receives data from Device 02
+
+Resources:
   MyCertificate:
     Type: 'Custom::CreateCertificate'
     Properties:
@@ -21,7 +67,7 @@ Resources:
       Role: !GetAtt CreateCertExecutionRole.Arn
       Runtime: nodejs12.x
       Code:
-        S3Bucket: example-bucket
+        S3Bucket: !Ref MyS3bucket
         S3Key: registerDevice.zip 
 
   CreateCertExecutionRole:
@@ -89,7 +135,7 @@ Resources:
       Role: !GetAtt TriggerAuditExecutionRole.Arn
       Runtime: nodejs12.x
       Code:
-        S3Bucket: example-bucket
+        S3Bucket: !Ref MyS3bucket
         S3Key: startaudit.zip 
 
   TriggerAuditExecutionRole:
@@ -125,7 +171,7 @@ Resources:
   Thing01:
     Type: AWS::IoT::Thing
     Properties: 
-      ThingName: 'SensorDevice01'
+      ThingName: !Ref ThingName01
       AttributePayload: 
         Attributes: 
           SensorType: 'DHT22'
@@ -133,7 +179,7 @@ Resources:
   Thing02:
     Type: AWS::IoT::Thing
     Properties: 
-      ThingName: 'SensorDevice02'
+      ThingName: !Ref ThingName02
       AttributePayload: 
         Attributes: 
           SensorType: 'DHT22'
@@ -141,13 +187,13 @@ Resources:
   AttachCertToDevice01: 
     Type: AWS::IoT::ThingPrincipalAttachment
     Properties: 
-      ThingName: 'SensorDevice01'
+      ThingName: !Ref ThingName01
       Principal: !GetAtt MyCertificate.certARN
 
   AttachCertToDevice02: 
     Type: AWS::IoT::ThingPrincipalAttachment
     Properties: 
-      ThingName: 'SensorDevice02'
+      ThingName: !Ref ThingName02
       Principal: !GetAtt MyCertificate.certARN
 
   DeviceIAMPolicy:
@@ -169,24 +215,24 @@ Resources:
   AttachPolicyToCert: 
     Type: AWS::IoT::PolicyPrincipalAttachment
     Properties: 
-      PolicyName: !Sub 'DevicePolicy${AWS::StackName}' 
+      PolicyName: !Sub 'DevicePolicy-${AWS::StackName}' 
       Principal: !GetAtt MyCertificate.certARN
 
   Device01:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: example-bucket
+        S3Bucket: !Ref MyS3bucket
         S3Key: device.zip 
       Runtime: python3.7
-      FunctionName: Device01
+      FunctionName: !Ref ThingName01
       Environment:
         Variables:
           CFNstackname: !Ref AWS::StackName
-          topicname: 'temperature-device-01'
-          devicename: 'SensorDevice01'
+          topicname: !Ref IoTTopic01
+          devicename: !Ref ThingName01
       Timeout: 5
-      MemorySize: 512
+      MemorySize: 128
       Handler: device.lambda_handler
       Role: !GetAtt DeviceFunctionRole.Arn
 
@@ -194,17 +240,17 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: example-bucket
+        S3Bucket: !Ref MyS3bucket
         S3Key: device.zip 
       Runtime: python3.7
-      FunctionName: Device02
+      FunctionName: !Ref ThingName02
       Environment:
         Variables:
           CFNstackname: !Ref AWS::StackName
-          topicname: 'temperature-device-02'
-          devicename: 'SensorDevice02'
+          topicname: !Ref IoTTopic02
+          devicename: !Ref ThingName02
       Timeout: 5
-      MemorySize: 512
+      MemorySize: 128
       Handler: device.lambda_handler
       Role: !GetAtt DeviceFunctionRole.Arn
 
@@ -271,8 +317,6 @@ Resources:
       Timeout: 5
       MemorySize: 512
       Handler: index.lambda_handler
-      TracingConfig:
-        Mode: Active
       Role: !GetAtt IteratorExecutionRole.Arn
 
   IteratorExecutionRole:
@@ -414,6 +458,69 @@ Resources:
                 Action: states:StartExecution
                 Resource: !Ref StateMachine
 
+  SNSTopicForAlert:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !Ref MyEmail
+          Protocol: email
+      TopicName: "BadIoTDevices"
+
+  SNSTopicRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - 
+            Effect: Allow
+            Principal:
+              Service: iot.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSIoTDeviceDefenderPublishFindingsToSNSMitigationAction
+
+  MoveThingToThingGroup:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: |
+          import boto3
+          import json
+          import os
+          iot = boto3.client('iot')
+          def lambda_handler(event, context):
+            message = json.loads(event['Records'][0]['Sns']['Message']) 
+            print("JSON: " + json.dumps(message)) 
+            thing = message['thingName']
+            addThing = iot.add_thing_to_thing_group(
+                thingGroupName=os.environ['ThingGroupName'],
+                thingName=thing,
+            )
+      Runtime: python3.7
+      FunctionName: IsolateDevice
+      Timeout: 5
+      MemorySize: 128
+      Handler: index.lambda_handler
+      Role: !GetAtt MoveThingFunctionRole.Arn
+
+  MoveThingFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - 
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSIoTDeviceDefenderAddThingsToThingGroupMitigationAction
+
 Outputs:
   CertARN:
     Description: 'ARN of new Cert'
@@ -430,3 +537,6 @@ Outputs:
   Device02:
     Description: 'Name of Lambda function acting as Device 02'
     Value: !Ref Device02
+  SNSTopic:
+    Description: SNS topic receives IoT Device Defender alerts
+    Value: !Ref SNSTopicForAlert

