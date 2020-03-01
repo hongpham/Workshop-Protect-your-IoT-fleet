@@ -13,7 +13,7 @@ This module walks your through IoT environment setup. To work on this workshop, 
   
 You will need to provision nessesary AWS resources for this lab following these steps:
   
-  1.  From AWS Management console, choose a region that works best for you from the top right corner of the console. For example recommend Ohio or Oregon if you're in North America. 
+  1.  Log into AWS Account. From AWS Management console, choose a region that works best for you from the top right corner of the console. For example recommend Ohio or Oregon if you're in North America. 
   2. Create a S3 bucket (or use an existing bucket) to store source code. In this workshop, we use CloudFormation to create multiple Lambda functions. We need to provide the S3Bucket name so that CloudFormation can pull the source code to create these Lambda functions. We recommend to use non-production S3 bucket.
   3. Download CloudFormation template [setupinfra.yml](setupinfra.yml)
 setupinfra.yml</a> to your local laptop.
