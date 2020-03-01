@@ -43,7 +43,7 @@ You will need to provision nessesary AWS resources for this lab following these 
 
 ## Available resources:
 
-If you are at an AWS Event, you are provided an AWS Account with the resources below ready to use. Otherwise, you will need to use a provided CloudFormation template to create these resources in your AWS Account by following [Click here if you are using your own AWS account](/Module%201:%20Environment%20build/README.md)
+If you are at an AWS Event, you are provided an AWS Account with the resources below ready to use. Otherwise, you will need to use a provided CloudFormation template to create these resources in your AWS Account by following ["Click here if you are using your own AWS account"](/Module%201:%20Environment%20build/README.md) at the beginning of this module
 
 Here is the list of resources:
 
