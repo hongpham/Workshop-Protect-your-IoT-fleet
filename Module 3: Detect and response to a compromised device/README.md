@@ -34,13 +34,14 @@ Click **Next** to view summary of this Security Profile. When you confirm everyt
 
 In this example, we will create a simple automation that will move violated device to a thing group specifically for investigation. We attach a **Deny all** IAM policies to this thing group so that the devices do not have any permision to perform any iot actions.
 
-### 2.1 Create IoT Thing Group with deny all permission
+### 2.1 Create IoT Thing Group denies all IoT actions
 
 From IoT management console, click **Manage**, **Thing groups**, **Create**, **Create Thing Group** . Name your thing group and click **Create thing group**
 
 <img src="../images/CreateThingGroup.png"/>
 
-Now let's create a policy that deny all actions. Click on **Secure, Policies, Create**. Name your new policy. Under Add statements, type **iot:*** for **Action**, and **'\*'** for **Resource ARN**. Check **Deny** box, and click **Create**
+Now let's create a policy that deny all IoT actions. Click on **Secure, Policies, Create**. Name your new policy. Under Add statements, type **iot:*** for **Action**, and **'\*'** for **Resource ARN**. Check **Deny** box, and click **Create**. 
+> Note that this policy only denies all IoT actions. If your devices have addtional permission to work with others AWS Services (for example, permission to Put an item in DynamoDB table), this policy won't deny those permission.
 
 <img src="../images/DenyAll.png"/>
 
