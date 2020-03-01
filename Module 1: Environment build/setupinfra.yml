@@ -10,7 +10,7 @@ Metadata:
           default: "S3 bucket"
         Parameters:
           - MyS3bucket
-       - 
+      - 
         Label:
           default: "Communication"
         Parameters:
@@ -199,7 +199,7 @@ Resources:
   DeviceIAMPolicy:
     Type: AWS::IoT::Policy
     Properties:
-      PolicyName: !Sub 'DevicePolicy${AWS::StackName}'
+      PolicyName: !Sub 'DevicePolicy-${AWS::StackName}'
       PolicyDocument: {
         'Version': '2012-10-17',
         'Statement': [{
@@ -225,12 +225,12 @@ Resources:
         S3Bucket: !Ref MyS3bucket
         S3Key: device.zip 
       Runtime: python3.7
-      FunctionName: !Ref ThingName01
+      FunctionName: !Join ["-",[!Ref ThingName01,'function']]
       Environment:
         Variables:
           CFNstackname: !Ref AWS::StackName
-          topicname: !Ref IoTTopic01
-          devicename: !Ref ThingName01
+          topicname: !Ref IoTTopic01  
+          devicename: !Join ["-",[!Ref ThingName01,'function']]
       Timeout: 5
       MemorySize: 128
       Handler: device.lambda_handler
@@ -243,12 +243,12 @@ Resources:
         S3Bucket: !Ref MyS3bucket
         S3Key: device.zip 
       Runtime: python3.7
-      FunctionName: !Ref ThingName02
+      FunctionName: !Join ["-",[!Ref ThingName02,'function']]
       Environment:
         Variables:
           CFNstackname: !Ref AWS::StackName
           topicname: !Ref IoTTopic02
-          devicename: !Ref ThingName02
+          devicename: !Join ["-",[!Ref ThingName02,'function']]
       Timeout: 5
       MemorySize: 128
       Handler: device.lambda_handler
