@@ -6,31 +6,23 @@ This module walks your through IoT environment setup. To work on this workshop, 
 
 <details><summary>Click here if you're at an AWS event where the Event Engine is being used</summary><br>
   
-   1. If you are at an AWS Sponsored event, you will be provided with either an AWS account or a hash key for Event Engine.  To get start, go to [What will be provided](#what-will-be-provided)
+   1. If you are at an AWS Sponsored event, you will be provided with either an AWS account or a hash key for Event Engine. To get start, go to [What will be provided](#what-will-be-provided)
 </details>
 
 <details><summary>Click here if you are using your own AWS account (whether you are at an AWS event, a separate event or online)</summary><br>
   
 You will need to provision nessesary AWS resources for this lab following these steps:
   
-  1.  Log into AWS Account. From AWS Management console, choose a region that works best for you from the top right corner of the console. For example recommend Ohio or Oregon if you're in North America. 
-  2. Create a S3 bucket (or use an existing bucket) to store source code. In this workshop, we use CloudFormation to create multiple Lambda functions. We need to provide the S3Bucket name so that CloudFormation can pull the source code to create these Lambda functions. We recommend to use non-production S3 bucket.
-  3. Download CloudFormation template [setupinfra.yml](setupinfra.yml)
-setupinfra.yml</a> to your local laptop.
-  4. Download these source code and upload it to S3 bucket
-  
-     a. [registerDevice.zip](registerDevice/registerDevice.zip)--> this Lambda function creates X.509 certificate a IAM policies, store it in AWS Secrets Manager.
-
-      b. [staraudit.zip](startaudit/startaudit.zip)--> this Lambda function starts an on-demand Device Defender Audit 
-
-      c. [device.zip](device/device.zip)--> this Lambda function acts as IoT Device.
-
+  1. **Choose a region:** sign in to your AWS Account. From AWS Management console, choose a region that works best for you from the top right corner of the console. For example, Ohio or Oregon if you're in North America. 
+  2. **Create S3 bucket:** You will use CloudFormation to provision neccesary resources, including multiple Lambda functions. We need to use a S3 bucket to store deployment packages of these Lambda functions. If you don't have a S3 bucket, create a new one. Or you can using an existing non-prod bucket.
+  3. Download CloudFormation template [setupinfra.yml](setupinfra.yml) to your local laptop.
+  4. Download these Lambda deployment packages and upload it to S3 bucket. **Note:** these deployment packages need to be at the top level, and not in any directory of the S3 bucket
+      a. [registerDevice.zip](registerDevice/registerDevice.zip)--> this deployment package is for a Lambda function that creates X.509 certificate, its private key and store it in AWS Secrets Manager. This function also creates a IoT Core policy and attachs it to X.509 certificate.
+      b. [staraudit.zip](startaudit/startaudit.zip)--> this deployment package is for a Lambda function that start an on-demand Device Defender Audit 
+      c. [device.zip](device/device.zip)--> this deployment package is for a Lambda function acts as IoT Device. CloudFormation template will create 2 Lambda functions acting as 2 IoT devices.
   5. Create a new CloudFormation stack:
-  
       a. From CloudFormation console, click **Create stacks, With new resources (standard)**
-      
       b. Choose **Upload a new template**, and upload the CloudFormation template that you download to your local laptop earlier in step 3. Click **Next**
-      
       c. Give a name for your CloudFormation stack. Then in Parameter, provide the name of the S3 bucket that you create in step 2. Leave everything as default for other parameter. Click **Next**
       
         <img src="../images/s3parameter.png"/>
