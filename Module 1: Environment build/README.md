@@ -53,8 +53,11 @@ Here is the list of resources:
 - 1 X.509 Certificate and it's private key stored in AWS Secrets Manager
 - 1 AWS IoT Core Policy
 - 1 on-demand Audit
+- 1 SNS topic named **BadDevices**.  You will use this SNS topic to receive security realated alerts from AWS IoT Device Defender. 
 
-Here is the architecture diagram:
+>**IMPORTANT: You need to subscribe your email to receive notifications. If this is the first time you subscribe to a SNS topic, follow this [tutorial](https://docs.aws.amazon.com/sns/latest/dg/sns-tutorial-create-subscribe-endpoint-to-topic.html#create-subscribe-endpoint-to-topic-aws-console). After subscribe your email address, remember to CONFIRM YOUR SUBSCRIPTION 
+
+Below is the architecture diagram:
 
 <img src="../images/IoTSecurityWorkshopInfra.jpg" width="500" height="610"/>
 
