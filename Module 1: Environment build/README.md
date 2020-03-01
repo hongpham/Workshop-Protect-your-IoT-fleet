@@ -1,10 +1,12 @@
 # Module 1: Environment build
 
-Depending on how you're doing this workshop, expand one of the following dropdowns to start.
+Your first task as a Security Engineer is to examine how IoT devices are configured and connected to the cloud. 
+
+This module walks your through IoT environment setup. To work on this workshop, you need an AWS account, and IoT devices that already connect to AWS IoT. Depending on the scenerios below, expand one of the following dropdowns to start.
 
 <details><summary>Click here if you're at an AWS event where the Event Engine is being used</summary><br>
   
-   1. If you are at an AWS Sponsored event, you will be provided with either an AWS account or a hash key for Event Engine. To get start, go to [What will be provided](#what-will-be-provided)
+   1. If you are at an AWS Sponsored event, you will be provided with either an AWS account or a hash key for Event Engine.  To get start, go to [What will be provided](#what-will-be-provided)
 </details>
 
 <details><summary>Click here if you are using your own AWS account (whether you are at an AWS event, a separate event or online)</summary><br>
