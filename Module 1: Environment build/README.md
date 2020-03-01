@@ -13,7 +13,7 @@ This module walks your through IoT environment setup. To work on this workshop, 
   
 You will need to provision nessesary AWS resources for this lab following these steps:
   
-  1. **Choose a region:** sign in to your AWS Account. From AWS Management console, choose a region that works best for you from the top right corner of the console. For example, Ohio or Oregon if you're in North America. 
+  1. **Choose a region:** sign in to your AWS Account. From AWS console home, choose a region that works best for you from the top right corner of the console. For example, Ohio or Oregon if you're in North America. 
   2. **Create a S3 bucket:** You will use CloudFormation to provision neccesary resources, including multiple Lambda functions. We need to use a S3 bucket to store deployment packages of these Lambda functions. If you don't have a S3 bucket, create a new one. Or you can using an existing non-prod bucket.
   3. Download CloudFormation template [setupinfra.yml](setupinfra.yml) and save it locally on your laptop/computer.
   4. Download these Lambda deployment packages and upload it to S3 bucket. **Note:** these deployment packages need to be at the top level, and not in any directory of the S3 bucket
@@ -65,7 +65,7 @@ Let's move to the next step, where you can validate if the environment setup is 
 In this workshop, we will use 2 Lambda functions acting as 2 seperate IoT Devices: SensorDevice01 and SensorDevice02.  Each device will send temperature telemetry to AWS IoT every 10 seconds. 
 To understand how the devices send data, let's look at the code of Lambda functions (writen in Python):
 
-1. From the main AWS management console, click **Lambda**
+1. From the AWS console home, click **Lambda**
 2. Once you're in Lambda management console, click **Functions** on the left side. Then click on **SensorDevice01** (you can search function name if you have too many funtions.
 
 <img src="../images/Lambdadevice.png"/>
@@ -115,21 +115,33 @@ After checking these code on the devices, go to next **AWS IoT Things** to valid
 
 Two AWS IoT Things **SensorDevice01** and **SensorDevice02** are already created for you. These Things are associated with a X.509 certificate (you'll learn more why using one certificate for multiple devices isn't a best practices in [Module 2: Audit your IoT Fleet](/Module%202:%20Audit%20your%20IoT%20Fleet). When devices **SensorDevice01-funtion** and **SensorDevice02-function** connect to AWS IoT, it needs to present this X.509 certificate and it's private key to prove that it is the Things registered with AWS IoT. You'll need to validate **SensorDevice01** and **SensorDevice02** configuration to understand how AWS IoT associate these Thing with devices.
 
-<img src="../images/IoTThings.png" width="600" height="261"/>
+1. From AWS console home, click **IoT Core** to go to IoT management console.
+2. Click **Manage, Things** to view the list of IoT Things
 
-Click on SensorDevice01 to view more information about this Thing. Now let's look at how this Thing is authenticated to communicate with AWS IoT. On the left column, click on Security:
+<img src="../images/IoTThings.png" width="600" height="261"/>
+3. To get more information about a Thing, click on the Thing name (for example, **SensorDevice01**). 
+4. Each Thing need to use a X.509 certificate to authenticate with AWS IoT. To validate which certificate is associated to this **SensorDevice01**, go to **Security**. You should see a X.509 already associates with this Thing.
 
 <img src="../images/ThingSecurity.png" width="400" height="347"/>
 
-You will see a X.509 certificate is associated with this thing. When the device initiates connection to AWS IoT, it needs to present to AWS IoT this certificate, and the associated private key, as well as AWS IoT RootCA certificate as device's credentials. This certificate is currently valid and activated.
+5. This X.509 certificate need to be valid and activated. To check, click the certificate to get more information. You should see this certificate is issued by Amazon Web Services. It is currently **Active** with an Expiration date
 
-Now let's click on the certificate to get more details. You can see the ARN (Amazon Resource Name) of the certificate, as well as Create Date, Effective Date (when the cert is activated), and Expiration Date.
+<img src="../images/thingcert.png"/>
 
-On the left side, click on Policies to see permission that this any Thing attached to this certificate can perform. You will see a Policy named DevicePolicy-[your-stack-name] attached to this cert. This is [AWS IoT policies](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html). It allows you to control access to the AWS IoT data plane. They follow the same conventions as IAM policies. Click on this Policy and you will see the policy document specifies priviledges of the request that your IoT Devices send to AWS IoT.
+6. Remember that X.509 certificate is for Authentication. Now you need to validate device's Authorization - what actions this device is allowed to perform. AWS IoT use IoT Core Policy and IAM Policy. In this workshop, we will use IoT Core Policy to grant permission to devices. To understand how AWS use IAM Policy, take a look at [this IAM policies document](https://docs.aws.amazon.com/iot/latest/developerguide/iam-policies.html)
+
+7. AWS IoT Core policies determine which operations are allowed. Operations are divided into two groups: data plan and control plan. 
+    - Control plane API allows you to perform administrative tasks like creating or updating certificates, things, rules, and so on.
+    - Data plane API allows you send data to and receive data from AWS IoT Core.
+   If you would like to dive deeper into AWS IoT Core policies, follow [this AWS IoT Core Policies document](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) 
+
+8. To check which actions that your AWS IoT Thing can perform, you need to check the IoT Core Policies (or Policies in short) that associate with this Thing. Each Thing can have multiple Policies. A Policy can be attached to a X.509 certificate, or an AWS IoT Thing Group. In[Module 3: Detect and response to a compromised device](/Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device), you will create a Policy and attach it to a Thing Group. As for now you will check an existing Policy associates with X.509 certificate.
+
+9. Get back to Certificate Details (step 3,4, and 5 above). Click **Policies** to see a Policy named DevicePolicy-[your-stack-name] attached to this X-509 certificate. The naming convention DevicePolicy-[your-stack-name] is to make sure each Policy created automatically by CloudFormation will have a unique name. Click on this Policy and you will see the policy document specifies priviledges of the request that your IoT Devices send to AWS IoT.
 
 <img src="../images/DevicePolicy.png" width="600" height="439"/>
 
-What do you think about this policy? What would you do to only give appropriate permisison for the Thing associated to this certificate? To get some idea, you can look at [example AWS IoT policies here](https://docs.aws.amazon.com/iot/latest/developerguide/example-iot-policies.html)
+10. What do you think about this policy? What would you do to only give appropriate permisison for the Thing associated to this certificate? To get some idea, you can look at [example AWS IoT policies here](https://docs.aws.amazon.com/iot/latest/developerguide/example-iot-policies.html)
 
 ### 3. Check if your devices are sending data to AWS IoT
 
