@@ -17,13 +17,12 @@ You will need to provision nessesary AWS resources for this lab following these 
   2. **Create a S3 bucket:** You will use CloudFormation to provision neccesary resources, including multiple Lambda functions. We need to use a S3 bucket to store deployment packages of these Lambda functions. If you don't have a S3 bucket, create a new one. Or you can using an existing non-prod bucket.
   3. Download CloudFormation template [setupinfra.yml](setupinfra.yml) and save it locally on your laptop/computer.
   4. Download these Lambda deployment packages and upload it to S3 bucket. **Note:** these deployment packages need to be at the top level, and not in any directory of the S3 bucket
-  
+      
       a. [registerDevice.zip](registerDevice/registerDevice.zip)--> this deployment package is for a Lambda function that creates X.509 certificate, its private key and store it in AWS Secrets Manager. This function also creates a IoT Core policy and attachs it to X.509 certificate.
       
-      b. [staraudit.zip](startaudit/startaudit.zip)--> this deployment package is for a Lambda function that start an on-demand Device Defender Audit 
+      b. [staraudit.zip](startaudit/startaudit.zip)--> this deployment package is for a Lambda function that start an on-demand Device Defender Audit
       
       c. [device.zip](device/device.zip)--> this deployment package is for a Lambda function acts as IoT Device. CloudFormation template will create 2 Lambda functions acting as 2 IoT devices.
-      
   5. Create a new CloudFormation stack:
   
       a. From CloudFormation console, click **Create stacks, With new resources (standard)**
@@ -31,36 +30,84 @@ You will need to provision nessesary AWS resources for this lab following these 
       b. Choose **Upload a new template**, and upload the CloudFormation template that you download to your laptop/computer earlier in step 3. Click **Next**
       
       c. Name this new CloudFormation stack. Then in Parameter session, provide the name of the S3 bucket that you create in step 2. Leave everything as default for other parameter. Click **Next**
+      
       >Note: We recommend you to keep the default values of **IoT Parameters** for easy reference when you go through this workshop. You can change these values if you are comfortable working with AWS IoT Thing and Topics.  
+      
         <img src="../images/s3parameter.png"/>
 
       d. Leave everything by default in **Configure stack options**. Click **Next**
       
-      e. Scroll down to **The following resource(s) require capabilities: [AWS::IAM::ManagedPolicy]**. Check the box next to **I acknowledge that AWS CloudFormation might create IAM resources.**. Click **Create stack**. The stack  will take 5-10 minutes to complete.
+      e. Scroll down to **The following resource(s) require capabilities: [AWS::IAM::ManagedPolicy]**. Check the box next to **I acknowledge that AWS CloudFormation might create IAM resources.**. Click **Create stack**. The stack  will take 5-10 minutes to complete. When the stack completes, move to [Available resources](#available-resources)
       
 </details>
 
 ## Available resources:
-In this lab, AWS resources are already created for you in advance:
 
-- 2 IoT Devices registered with AWS IoT
+If you are at an AWS Event, you are provided an AWS Account with the resources below ready to use. Otherwise, you will need to use a provided CloudFormation template to create these resources in your AWS Account by following [instruction at the begining of this module](/Module%201:%20Environment%20build/README.md)
+
+Here is the list of resources:
+
+- 2 IoT Devices registered with AWS IoT (under the hood, each device is a Lambda function)
 - 1 X.509 Certificate and it's private key stored in AWS Secrets Manager
 - 1 on-demand Audit
 
-## Architecture Diagram:
+Here is the architecture diagram:
 
-<img src="../images/IoTSecurityWorkshopInfra.jpg" width="350" height="431"/>
+<img src="../images/IoTSecurityWorkshopInfra.jpg" width="500" height="610"/>
+
+Let's move to the next step, where you can validate if the environment setup is correct
 
 ## Validate environment setup
 
 ### 1. IoT devices
 
-In this workshop, we will use 2 Lambda functions acting as 2 seperate IoT Devices: SensorDevice01 and SensorDevice02, respectively. Each device will send temperature telemetry to AWS IoT every 10 seconds. Let's look at the code of Lambda functions (writen in Python) by going to Lambda management console, and click on function Device01 or Device02:
+In this workshop, we will use 2 Lambda functions acting as 2 seperate IoT Devices: SensorDevice01 and SensorDevice02.  Each device will send temperature telemetry to AWS IoT every 10 seconds. 
+To understand how the devices send data, let's look at the code of Lambda functions (writen in Python):
+
+1. From the main AWS management console, click **Lambda**
+2. Once you're in Lambda management console, click **Functions** on the left side. Then click on **SensorDevice01** (you can search function name if you have too many funtions.
 
 <img src="../images/Lambdadevice.png"/>
 
-First, the function will retrieve [AWS IoT Endpoint](https://docs.aws.amazon.com/iot/latest/developerguide/iot-custom-endpoints.html) to send telemetry data to. To connect with AWS IoT Endpoint, each IoT device needs to have  a X.509 device certificate, private key, and root CA certificate installed. You can register your root CA with AWS IoT. In this workshop, we will use the AWS IoT Root CA. Then Lambda function checks if these files are already available in /tmp ([local storage directory for Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html#function-code)) . If not, it will retrieve these files from AWS Secrets Manager. Finally, it generates random temperature telemetry data and sends it to AWS IoT Endpoint
+3. Scroll down to **Function code** and you will see  the Python code of this Lambda function. Here is a quick walk through what it does:
 
+    a. First, the function will retrieve [AWS IoT Endpoint](https://docs.aws.amazon.com/iot/latest/developerguide/iot-custom-endpoints.html) to send telemetry data to. 
+    
+                  endpoint = iot.describe_endpoint(endpointType='iot:Data-ATS')
+                  endpointaddress = endpoint['endpointAddress']
+    
+    b. Next, it checks if there is  a X.509 device certificate, private key, and [root CA certificate](https://docs.aws.amazon.com/iot/latest/developerguide/server-authentication.html#server-authentication-certs)(for server authentication) available in /tmp ([local storage directory for Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html#function-code)). If not, it will retrieve these files from AWS Secrets Manager. IoT device needs these files to connect to AWS IoT.
+    
+                	if os.path.isfile('/tmp/cert.pem'):
+		                  print('/tmp/cert.pem is available')
+	                else:
+                      certpem = secretmanager.get_secret_value(SecretId='CertPem'+stackname)
+		                  newcert = open('/tmp/cert.pem', 'w+')
+		                  newcert.write(certpem['SecretString'])
+		                  newcert.close()
+                  ....more code 
+                  //download Amazon RootCA1 certificate
+		              if os.path.isfile('/tmp/rootca.pem'):
+		              print('/tmp/rootca.pem is available')
+	                else:
+		                  url = 'https://www.amazontrust.com/repository/AmazonRootCA1.pem'
+		                  newrootcapem = requests.get(url)
+		                  open('/tmp/rootca.pem', 'wb').write(newrootcapem.content)
+                      
+    c. Next, it connects with AWS IoT using AWS IoT Python SDK 
+    
+                    myMQTTClient = AWSIoTMQTTClient(devicename)
+	                  myMQTTClient.configureEndpoint(endpointaddress, 8883)
+	                  myMQTTClient.configureCredentials("/tmp/rootca.pem", "/tmp/private.key", "/tmp/cert.pem")
+                    
+    d. Finally, It generates random temperature telemetry data and sends it to AWS IoT Endpoint
+    
+	                   telemetrydata = round(random.uniform(15.1,29.9),2)
+                     #Connect to AWS IoT
+	                   myMQTTClient.connect()
+	                   myMQTTClient.publish(topicname, telemetrydata, 0)
+	                   myMQTTClient.disconnect()
+                     
 ### 2. AWS IoT Things
 
 Two IoT Devices above are already registered to AWS IoT. Let's look at how we use AWS IoT to manage these devices. From the IoT Management Console, click on Manage, click on Things:
