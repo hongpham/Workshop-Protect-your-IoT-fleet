@@ -6,7 +6,7 @@ This module walks your through IoT environment setup. To work on this workshop, 
 
 <details><summary>Click here if you're at an AWS event where the Event Engine is being used</summary><br>
   
-   1. If you are at an AWS Sponsored event, you will be provided with either an AWS account or a hash key for Event Engine. To get start, go to [What will be provided](#what-will-be-provided)
+   1. If you are at an AWS Sponsored event, you will be provided with either an AWS account or a hash key for Event Engine. To get start, go to [Available resources](#available-resources)
 </details>
 
 <details><summary>Click here if you are using your own AWS account (whether you are at an AWS event, a separate event or online)</summary><br>
@@ -14,7 +14,7 @@ This module walks your through IoT environment setup. To work on this workshop, 
 You will need to provision nessesary AWS resources for this lab following these steps:
   
   1. **Choose a region:** sign in to your AWS Account. From AWS Management console, choose a region that works best for you from the top right corner of the console. For example, Ohio or Oregon if you're in North America. 
-  2. **Create S3 bucket:** You will use CloudFormation to provision neccesary resources, including multiple Lambda functions. We need to use a S3 bucket to store deployment packages of these Lambda functions. If you don't have a S3 bucket, create a new one. Or you can using an existing non-prod bucket.
+  2. **Create a S3 bucket:** You will use CloudFormation to provision neccesary resources, including multiple Lambda functions. We need to use a S3 bucket to store deployment packages of these Lambda functions. If you don't have a S3 bucket, create a new one. Or you can using an existing non-prod bucket.
   3. Download CloudFormation template [setupinfra.yml](setupinfra.yml) and save it locally on your laptop/computer.
   4. Download these Lambda deployment packages and upload it to S3 bucket. **Note:** these deployment packages need to be at the top level, and not in any directory of the S3 bucket
   
@@ -28,10 +28,10 @@ You will need to provision nessesary AWS resources for this lab following these 
   
       a. From CloudFormation console, click **Create stacks, With new resources (standard)**
       
-      b. Choose **Upload a new template**, and upload the CloudFormation template that you download to your local laptop earlier in step 3. Click **Next**
+      b. Choose **Upload a new template**, and upload the CloudFormation template that you download to your laptop/computer earlier in step 3. Click **Next**
       
-      c. Give a name for your CloudFormation stack. Then in Parameter, provide the name of the S3 bucket that you create in step 2. Leave everything as default for other parameter. Click **Next**
-      
+      c. Name this new CloudFormation stack. Then in Parameter session, provide the name of the S3 bucket that you create in step 2. Leave everything as default for other parameter. Click **Next**
+      >Note: We recommend you to keep the default values of **IoT Parameters** for easy reference when you go through this workshop. You can change these values if you are comfortable working with AWS IoT Thing and Topics.  
         <img src="../images/s3parameter.png"/>
 
       d. Leave everything by default in **Configure stack options**. Click **Next**
@@ -40,8 +40,7 @@ You will need to provision nessesary AWS resources for this lab following these 
       
 </details>
 
-
-## What will be provided:
+## Available resources:
 In this lab, AWS resources are already created for you in advance:
 
 - 2 IoT Devices registered with AWS IoT
