@@ -49,7 +49,9 @@ Here is the list of resources:
 
 - 2 IoT Devices (under the hood, each device is a Lambda function) named **SensorDevice01-function** and **SensorDevice02-function**
 - 2 AWS IoT Things named **SensorDevice01** and **SensorDevice02**
+- 2 AWS IoT Topic **temperature-device-01** and **temperature-device-02**
 - 1 X.509 Certificate and it's private key stored in AWS Secrets Manager
+- 1 AWS IoT Core Policy
 - 1 on-demand Audit
 
 Here is the architecture diagram:
@@ -135,22 +137,28 @@ Two AWS IoT Things **SensorDevice01** and **SensorDevice02** are already created
     - Data plane API allows you send data to and receive data from AWS IoT Core.
    If you would like to dive deeper into AWS IoT Core policies, follow [this AWS IoT Core Policies document](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) 
 
-8. To check which actions that your AWS IoT Thing can perform, you need to check the IoT Core Policies (or Policies in short) that associate with this Thing. Each Thing can have multiple Policies. A Policy can be attached to a X.509 certificate, or an AWS IoT Thing Group. In[Module 3: Detect and response to a compromised device](/Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device), you will create a Policy and attach it to a Thing Group. As for now you will check an existing Policy associates with X.509 certificate.
+8. To check which actions that your AWS IoT Thing can perform, you need to check the IoT Core Policies (or Policies in short) that associate with this Thing. Each Thing can have multiple Policies. A Policy can be attached to a X.509 certificate, or an AWS IoT Thing Group. In [Module 3: Detect and response to a compromised device](/Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device), you will create a Policy and attach it to a Thing Group. As for now you will check an existing Policy associates with X.509 certificate.
 
 9. Get back to Certificate Details (step 3,4, and 5 above). Click **Policies** to see a Policy named DevicePolicy-[your-stack-name] attached to this X-509 certificate. The naming convention DevicePolicy-[your-stack-name] is to make sure each Policy created automatically by CloudFormation will have a unique name. Click on this Policy and you will see the policy document specifies priviledges of the request that your IoT Devices send to AWS IoT.
 
 <img src="../images/DevicePolicy.png" width="600" height="439"/>
 
-10. What do you think about this policy? What would you do to only give appropriate permisison for the Thing associated to this certificate? To get some idea, you can look at [example AWS IoT policies here](https://docs.aws.amazon.com/iot/latest/developerguide/example-iot-policies.html)
+10. What do you think about this Policy? What would you do differently to only give appropriate permisison for the Thing associated with this certificate? To get some idea, you can look at [example AWS IoT policies here](https://docs.aws.amazon.com/iot/latest/developerguide/example-iot-policies.html)
 
 ### 3. Check if your devices are sending data to AWS IoT
 
-To check device's activity, go to **Manage, Things, SensorDevice01, Activity**. You will see the timestamp of each activities and the json object with details:
+1. To check device's activity, go to **Manage, Things, SensorDevice01, Activity**. You will see the timestamp of each activities and the metadata json object:
 
 <img src="../images/thingconnect.png"/>
 
-Devices publish messages to AWS IoT topic that you create. You can use the AWS IoT MQTT client to subscribe to these topics to see the content of these messages. From IoT management console, click on **Test, Subscribe to a topic** , then type in the topic name that your IoT Devices send telemetry data to, and click "Subscribe to topic". In this workshop, the topic names will be "temperature-device-01" and "temperature-device-02"
+3. Devices publish messages to AWS IoT topics. To view the messages,  you can use the AWS IoT MQTT client. 
+
+    1. From AWS IoT console, click on **Test, Subscribe to a topic**
+    
+    2. Type in the topic name **temperature-device-01** that your IoT Devices send telemetry data to. In this workshop, the topic names will be "temperature-device-01" and "temperature-device-02". If you're running this workshop on your AWS account, and provide unique name for these topics when you use CloudFormation template to create resources, you will need to type in the unique topic name instead of temperature-device-01
+    
+    3. Click "Subscribe to topic". 
 
 <img src="../images/mqttclient.png"/>
 
-Seeing the temperature records? Yay! Your devices are connected and sending data to AWS IoT. That's exciting. Let's move to [Module 2: Audit your IoT Fleet](../Module%202:%20Audit%20your%20IoT%20Fleet) to find out how you can audit your devices configuration. 
+Seeing the temperature records? Yay! Your devices are connected and sending data to AWS IoT. Now your next task is to audit all Things and devices to make sure there is no bad configuration. You can do so by moving to [Module 2: Audit your IoT Fleet](../Module%202:%20Audit%20your%20IoT%20Fleet)
