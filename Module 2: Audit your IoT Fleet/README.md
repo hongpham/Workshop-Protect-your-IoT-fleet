@@ -17,9 +17,47 @@ In Module 1, you validated environment setup for your IoT devices. Your next tas
 
 ## 1. Audit your IoT Fleet
 
-### 1.1 Check audit settings
+AWS provides a service called AWS IoT Device Defender to help you looks at account- and device-related settings and policies to ensure security measures are in place. Device Defender provides a tool call Audit. An Audit can help you detect any drifts from security best practices or access policies.
 
-To get start, you need to identify what type of check you would like to run against your devices. AWS IoT Device Defender has built in audit checks that you can quickly enable. Let's create an audit with these checks.
+Audit provides [14 type of checks](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-audit-checks.html). You can configure audit settings in your AWS account to choose which checks will be available when you set up audits. These Settings are effective at regional level. That means, settings in region A will not affect region B. 
+
+An Audit Settings has 3 parts:
+
+* Services permissions: you will need to allow Device Defender to run Audit against your IoT devices. You do so by using an IAM policies to manage permission.
+* Enable Audits check: you select checks to make it available for audits. You can enable or disable anytime. Disable a check means that Device Defender will not include that type of check when it run an Audit.
+* SNS alerts: This optional session let you choose a SNS topic to receive alerts from Device Defender. Alerts are always displayed in the AWS IoT console.
+
+### 1.1 Check Audit settings
+
+In this module, you will run all of the checks for your IoT devices. You will need to validate if all checks are enabled in settings. Leave all the check enable. Depending on the scenerios below, expand one of the following dropdowns to start
+
+<details><summary>Click here if you're at an AWS event where the Event Engine is being used</summary><br>
+  
+   1. If you are at an AWS Sponsored event, an on-demand Audit was created in advanced for you to make sure you can see how an Audit results look like if you can't create an Audit during the event. 
+   
+   2. Sign in to AWS Account. From the AWS console home, click **IoT Device Defender** to go to IoT console. (You can search this service in the search box if you don't see it)
+   
+   3. On the left side, click **Defend, Settings** to view current settings 
+   
+   4. Under **Service permissions**, you will see an IAM role that gives permission to Device Defender to run audits. This IAM role has 1 AWS managed policy **AWSIoTDeviceDefenderAudit** attached to it. Here is how this role looks like in IAM console
+   
+   <img src="../images/auditrole.png"/>
+
+   5. Under **Enable Audit checks**, you will see the list of enabled checks, severity of each checks, and what resources this checks will audit against. Click on the question mark next to the check name to learn more what it does. 
+   
+   6. To disable any checks, click on the box next to it and click **Disable**. For example, this is how it looks like when you disable 'Logging disabled' and 'CA certificate expiring' check. 
+   
+   <img src="../images/disablecheck.png"/>
+
+   7. Disabled checks will be listed under **Disabled Audit checks session**. To enable the checks again, check the box next to check name and click **Enable**
+   
+   7. The final session of Settings is **SNS alerts**. You need to enable SNS alerts to receive audit related alerts from Device Defender. Click on **Edit, Enabled**
+   
+   8. Under **Topic**, click Select to use an SNS create previously in [Module 1](/Module%201:%20Environment%20build#available-resources)
+  
+   
+</details>
+
 
 First, you need to configure  Device Defender Audit settings in your AWS accout. Settings include SNS alerts configuration and which Audit checks are enabled or disabled.  To view settings and enable/disable Audit checks, click **Defend**, **Setting**
 
