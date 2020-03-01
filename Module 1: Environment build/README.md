@@ -78,35 +78,35 @@ To understand how the devices send data, let's look at the code of Lambda functi
     
     b. Next, it checks if there is  a X.509 device certificate, private key, and [root CA certificate](https://docs.aws.amazon.com/iot/latest/developerguide/server-authentication.html#server-authentication-certs)(for server authentication) available in /tmp ([local storage directory for Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html#function-code)). If not, it will retrieve these files from AWS Secrets Manager. IoT device needs these files to connect to AWS IoT.
     
-                	if os.path.isfile('/tmp/cert.pem'):
-		                  print('/tmp/cert.pem is available')
-	                else:
-                      certpem = secretmanager.get_secret_value(SecretId='CertPem'+stackname)
-		                  newcert = open('/tmp/cert.pem', 'w+')
-		                  newcert.write(certpem['SecretString'])
-		                  newcert.close()
+            if os.path.isfile('/tmp/cert.pem'):
+               print('/tmp/cert.pem is available')
+            else:
+               certpem = secretmanager.get_secret_value(SecretId='CertPem'+stackname)
+               newcert = open('/tmp/cert.pem', 'w+')
+               newcert.write(certpem['SecretString'])
+               newcert.close()
                   ....more code 
-                  //download Amazon RootCA1 certificate
-		              if os.path.isfile('/tmp/rootca.pem'):
-		              print('/tmp/rootca.pem is available')
-	                else:
-		                  url = 'https://www.amazontrust.com/repository/AmazonRootCA1.pem'
-		                  newrootcapem = requests.get(url)
-		                  open('/tmp/rootca.pem', 'wb').write(newrootcapem.content)
+            //download Amazon RootCA1 certificate
+            if os.path.isfile('/tmp/rootca.pem'):
+               print('/tmp/rootca.pem is available')
+            else:
+               url = 'https://www.amazontrust.com/repository/AmazonRootCA1.pem'
+               newrootcapem = requests.get(url)
+               open('/tmp/rootca.pem', 'wb').write(newrootcapem.content)
                       
     c. Next, it connects with AWS IoT using AWS IoT Python SDK 
     
-                    myMQTTClient = AWSIoTMQTTClient(devicename)
-	                  myMQTTClient.configureEndpoint(endpointaddress, 8883)
-	                  myMQTTClient.configureCredentials("/tmp/rootca.pem", "/tmp/private.key", "/tmp/cert.pem")
+            myMQTTClient = AWSIoTMQTTClient(devicename)
+            myMQTTClient.configureEndpoint(endpointaddress, 8883)
+            myMQTTClient.configureCredentials("/tmp/rootca.pem", "/tmp/private.key", "/tmp/cert.pem")
                     
     d. Finally, It generates random temperature telemetry data and sends it to AWS IoT Endpoint
-    
-	                   telemetrydata = round(random.uniform(15.1,29.9),2)
-                     #Connect to AWS IoT
-	                   myMQTTClient.connect()
-	                   myMQTTClient.publish(topicname, telemetrydata, 0)
-	                   myMQTTClient.disconnect()
+
+            telemetrydata = round(random.uniform(15.1,29.9),2)
+            #Connect to AWS IoT
+            myMQTTClient.connect()
+            myMQTTClient.publish(topicname, telemetrydata, 0)
+            myMQTTClient.disconnect()
                      
 ### 2. AWS IoT Things
 
