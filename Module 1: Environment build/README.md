@@ -29,15 +29,15 @@ You will need to provision nessesary AWS resources for this lab following these 
       
       b. Choose **Upload a new template**, and upload the CloudFormation template that you download to your laptop/computer earlier in step 3. Click **Next**
       
-      c. Name this new CloudFormation stack. Then in Parameter session, provide the name of the S3 bucket that you create in step 2. Leave everything as default for other parameter. Click **Next**
+      c. Name this new CloudFormation stack. Under Parameter session, provide the **name of the S3 bucket** that you create in step 2. Provide **email address** to receive alerts when AWS IoT detects a bad devices. Leave everything as default for other parameter. Click **Next**
       
       >Note: We recommend you to keep the default values of **IoT Parameters** for easy reference when you go through this workshop. You can change these values if you are comfortable working with AWS IoT Thing and Topics.  
       
         <img src="../images/s3parameter.png"/>
 
-      d. Leave everything by default in **Configure stack options**. Click **Next**
+      d. Leave everything by default in **Configure stack options**. Click **Next** to go to review step
       
-      e. Scroll down to **The following resource(s) require capabilities: [AWS::IAM::ManagedPolicy]**. Check the box next to **I acknowledge that AWS CloudFormation might create IAM resources.**. Click **Create stack**. The stack  will take 5-10 minutes to complete. When the stack completes, move to [Available resources](#available-resources)
+      e. In **Review**, under **Parameters**, make sure you provided **MyS3bucket** and **MyEmail**. Then scroll down to **The following resource(s) require capabilities: [AWS::IAM::ManagedPolicy]**. Check the box next to **I acknowledge that AWS CloudFormation might create IAM resources.**. Click **Create stack**. The stack  will take 5-10 minutes to complete. When the stack completes, move to [Available resources](#available-resources)
       
 </details>
 
@@ -47,7 +47,8 @@ If you are at an AWS Event, you are provided an AWS Account with the resources b
 
 Here is the list of resources:
 
-- 2 IoT Devices registered with AWS IoT (under the hood, each device is a Lambda function)
+- 2 IoT Devices (under the hood, each device is a Lambda function) named **SensorDevice01-function** and **SensorDevice02-function**
+- 2 AWS IoT Things named **SensorDevice01** and **SensorDevice02**
 - 1 X.509 Certificate and it's private key stored in AWS Secrets Manager
 - 1 on-demand Audit
 
@@ -107,10 +108,12 @@ To understand how the devices send data, let's look at the code of Lambda functi
             myMQTTClient.connect()
             myMQTTClient.publish(topicname, telemetrydata, 0)
             myMQTTClient.disconnect()
-                     
+
+After checking these code on the devices, go to next **AWS IoT Things** to validate how devices register to AWS IoT.
+
 ### 2. AWS IoT Things
 
-Two IoT Devices above are already registered to AWS IoT. Let's look at how we use AWS IoT to manage these devices. From the IoT Management Console, click on Manage, click on Things:
+Two AWS IoT Things **SensorDevice01** and **SensorDevice02** are already created for you. These Things are associated with a X.509 certificate (you'll learn more why using one certificate for multiple devices isn't a best practices in [Module 2: Audit your IoT Fleet](/Module%202:%20Audit%20your%20IoT%20Fleet). When devices **SensorDevice01-funtion** and **SensorDevice02-function** connect to AWS IoT, it needs to present this X.509 certificate and it's private key to prove that it is the Things registered with AWS IoT. You'll need to validate **SensorDevice01** and **SensorDevice02** configuration to understand how AWS IoT associate these Thing with devices.
 
 <img src="../images/IoTThings.png" width="600" height="261"/>
 
