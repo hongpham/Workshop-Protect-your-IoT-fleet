@@ -15,14 +15,21 @@ You will need to provision nessesary AWS resources for this lab following these 
   
   1. **Choose a region:** sign in to your AWS Account. From AWS Management console, choose a region that works best for you from the top right corner of the console. For example, Ohio or Oregon if you're in North America. 
   2. **Create S3 bucket:** You will use CloudFormation to provision neccesary resources, including multiple Lambda functions. We need to use a S3 bucket to store deployment packages of these Lambda functions. If you don't have a S3 bucket, create a new one. Or you can using an existing non-prod bucket.
-  3. Download CloudFormation template [setupinfra.yml](setupinfra.yml) to your local laptop.
+  3. Download CloudFormation template [setupinfra.yml](setupinfra.yml) and save it locally on your laptop/computer.
   4. Download these Lambda deployment packages and upload it to S3 bucket. **Note:** these deployment packages need to be at the top level, and not in any directory of the S3 bucket
+  
       a. [registerDevice.zip](registerDevice/registerDevice.zip)--> this deployment package is for a Lambda function that creates X.509 certificate, its private key and store it in AWS Secrets Manager. This function also creates a IoT Core policy and attachs it to X.509 certificate.
+      
       b. [staraudit.zip](startaudit/startaudit.zip)--> this deployment package is for a Lambda function that start an on-demand Device Defender Audit 
+      
       c. [device.zip](device/device.zip)--> this deployment package is for a Lambda function acts as IoT Device. CloudFormation template will create 2 Lambda functions acting as 2 IoT devices.
+      
   5. Create a new CloudFormation stack:
+  
       a. From CloudFormation console, click **Create stacks, With new resources (standard)**
+      
       b. Choose **Upload a new template**, and upload the CloudFormation template that you download to your local laptop earlier in step 3. Click **Next**
+      
       c. Give a name for your CloudFormation stack. Then in Parameter, provide the name of the S3 bucket that you create in step 2. Leave everything as default for other parameter. Click **Next**
       
         <img src="../images/s3parameter.png"/>
