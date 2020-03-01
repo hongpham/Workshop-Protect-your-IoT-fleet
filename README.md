@@ -10,7 +10,21 @@ To achieve these requirement, you need to:
    
 
 ## Terminology
-Before diving into 
+
+   - **AWS IoT Core:** platform that enables you to connect devices to AWS Services and other devices, secure data and interactions, process and act upon device data, enables applications to interact with devices even when they are offline and that allows you to produce low-cost Alexa built-in devices.
+   - **AWS IoT Thing:** AWS IoT provides a registry that helps you manage things. A thing is a representation of a specific device or logical entity. It can be a physical device or sensor (for example, a light bulb or a switch on a wall). It can also be a logical entity like an instance of an application or physical entity that does not connect to AWS IoT but is related to other devices that do (for example, a car that has engine sensors or a control panel).
+   - **IoT Thing Group:** allow you to manage several things at once by categorizing them into groups
+   - **X-509 Certificate:** digital certificates that can be used to authenticate IoT devices
+   - **IoT Core Policy:** AWS IoT Core policies allow you to control access to the AWS IoT Core data plane. The AWS IoT Core data plane consists of operations that allow you to connect to the AWS IoT Core message broker, send and receive MQTT messages, and get or update a device's shadow. You can attach a policy to a Thing group and it is inherited by its child groups, and by all of the things in the group and in its child groups. This makes control of permissions easy for large numbers of things. 
+   - **IoT Topics:** When devices send messages to AWS IoT, it needs to to AWS IoT the topic name. AWS IoT looks at topic names to route messages.
+   - **IoT Device Defender:** a security service that allows you to audit the configuration of your devices, monitor connected devices to detect abnormal behavior, and mitigate security risks.
+   - **IoT Device Defender Audit:** An AWS IoT Device Defender audit looks at account- and device-related settings and policies to ensure security measures are in place. 
+   - **IoT Device Defender Mitigation Actions:** You can use Mitigation Actions to mitigate issues that were found during an audit
+   - **IoT Device Defender Detect:** AWS IoT Device Defender Detect allows you to identify unusual behavior that might indicate a compromised device by monitoring the behavior of your devices. You can use a combination of cloud-side metrics (from AWS IoT) and device-side metrics (from agents you install on your devices) to detects change in devices
+   - **Security profile:** A security profile defines anomalous behaviors for a group of devices (a thing group) or for all devices in your account, and specifies which actions to take when an anomaly is detected. 
+   - **Behaviors:** A behavior tells AWS IoT Device Defender Detect how to recognize when a device is doing something abnormal.
+   
+   
 
 ## Agenda
 ### 1. [Module 1: Environment build](/Module%201:%20Environment%20build)
