@@ -1,3 +1,5 @@
+# Module 3: Detect and response to unusual behaviors of your devices
+
 1. [Define unusual behaviors of your devices](#1-define-unusual-behaviors-of-your-devices)
 2. [Respond to a violation](#2-respond-to-a-violation)
 3. [Simulate a compromised device](#3-simulate-a-compromised-device)
