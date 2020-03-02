@@ -31,9 +31,9 @@ An Audit Settings has 3 parts:
 
 In this module, you will run all of the checks for your IoT devices. You will need to validate if all checks are enabled in settings. Leave all the check enable. Depending on the scenerios below, expand one of the following dropdowns to start
 
-<details><summary>Click here if you're at an AWS event where the Event Engine is being used</summary><br>
+<details><summary>Click here if you're at an AWS event where the Event Engine is being used or you run CloudFormation template in [Module 1](/Module%201:%20Environment%20build) on your AWS account</summary><br>
   
-   1. If you are at an AWS Sponsored event, an on-demand Audit was created in advanced for you to make sure you can see how an Audit results look like if you can't create an Audit during the event. 
+   1. If you are at an AWS Sponsored event, an on-demand Audit was created in advanced for you to make sure you can see how an Audit results look like if you can't create an Audit during the event. Thus Audit Settings is already created for you. You can follow steps below to validate Settings
    
    2. Sign in to AWS Account. From the AWS console home, click **IoT Device Defender** to go to IoT console. (You can search this service in the search box if you don't see it)
    
@@ -63,9 +63,30 @@ In this module, you will run all of the checks for your IoT devices. You will ne
 
 You have completed checking setting for Device Defender Audit. Next step is to create an Audit.
    
-</details>
 
-Outside of this Lab, you should follow [instruction in this document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-HowToProceed.html) when you run Audit the very first time. 
+<details><summary>Click here if you manually configure Audit Settings very first time</summary><br>
+
+If you finished [Module 1](/Module%201:%20Environment%20build) before working on this module, an on-demand Device Defender Audit was created in advance for you. Ignore this option if you're in an AWS event.
+
+If you are not following along with Module 1 and this module, and this is the first time you run a Device Defender Audit, you should follow [instruction in this document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-HowToProceed.html). If you use AWS IoT console to start an Audit, follow these steps:
+
+1. Sign in to AWS Account. From AWS console home, click on IoT Device Defender to go to IoT console
+
+2. On the left side of IoT console, click **Defend, Audit, Get started with an audit**
+
+3. You will go through 3 steps to configure settings for Device Defender Audit. Click **Next** to start first steps **Review permissions**
+
+   <img src="../images/firstaudit1.png"/>
+
+4. In this step, you need to grant Device Defender Audits permisison to run audit against your IoT resources and policies by using IAM Role. This IAM role needs to have AWS managed policy **AWSIoTDeviceDefenderAudit**. You can create this IAM role in advance or click **Create Role** so that Device Defender can create the role for you. Click **Next** to go to **Select checks**
+
+5. Select the checks you want to enable, and click **Next** to go to the next step, **Configure SNS**
+
+6. This optional step let you choose which SNS topic will receive alerts from Device Defender. If you choose **Enabled**, you need to provide SNS topic name and IAM role that allow Device Defender to send alerts to that SNS topic. This IAM role needs to have AWS managed policy **AWSIoTDeviceDefenderPublishFindingsToSNSMitigationAction**.
+
+7. Click **Enable Audit** to start your very first Audit. Note that this first Audit is a daily audit - meaning it will run every day at specific time decided by Device Defender. To create different type of Audit (on-demand, monthly,...), click **Defend, Audit, Schedules, Create**
+
+</details>
 
 ### 1.2 Run an On-Demand Audit
 
