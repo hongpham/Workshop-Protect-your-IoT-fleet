@@ -176,25 +176,32 @@ AWS IoT Device Defender provides predefined actions for the different audit chec
 
 Now we can apply this mitigation actions to the audit findings.
 
-### 2.2 Apply mitigation actions to audit findings
+### 2.2 Apply mitigation actions to noncompliant findings
 
-To apply mitigation actions to the audit findings, navigate to **Audit**, **Results**. Click on the **On-demand** audit to view the list of findings.
+After we define mitigation actions for Device Defender, you need to apply these actions to noncompliant findings, so that Device Defender can start remediation.
 
-Under **Non-compliant checks**, click on **Device certificate shared**. Device Defender detects multiple devices are sharing one X.509 certificate. When you click on this check, you will see cerfiticate ID associated to both SensorDevice01 and SensorDevice02.
+1. From left side of IoT console, navigate to **Audit**, **Results**. 
 
-To apply mitigation actions, check the box next to finding ID, and click **Start Mitigation Action** on the top right corner.
+2. You should see multiple On-demand audit results. The latest audit should be the one you started on [step 1.2 Start an On-Demand Audit](#1.2-start-an-on-demand-audit). Click on this **On-demand** audit to view the list of findings.
+
+3. Under **Non-compliant checks**, click on **Device certificate shared** to go to findings details. You should see the cerfiticate ID associated to this finding.
+
+4. To apply mitigation actions, check the box next to finding ID, and click **Start Mitigation Action** on the top right corner.
 
 <img src="../images/startma.png"/>
 
-Give a name for this task, then click **Select options for IoT policies overly permissive** to see the drop down lists of actions, and choose the mitigation action you created in the previous step. Then click **Confirm**
+5. Give a name for this task, then click **Select options for IoT policies overly permissive** to see the drop down lists of actions, and choose the mitigation action you created in the previous step. Then click **Confirm**
 
 <img src="../images/choosema.png"/>
 
-To view the status of mitigation actions task, click on **Defend**, **Action results** It can take a few minutes for the task to complete. Since we use mitigation action **Update device certificate**, Device Defender will deactivate the Certificate. To double check, go to **Secure**, **Certificates**. You should see the certificate is **Inactivate**.
+6. To view the status of mitigation actions task, click on **Defend**, **Action results** 
+
+7. Since we use mitigation action **Update device certificate**, Device Defender will deactivate the Certificate. 
+
+8. To double check, go to **Secure**, **Certificates**. You should see the certificate is **Inactivate**.
 
 <img src="../images/inactivecert.png"/>
 
 > Note: If you will work on next module [Module 3: Detect and response to a compromised device](../Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device), then you will need to re-activate this certificate.
 
-Congratulations! You have mitigated a non-compliant findings in your device configuration. Let's move to the next module [Module 3: Detect and response to a compromised device](../Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device) where you will build automation to detect if a device is compromised.
-
+Congratulations! You have mitigated a noncompliant findings in your device configuration. Your next task is to detect if a devices are being used for wrong purpose (for example, particiate in a DDoS attack). Move to [Module 3: Detect and response to a compromised device](../Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device) to learn what you can do to accomplish this task.
