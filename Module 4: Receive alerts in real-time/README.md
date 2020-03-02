@@ -4,7 +4,11 @@ For many Security Engineers, receiving alerts in real time is critical. They nee
 
 In this extra-credit module, we will show you how to configure SNS to send Device Defender alerts to your phone, or to Amazon Chime chatroom. If you are interested in using Slack with SNS, then take a look at [this Lambda blueprints](https://aws.amazon.com/about-aws/whats-new/2015/12/aws-lambda-launches-slack-integration-blueprints/)
 
+1. [Send SMS message to your phone](#1-send-sms-message-to-your-phone-only-available-in-region-that-supports-sms-messaging)
+2. [Receive alerts on Chime chatroom](#2-receive-alerts-on-chime-chatroom)
+
 ## 1. Send SMS message to your phone (only available in [region that supports SMS messaging](https://docs.aws.amazon.com/sns/latest/dg/sns-supported-regions-countries.html)):
+
 You can subcribe your phone number to SNS topic receive alerts from IoT Device Defender. When a new alert occur, SNS will send you a SMS message (please note that SMS cost may be applied to your phone number)
 
 1. Sign in to your AWS account. From AWS console home, click **SNS**
