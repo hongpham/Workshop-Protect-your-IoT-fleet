@@ -39,7 +39,7 @@ In this module, you will run all of the checks for your IoT devices. You will ne
    
    3. On the left side, click **Defend, Settings** to view current settings 
    
-   4. Under **Service permissions**, you will see an IAM role that gives permission to Device Defender to run audits. This IAM role has 1 AWS managed policy **AWSIoTDeviceDefenderAudit** attached to it. Here is how this role looks like in IAM console
+   4. Under **Service permissions**, you will see an IAM role in a format [CloudFormation-stack-name]-IoTAuditRole-[random-value] that gives permission to Device Defender to run audits. This role was create in advance for you using CloudFormation. This IAM role has 1 AWS managed policy **AWSIoTDeviceDefenderAudit** attached to it. Here is how this role looks like in IAM console
    
    <img src="../images/auditrole.png"/>
 
@@ -53,19 +53,19 @@ In this module, you will run all of the checks for your IoT devices. You will ne
    
    7. The final session of Settings is **SNS alerts**. You need to enable SNS alerts to receive audit related alerts from Device Defender. Click on **Edit, Enabled**
    
-   8. Under **Topic**, click Select to use an SNS create previously in [Module 1](/Module%201:%20Environment%20build#available-resources)
+   8. Under **Topic**, select SNS topic **BadDevices** create previously in [Module 1](/Module%201:%20Environment%20build#available-resources). 
+   
+   9. Under **Role**, select IAM role with this naming convention [CloudFormation-stack-name]-SNSTopicRole-[random-value]. This role is create by CloudFormation. It has one AWS managed policy **AWSIoTDeviceDefenderPublishFindingsToSNSMitigationAction** 
   
+   10. When you're ready, click **Update** to enable SNS alerts. 
+   
+   <img src="../images/snsrole.png"/>
+
+You have completed checking setting for Device Defender Audit. Next step is to create an Audit.
    
 </details>
 
-
-First, you need to configure  Device Defender Audit settings in your AWS accout. Settings include SNS alerts configuration and which Audit checks are enabled or disabled.  To view settings and enable/disable Audit checks, click **Defend**, **Setting**
-
-<img src="../images/enableaudit.png"/>
-
-After all audit checks are already enabled, we can create an on-demand audit.
-
-> Note: we already created an on-demand audit in advance for you because we would like to show you example results. In this Lab, you will not go through neccessary steps to give permisison to Device Defender to collect data, and to choose SNS topic to send notification. Outside of this Lab, you should follow [instruction in this document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-HowToProceed.html) when you run Audit the very first time. 
+Outside of this Lab, you should follow [instruction in this document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-HowToProceed.html) when you run Audit the very first time. 
 
 ### 1.2 Run an On-Demand Audit
 
