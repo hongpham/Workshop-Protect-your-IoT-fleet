@@ -120,7 +120,7 @@ To start an Audit immediately, you create an On-Demand Audit by following these 
 
 <img src="../images/checkresult.png"/>
 
-Under **Non-compliant checks**, you should see 3 checks:
+7. Under **Non-compliant checks**, you should see 3 noncompliant findings under **Check name**:
 
 - [Device certificate shared](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-device-cert-shared.html): indicates multiple, concurrent connections use the same X.509 certificate to authenticate with AWS IoT. Each device should have a unique certificate to authenticate with AWS IoT. When multiple devices use the same certificate, this might indicate that a device has been compromised. Its identity might have been cloned to further compromise the system.
 
@@ -128,11 +128,22 @@ Under **Non-compliant checks**, you should see 3 checks:
 
 - [Logging disabled](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-logging-disabled.html): indicates AWS IoT logs are not enabled in Amazon CloudWatch. AWS IoT logs in CloudWatch provide visibility into behaviors in AWS IoT, including authentication failures and unexpected connects and disconnects that might indicate that a device has been compromised.
 
-To view which resources associate which each findings, click on the check name. For example, click on **Device certificate shared** and you will see the Certificate ID that is being shared between SensorDevice01 and SensorDevice02
+> Helpful tip: this Audit Checks document provide instructions to help you fix noncompliant findings for 14 checks.
+
+8. To view which resources associate which each findings, click on the check name. In this module, let's work on fixing  **Device certificate shared**  findings. Click on this finding to find out which device certificate are being shared, and which IoT Things are involved.
+
+9. You should will see the Certificate Id that is being shared.
 
 <img src="../images/sharedcert.png"/>
 
-Now we have a list of non-compliant checks, next step we will need to remediate these non-compliant findings
+10. To find out which IoT Things are sharing this cert, go to **Secure, Certificates**. Click the Certificate Id that you see in previous step to view details of this certificate.
+
+11. Now click on **Things** to view the list of IoT Things are using this certificate
+
+<img src="../images/thingswithcert.png"/>
+
+
+Now you know exactly that 2 Things SensorDevice01 and SensorDevice02 are using the same X.509 to connect to AWS IoT. This is not a good configuration. Move to the next step to mitigate this noncompliant finding.
 
 ## 2. Take actions to mitigate audit findings
 
