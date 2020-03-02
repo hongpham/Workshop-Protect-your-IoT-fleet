@@ -8,7 +8,6 @@ This module will walk you through neccessary steps to build solutions for requir
 2. [Respond to a violation](#2-respond-to-a-violation)
 3. [Simulate a compromised device](#3-simulate-a-compromised-device)
 
-
 ## 1. Define unusual behaviors of your devices
 
 Your first task is to implement a solution to detect unusual behaviors of IoT devices. How do you know if devices act differently than its regular behavior? You need to have metrics related to device's activities, and you need to define when the value of each metric is considered outside of regularity.
@@ -37,7 +36,7 @@ In this case, you will create a Security Profile to allow Device Defender monito
 
 8. You need to keep the mesage size metrics of each message for investigation. Under **Addionional Metrics to retain**, click on **Select** on the right corner to see drop down list of metrics that we can retain. Select **Message size**. You also need to keep track of how many messages are sent and received between AWS IoT and each device in a given period. To keep this metric, select **Message received**. Then click **Next**
 
-9. Select a SNS topic for alerts when a device violates a behavior in this profile. An SNS topic was created for you in advance. This step is similar to [Module 2, session 1.1, Option 1, step 9 and 10](/Module%202:%20Audit%20your%20IoT%20Fleet/README.md#11-check-audit-settings). Select SNS topic **BadDevices**. For IAM Role, select IAM role with this naming convention [CloudFormation-stack-name]-SNSTopicRole-[random-value]. If you worked on Module 2 of this workshop, you should already subcribed your email to this topic **BadDevices**. If you haven't subscribed your email, don't forget to do so.
+9. Select a SNS topic for alerts when a device violates a behavior in this profile. An SNS topic was created for you in advance. This step is similar to [Module 2, session 1.1, Option 1, step 9 and 10](/Module%202:%20Audit%20your%20IoT%20Fleet/README.md#11-check-audit-settings). Select SNS topic **BadIoTDevices**. For IAM Role, select IAM role with this naming convention [CloudFormation-stack-name]-SNSTopicRole-[random-value]. If you worked on Module 2 of this workshop, you should already subcribed your email to this topic **BadIoTDevices**. If you haven't subscribed your email, don't forget to do so.
 
 <img src="../images/snsdetect.png"/>
 
@@ -49,36 +48,47 @@ Click **Next** to view summary of this Security Profile. When you confirm everyt
 
 ## 2. Respond to a violation
 
-In this example, we will create a simple automation that will move violated device to a thing group specifically for investigation. We attach a **Deny all** IAM policies to this thing group so that the devices do not have any permision to perform any iot actions.
+After you figure out how to detect unusual device's behaviors, next step is to respond to this violation. 
+
+This session walk you through how to create a simple automation that will move violated device to an IoT Thing Group specifically for investigation. You attach an IAM policy to this Thing Group so that the devices in this Thing Group do not have any permision to perform any IoT actions.
 
 ### 2.1 Create IoT Thing Group denies all IoT actions
 
-From IoT management console, click **Manage**, **Thing groups**, **Create**, **Create Thing Group** . Name your thing group and click **Create thing group**
+1. Sign in to your AWS account, click on IoT Device Defender.
+2. From IoT management console, click **Manage**, **Thing groups**, **Create**, **Create Thing Group** . Name your thing group  as **IsolatedDevices** and click **Create thing group**
 
 <img src="../images/CreateThingGroup.png"/>
 
-Now let's create a policy that deny all IoT actions. Click on **Secure, Policies, Create**. Name your new policy. Under Add statements, type **iot:*** for **Action**, and **'\*'** for **Resource ARN**. Check **Deny** box, and click **Create**. 
-> Note that this policy only denies all IoT actions. If your devices have addtional permission to work with others AWS Services (for example, permission to Put an item in DynamoDB table), this policy won't deny those permission.
+3. Next, create a policy that deny all **IoT actions** 
+
+4. Click on **Secure, Policies, Create**. Name your new policy. 
+
+5. Under **Add statements**, type **iot:*** for **Action**, and **'\*'** for **Resource ARN**. Check **Deny** box, and click **Create**. 
+> Note that this policy only denies all IoT actions. If your devices have additional permission to work with others AWS services (for example, permission to Put an item in DynamoDB table), this policy won't deny those permission.
 
 <img src="../images/DenyAll.png"/>
 
-Next, you will associate this policy with Thing Group that we create earlier. Go to **Manage, Thing groups, Security, Edit**. Select the policy that you create earlier, and click **Save**
+6. Associate this policy with Thing Group that we create earlier. Go to **Manage, Thing groups, Security, Edit**. Select the policy that you create earlier, and click **Save**
 
 <img src="../images/AttachDenyAll.png"/>
 
-Any device in this Thing Group will not have permission to send data to AWS IoT.
+Any device in Thing Group **IsolatedDevices** will not have permission to send data to AWS IoT.
 
-### 2.2 Create Lambda function to move device into thing group
+Next, you use a Lambda function to move offending devices to this Thing Group
 
-In this step, we create a Lambda function to move offending device to **IsolatedDevices** thing group for forensic. When Device Defender finds a violation and sends alerts to SNS topic that you created earlier, SNS will trigger this Lambda function.
+### 2.2 Use Lambda function to move device into Thing Group
 
-> Note: in this Lab, we expect to have 1 violation, which mean the Lambda function will be trigger once. Before implemenet this solution, we recommend you to test thoroughly to make sure this is an appropriate solution for you.
+In this step, you use a Lambda function to move offending device to **IsolatedDevices** thing group for forensic. When Device Defender finds a violation and sends alerts to SNS topic that you created earlier, SNS will trigger this Lambda function.
 
-Go to Lambda management console, click **Create function**. Choose **Author from scratch**, and give a name to your function. Choose Runtime as **Node.js 12.x** and leave Permission as default - **Create a new role with basic Lambda permissions** (we will need to update this role later). When ready, click **Create function**
+> Note: in this Lab, we expect to have 1-2 violation, which means the Lambda function will be trigger no more than 2 times. 
 
-<img src="../images/AddThing.png"/>
+1. A Lambda function **IsolateDevice** was already created in advance for you.
 
-Replace default code in index.js by the block of code below. Remembe to click **Save** to save this change:
+2. To understand what this Lambda function does, go to Lambda console, click **Function**. Click **IsolateDevice**
+
+3. Under **Function Code**, you will see Python code below. When alert from Device Defender Detect is sent to SNS topic **BadIoTDevices**, SNS will trigger this Lambda function. This function will parse the SNS message to retrieve offending device's name, and add this device to Thing Group **IsolateDevice**
+
+> Note: you need to  provide Thing Group name to this function, and subscribe Lambda function to SNS topic by following steps below.
 
 ```python
 import boto3
@@ -92,47 +102,56 @@ def lambda_handler(event, context):
 	thing = d['thingName']
 
 	addThing = iot.add_thing_to_thing_group(
-    	thingGroupName='IsolatedDevices',
+    	thingGroupName=os.environ['ThingGroupName'],
 	thingName=thing
 	)
 ```
-Now let's update the execution role of this Lambda function. We need to allow this function to attach a Thing to a Thing Group. Scroll down to **Execution Role**. Under **Existing role**, you will see the role name associated to this function.
 
-<img src="../images/lambdarole.png"/>
+4. You need to provide Thing Group name for this Lambda function. To do so, you create an Environment Variables.
 
-Click on the link below to view this role in IAM console. Click **Attach policies**, search for **AWSIoTFullAccess** and attach this managed policy to the role. You can choose to scope down permission by create a customer manage policy and attach it to the role if you're very comfortable with building IAM policy.
+5. Scroll down to **Environment Variables**, click **Manage environment variables**
 
-After updating your IAM role, let's subscribe this function to SNS topic. From SNS console, click **Topics**. From the list of topics, click the topic that you create earlier. Click **Create subscription**
+6. Click **Add environment variable**. Type **ThingGroupName** as Key (need to be exactly as ThingGroupName), and **IsolatedDevice** as Value. Click Save.
 
-<img src="../images/snssublambda.png"/>
+7. Now this function is ready to be invoked. The next thing to do is to configure SNS topic to trigger this function.
 
-Choose **AWS Lambda** for Protocal. For Endpoint, choose the Lambda function that you just created. Click **Create subscription**
+8. On the function console, expand **Designer** 
 
-<img src="../images/createsnslambda.png"/>
+<img src="../images/designerlambda.png"/>
 
-Now let's do the fun part: test this automation
+9. Click **Add trigger**. Select **SNS**. Select topic **BadIoTDevices**. Check **Enable trigger**. And click **Add** to make this SNS topic as a trigger of your function.
+
+<img src="../images/snstriggerlambda.png"/>
+
+**IsolateDevices** is now receiving events from trigger SNS topic **BadIoTDevices**. That means, it will move offending device to Thing Group **IsolatedDevice** when Device Defender alerts a violation. Next step, you are going to test if this automation works as expected.
 
 ## 3. Simulate a compromised device 
 
-In this step, we will update SensorDevice02's code to similate a situation that it is compromised, and it is sending way too much data as it should be. 
+In this step, you update SensorDevice02's code to similate a situation that its message is very large compared with regular message size. Because this behavior can indate that the device is compromised, you want to stop this device from taking any IoT actions, and move it to quarantive Thing Group to investigate further.
 
 ### 3.1 Update message size
 
-To update the amount of data SensorDevice02 is sending to AWS IoT, go to Lambda management console, click on function **Device02**. Scroll down to edit the code that generate random temperature telemetry data (line 55):
+1. To update the message size SensorDevice02 is sending to AWS IoT, go to Lambda management console, click on function **SensorDevice02-function**. Scroll down to comment out the code that generate random temperature telemetry data (line 57), which is usually about 120bytes in size:
 
 ```
-	deviceTemperature = round(random.uniform(15.1,29.9),2)
+	telemetrydata = round(random.uniform(15.1,29.9),2)
 ```
-This telemetry data is usually 120bytes. Let's replace the line of code above with a very long big text to purposely increase it's size
 
+2. Instead, create a large random string has 3000 characters (3000bytes in size). To do so, uncomment the line of code below (line 60)
 
-> deviceTemperature = "AWS IoT Device Defender is a security service that allows you to audit the configuration of your devices, monitor connected devices to detect abnormal behavior, and mitigate security risks. It gives you the ability to enforce consistent security policies across your AWS IoT device fleet and respond quickly when devices are compromised. IoT fleets can consist of large numbers of devices that have diverse capabilities, are long-lived, and are geographically distributed. These characteristics make fleet setup complex and error-prone. And because devices are often constrained in computational power, memory, and storage capabilities, this limits the use of encryption and other forms of security on the devices themselves. Also, devices often use software with known vulnerabilities. These factors make IoT fleets an attractive target for hackers and make it difficult to secure your device fleet on an ongoing basis.AWS IoT Device Defender addresses these challenges by providing tools to identify security issues and deviations from best practices. AWS IoT Device Defender can audit device fleets to ensure they adhere to security best practices and detect abnormal behavior on devices. "
+```
+	telemetrydata = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 3000)) 
+```
+3. Click **Save** on the topc right corner. After saving this code change, your new code should look like this:
 
+<img src="../images/codechange.png"/>
 
-Click on **Save** on the top right corner to save this change. After this change, each message Lambda function sent to AWS IoT will be ~1.3KB
+After this change, each message from **SensorDevice02** device will be about 3000bytes - which is very abnormal compared to regular message size (120bytes)
 
 Now we wait for a few minutes until you receive email from SNS. After that you can go to **Manage, Thing Groups, IsolatedDevices, Things** to see that **SensorDevice02** should be added to this group. Now let's check if this device has stopped sending telemetry data by going to **Test, Subscribe to a topic**, enter the topic **temperature-device-02**. 
 
 If your automation in step 2 works. You shouldn't see any message there because we have associated **DenyAll** policy to Thing Group **IsolatedDevices**
 
-Congratulations! You have succesfully completed this Lab. 
+Congratulations! By completing this module, you have learned how to detect unusual behaviors of IoT devices, and stop offending devices to take any IoT actions. 
+
+For extra-credit, move to [Module 4: Receive alerts in real-time](/Module%204:%20Receive%20alerts%20in%20real-time) to learn how to setup real-time notification from AWS IoT Device Defender on your phone or communication tools.
