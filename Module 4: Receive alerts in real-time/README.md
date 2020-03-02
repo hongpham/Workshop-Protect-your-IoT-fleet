@@ -92,9 +92,39 @@ You need to have  Slack channel to configure Device Defender to send alerts to y
 
 4. Select **Use a blueprint** to see the list of available blueprint. Blueprint templates are sample code for common use cases of Lambda.
 
-5. In the search box, type **Slack** to search for blueprints support Slack. Choose **cloudwatch-alarm-to-slack-python**. Click **Configure**
+5. In the search box, type **Slack** to search for blueprints support Slack. Choose **cloudwatch-alarm-to-slack-python**. Click **Configure**. This template is to send CloudWatch alarm to Slack channel. We will slight change the code in step 7 and 8 to have this Lambda function send Device Defender alerts  instead.
 
 6. Name your function. Under **Execution role**, leave default option  **Create a new role from AWS policy templates** as it is. This policy template has permisison to call KMS decrypt. To protect the Webhook URL, you would create a AWS Key Management Service (KMS) key, use it to encrypt the URL of the webhook, and base-64 encode it before pasting it in to the code. Remember to provide Role name for this new role
+
+7. You need to update the code to make this Lambda function send Device Defender alerts to Slack. Under **Lambda function code**, remove this code block (line 73-81)
+
+```python
+    alarm_name = message['AlarmName']
+    #old_state = message['OldStateValue']
+    new_state = message['NewStateValue']
+    reason = message['NewStateReason']
+    
+    slack_message = {
+        'channel': SLACK_CHANNEL,
+        'text': "%s state is now %s: %s" % (alarm_name, new_state, reason)
+    }
+```
+
+8. Replace it with these lines of code
+
+```python
+
+    thing = 'Thing name: ' + message['thingName']
+    securityprofile = 'Security profile: ' + message['securityProfileName']
+    behaviorname = 'Behavior name: ' + message['behavior']['name']
+
+    slack_message = {
+        'channel': SLACK_CHANNEL,
+        'text': "%s You have a new violation %s: %s" % (thing, securityprofile, behaviorname)
+    }
+
+```
+
 
 7. Under **SNS trigger**, choose the SNS topic that Device Defender sends alerts to. From previous Modules, a SNS topic **BadIoTDevices** was created. You can use this SNS topic or create a new one. Remember to check box **Enable trigger**
 
