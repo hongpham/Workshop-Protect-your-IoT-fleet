@@ -8,11 +8,11 @@ In Module 1, you validated environment setup for your IoT devices. Your next tas
     
     1.2 [Start an On-Demand Audit](#12-start-an-on-demand-audit)
 
-2. [Mitigate noncompliant findings](#2-itigate-noncompliant-findings)
+2. [Mitigate noncompliant findings](#2-mitigate-noncompliant-findings)
 
     2.1 [Define mitigation actions](#21-define-mitigation-actions)
     
-    2.2 [Apply mitigation actions to audit findings](#22-apply-mitigation-actions-to-audit-findings)
+    2.2 [Apply mitigation actions to audit findings](#2.2-apply-mitigation-actions-to-audit-findings)
 
 
 ## 1. Audit your IoT Fleet
