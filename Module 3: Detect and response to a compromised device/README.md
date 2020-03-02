@@ -1,32 +1,47 @@
 # Module 3: Detect and response to unusual behaviors of your devices
 
+In Module 2, you learned how to set up automation to audit devices configuration and implement mitigation actions. With additional security requirements from your IT organization, you need to have a solution in place to detect unusual behaviors of IoT devices, which can indicate that devices are compromised and participate in bad activities (for example, participate in a DDoS attack). You also need to find a solution to quickly response to this changes in device's behaviors. Becuase these IoT devices are used to send temperature telemetry, you identify one behavior indicates that a device is compromised: sending very large message compared to the regular message, which only has temperature telemetry.
+
+This module will walk you through neccessary steps to build solutions for requirements above by following these steps.
+
 1. [Define unusual behaviors of your devices](#1-define-unusual-behaviors-of-your-devices)
 2. [Respond to a violation](#2-respond-to-a-violation)
 3. [Simulate a compromised device](#3-simulate-a-compromised-device)
 
-After you have identify potential external threats to your IoT devices, it's crucial to implement a solution to quickly detec if the devices are compromised, and take action to stop the attack. In this lab, your task is to detect if the device participate in a DDoS attack and becomes the source of the actack.
-
-To do so, you will need to define when the devices' behaviors will be considered abnormal and need a human attention to check if it's actually compromised. So let's use AWS IoT Device Defender Detect for that.
 
 ## 1. Define unusual behaviors of your devices
 
-You realizes that you can use 2 device metrics to detect if the devices are acting strangely: how much data the device is sending, and the freqency of sending. Now you can tell Device Defender to monitor these two metrics, and alert you if it's out of the threadhold that you define. A combination of anomalous behaviors and actions to take when abnomoly behavior is detected is called **Security Profile**
+Your first task is to implement a solution to detect unusual behaviors of IoT devices. How do you know if devices act differently than its regular behavior? You need to have metrics related to device's activities, and you need to define when the value of each metric is considered outside of regularity.
 
-From the IoT management console, click **Defend**,**Detect**, **Security Profiles**, **Create your first security profile**. Name this security profile as **LargeMessageSize**.
+AWS IoT Device Defender Detect looks at cloud-side metrics (from AWS IoT) and device-side metrics (from agents you install on your devices), and help you detect changes in these metrics. However, you need to tell Device Defender when these metrics aren't normal and need human's attention.
 
-Create a behavior named **messageSize**. We ask Device Defender to observe **Message size** metric and alert us if the size of the message going out of the device is greater than 35000 bytes - which is larger than the regular message size that SensorDevice01 and SensorDevice02 usually send to AWS IoT. And if a device is in violation of this behavior for two datapoints, then the alarm will be trigger. For **Datapoints to Clear**, we choose to clear the alarm if the offending device is no longer in violation of this behavior for 2 conservative datapoints.
+To do that, you need to create a **Security Profile**. A security profile defines anomalous behaviors for a group of devices (a thing group) or for all devices in your account, and specifies which actions to take when an anomaly is detected. 
+
+In this case, you will create a Security Profile to allow Device Defender monitor message size of devices SensorDevice01 and SensorDevice02. The Software Developer Teams shared with you that each message size is around 120bytes, and devices send 6 messages in 1 minute (equivilant to 1 message/10 seconds). That means, each device should not send more than 720bytes in 1 minute. Now you can use this data point as a threashold for Security Profile.
+
+1. Sign in to your AWS account. From AWS console home, go to IoT console
+
+2. On the left side of IoT Console, Click **Defend, Detect, Security Profiles, Create your first security profile**. Name this security profile as **DetectLargeMessageSize**. 
+
+3. Under **Behaviors**, create a behavior named **LargeMessageSize**. We ask Device Defender to observe message size and alert us it transmits messages whose cumulative size is more than 1000bytes in a minute. 
+
+4. Click on drop down list under **Metric**, and choose metric **Message Size**. Choose **Check Type** as **Absolute Value**. That means an alarm occurs for a device if a specify number of message cross the threshold. If you choose **Statistical Threshold**, an alarm occurs for a device if, during specific number of consecutive five-minute periods, it transmits messages whose cumulative size is more than that measured for 90 percent of all other devices reporting for this security profile behavior. For simplicity, keep Check Type as **Absolute Value** for now.
+
+5. For **Operator**, choose **Greater than**. Specify **1000** for **Value**.
+
+6. For **Datapoints to Alarm**, specify **6**. Because you choose **Absolute Value** as Check Type, each message size is one datapoint. After 6 datapoints, the alarm will occur.
+
+7. For **Datapoints to Clear**, specify **6**. That means the alarm is cleared if the offending device is no longer in violation of this behavior for 6 conservative datapoints.
 
 <img src="../images/behaviors.png"/>
 
-We also need to keep relevant metrics for investigation. Under **Addionional Metrics to retain**, click on **Select** on the right corner to see drop down list of metrics that we can retain. In this lab, we'll choose **Established TCP connections count**, **Message size**, and **Message received**. Then click **Next**
+8. You need to keep the mesage size metrics of each message for investigation. Under **Addionional Metrics to retain**, click on **Select** on the right corner to see drop down list of metrics that we can retain. Select **Message size**. You also need to keep track of how many messages are sent and received between AWS IoT and each device in a given period. To keep this metric, select **Message received**. Then click **Next**
 
-Next step is to select a SNS topic for alerts when Device Defender alerts a violation. Choose the SNS topic and IAM role that you created in step 0.
+9. Select a SNS topic for alerts when a device violates a behavior in this profile. An SNS topic was created for you in advance. This step is similar to [Module 2, session 1.1, Option 1, step 9 and 10](/Module%202:%20Audit%20your%20IoT%20Fleet/README.md#11-check-audit-settings). Select SNS topic **BadDevices**. For IAM Role, select IAM role with this naming convention [CloudFormation-stack-name]-SNSTopicRole-[random-value]. If you worked on Module 2 of this workshop, you should already subcribed your email to this topic **BadDevices**. If you haven't subscribed your email, don't forget to do so.
 
 <img src="../images/snsdetect.png"/>
 
-> Don't forget to subscribe your email to this new SNS topic to receive an email when Device Defender alerts a violation.
-
-Now you need to attach this security profile to a target. A target can be a thing, or a thing group. For simplicity, we will attach this security profile with **All things** for now.
+10. You need to attach this security profile to a target. A target can be a thing, or a thing group. For simplicity, we will attach this security profile with **All things** for now.
 
 <img src="../images/target.png"/>
 
