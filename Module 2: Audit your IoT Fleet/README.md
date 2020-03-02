@@ -8,7 +8,7 @@ In Module 1, you validated environment setup for your IoT devices. Your next tas
     
     1.2 [Start an On-Demand Audit](#12-start-an-on-demand-audit)
 
-2. [Take actions to mitigate audit findings](#2-take-actions-to-mitigate-audit-findings)
+2. [Mitigate noncompliant findings](#2-itigate-noncompliant-findings)
 
     2.1 [Define mitigation actions](#21-define-mitigation-actions)
     
@@ -31,7 +31,7 @@ An Audit Settings has 3 parts:
 
 In this module, you will run all of the checks for your IoT devices. You will need to validate if all checks are enabled in settings. Leave all the check enable. Depending on the scenerios below, expand one of the following dropdowns to start
 
-<details><summary>Click here if you're at an AWS event where the Event Engine is being used or you run CloudFormation template in Module 1 on your AWS account</summary><br>
+<details><summary>Option 1: Click here if you're at an AWS event where the Event Engine is being used or you run CloudFormation template in Module 1 on your AWS account</summary><br>
   
    1. If you are at an AWS Sponsored event, an on-demand Audit was created in advanced for you to make sure you can see how an Audit results look like if you can't create an Audit during the event. Thus Audit Settings is already created for you. You can follow steps below to validate Settings
    
@@ -57,16 +57,15 @@ In this module, you will run all of the checks for your IoT devices. You will ne
    
    9. Under **Role**, select IAM role with this naming convention [CloudFormation-stack-name]-SNSTopicRole-[random-value]. This role is create by CloudFormation. It has one AWS managed policy **AWSIoTDeviceDefenderPublishFindingsToSNSMitigationAction** 
   
-   10. When you're ready, click **Update** to enable SNS alerts. 
-   
-   <img src="../images/snsrole.png"/>
-   
+   10. When you're ready, click **Update** to enable SNS alerts. Don't forget to subscribe to this SNS topic to receive noncompliant findings notification when an Audit completes
 
-You have completed checking setting for Device Defender Audit. Go to next session **1.2 Start an On-Demand Audit** to create and start an Audit.
+    <img src="../images/snsrole.png"/>
+    
+   You have completed checking setting for Device Defender Audit. Go to next session **1.2 Start an On-Demand Audit** to create and start an Audit.
    
 </details>
 
-<details><summary>Click here if you manually configure Audit Settings very first time</summary><br>
+<details><summary>Option 2: Click here if you manually configure Audit Settings very first time</summary><br>
 
 If you finished Module 1 before working on this module, an on-demand Device Defender Audit was created in advance. This option will not be suitable for you.
 
@@ -116,7 +115,7 @@ To start an Audit immediately, you create an On-Demand Audit by following these 
 
 5. To view Audit's status, go to **Defend**, **Audit**, **Results**. All On-Demand Audit will have the name On-demand.
 
-6. To view Audit's results, click on the name of the Audit **On-demand**
+6. When Audit completes, Device Defender sends you an email (you need to subscribe to SNS topic in [session 1.1](#1.1-check-audit-settings), Option 1, step 11) To view Audit's results, click on the name of the Audit **On-demand**
 
 <img src="../images/checkresult.png"/>
 
@@ -128,11 +127,11 @@ To start an Audit immediately, you create an On-Demand Audit by following these 
 
 - [Logging disabled](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-logging-disabled.html): indicates AWS IoT logs are not enabled in Amazon CloudWatch. AWS IoT logs in CloudWatch provide visibility into behaviors in AWS IoT, including authentication failures and unexpected connects and disconnects that might indicate that a device has been compromised.
 
-> Helpful tip: this Audit Checks document provide instructions to help you fix noncompliant findings for 14 checks.
+> Helpful tip: [this Audit Checks document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-audit-checks.html) provides instructions to help you fix noncompliant findings for 14 checks.
 
 8. To view which resources associate which each findings, click on the check name. In this module, let's work on fixing  **Device certificate shared**  findings. Click on this finding to find out which device certificate are being shared, and which IoT Things are involved.
 
-9. You should will see the Certificate Id that is being shared.
+9. You will see the Certificate Id that is being shared.
 
 <img src="../images/sharedcert.png"/>
 
@@ -145,21 +144,35 @@ To start an Audit immediately, you create an On-Demand Audit by following these 
 
 Now you know exactly that 2 Things SensorDevice01 and SensorDevice02 are using the same X.509 to connect to AWS IoT. This is not a good configuration. Move to the next step to mitigate this noncompliant finding.
 
-## 2. Take actions to mitigate audit findings
+## 2. Mitigate noncompliant findings
+
+There are multipl methods to automate remediation for noncompliant IoT devices after running Device Defender Audit. You can write script/tools to use AWS CLI/SDK to take actions on noncompliant device when you receive notification from AWS Device Defender. Another options is to use AWS Device Management to push update/patches to your devices at scale. In this module, we will use a different approach: use Device Defender's Mitigation Actions feature to fix noncompliant devices.
 
 ### 2.1 Define mitigation actions
 
-From IoT management console, click **Defend**, **Mitigation Actions**. From the top right conner, click **Create** to create a new Mitigation Actions.
+AWS IoT Device Defender provides predefined actions for the different audit checks. You need to configure those actions for your AWS account and then apply them to a set of findings. 
 
-To see the list of supported actions, you can look at [this document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-mitigation-actions.html). In this Lab, let's create a Mitigation Actions **Update device certificate** that will take action to deactivate the certificate.
+1. Sign in to AWS Account. From AWS console home, go to IoT Device Defender.
+
+2. From IoT console, click **Defend**, **Mitigation Actions**. From the top right conner, click **Create** to create a new Mitigation Actions.
+
+3. Provide a name for this action. You can name it **Update-device-certificate**.
+
+4. Now you need to choose which action Device Defender will perfom. Click on the drop down list **Action type** to see the [list of supported actions](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-mitigation-actions.html). 
+
+5. Since we want to remediate noncompliant finding **Device certificate shared**, choose **Update device certificate** action type to deactivate the certificate.
 
 <img src="../images/ma-updatedev.png"/>
 
-Now, you'll need to give Device Defender permisison to perform this mitigation action. To do so, you create an IAM role or select an existing role that allow action **"iot:UpdateCertificate"** . Since we don't have a role with this permisison, let's ask AWS IoT to create a new one. Click **Create Role** and enter a role name. 
+6. You need to give Device Defender permisison to perform this mitigation action. Under **Permission**, expand **Permissions** and **Trust relationships** to look at what permission and trust relationship is required.
+
+7. To create a new IAM role with these permisison, you need to create a new one. Click **Create Role** and enter a role name. Then click **Create role**.  This role will have AWS managed policy **AWSIoTDeviceDefenderAddThingsToThingGroupMitigationAction**
 
 <img src="../images/ma-permission.png"/>
 
-Leave everything else as it is and click **Save**. 
+8. Under **Parameters**, you should see **Deactivate** is choosen as the action Device Defender should take. Note: currently Action Type Update device certificate only has one Action - Deactivate. 
+
+9. Leave everything else as it is and click **Save**. 
 
 Now we can apply this mitigation actions to the audit findings.
 
