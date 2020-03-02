@@ -2,7 +2,11 @@
 
 For many Security Engineers, receiving alerts in real time is critical. They need to act quickly to reduce impact of security issues. Using SMS message, or collaboration tools such as Slack or Chime, are common solutions to notify engineers when thing goes wrong.
 
-In this extra-credit module, we will show you how to configure SNS to send Device Defender alerts to your phone, or to Amazon Chime chatroom. If you are interested in using Slack with SNS, then take a look at [this Lambda blueprints](https://aws.amazon.com/about-aws/whats-new/2015/12/aws-lambda-launches-slack-integration-blueprints/)
+In this extra-credit module, we will show you how to configure SNS to send Device Defender alerts to your phone, or to Amazon Chime chatroom. 
+
+**Prerequisite**
+* To work on solutions below, you need to have a SNS topic that already receives Device Defender alerts. 
+
 
 1. [Send SMS message to your phone](#1-send-sms-message-to-your-phone-only-available-in-region-that-supports-sms-messaging)
 2. [Receive alerts on Chime chatroom](#2-receive-alerts-on-chime-chatroom)
@@ -21,9 +25,11 @@ You can subcribe your phone number to SNS topic receive alerts from IoT Device D
 
 You will need to confirm your subscription in order to start receiving SMS message.
 
+Now you can move to [Test](#4-test) to test out this new intergration
+
 ## 2. Receive alerts on Chime chatroom
 
-Amazon Chime is a collaboration tools. Chime provide a feature call Incoming Webhook to allow applications post message to Chime chatroom. You can configure SNS to send a message to your Chime chatroom when Device Defender generates an alert.
+Amazon Chime is a communication tool that lets you chat and place calls. Chime provide a feature call Incoming Webhook to allow applications post message to Chime chatroom. You can configure SNS to send a message to your Chime chatroom when Device Defender generates an alert.
 
 ### 1. Configure Chime Webhook
 
@@ -65,9 +71,37 @@ def handler(event, context):
 ```
 Basically, this function parse the SNS message to retrieve Thing name, Security Profile, and Behavior name, then it use *requests* method to post these information to the webhook URL. In this lab, we have stored the webhook URL as an environment variable **CHIME_WEBHOOK**. In production use cases, we would recommend to store it securely using AWS Secrets Manager or any existing tools/vault that your team is using.
 
-When you have succcesfully created this Lambda function, let's add SNS as a trigger. Under **Designer**, click **Add trigger** and select **SNS**. Choose the SNS topic that you configured to receive IoT Device Defender alerts in. Remember to check box **Enable trigger**. Then click **Add*
+When you have succcesfully created this Lambda function, let's add SNS as a trigger. Under **Designer**, click **Add trigger** and select **SNS**. Choose the SNS topic that you configured to receive IoT Device Defender alerts in. Remember to check box **Enable trigger**. Then click **Add**
 
-### 2. Test
+Now you can move to [Test](#4-test) to test out this new intergration
+
+## 3. Receive alerts on Slack chatroom
+
+You need to have  Slack channel to configure Device Defender to send alerts to your Slack chatroom by following the steps below.
+
+### 3.1 Create a Slack Incoming WebHook
+
+1. Start by setting up an [incoming webhook integration](https://my.slack.com/services/new/incoming-webhook/). Choose the channel that Webhook will post messages to and click **Add Incoming Webhooks integration**
+
+2. Note down the **Webhook URL** and save it in your favourite text editor.
+
+3. Sign in to your AWS account. Go to Lambda console and create a Lambda function to post the message to the channel. 
+
+4. Select **Use a blueprint** to see the list of available blueprint. Blueprint templates are sample code for common use cases of Lambda.
+
+5. In the search box, type **Slack** to search for blueprints support Slack. Choose **cloudwatch-alarm-to-slack-python**. Click **Configure**
+
+6. Name your function. Under **Execution role**, leave default option  **Create a new role from AWS policy templates** as it is. This policy template has permisison to call KMS decrypt. To protect the Webhook URL, you would create a AWS Key Management Service (KMS) key, use it to encrypt the URL of the webhook, and base-64 encode it before pasting it in to the code. Remember to provide Role name for this new role
+
+7. Under **SNS trigger**, choose the SNS topic that Device Defender sends alerts to. From previous Modules, a SNS topic **BadIoTDevices** was created. You can use this SNS topic or create a new one. Remember to check box **Enable trigger**
+
+8. Under **Encryption configuration**, check box **Enable helpers for encryption in transit**. After that, click **Encrypt** or Environment variable **kmsEncryptedHookUrl**. Choose appropriate AWS KMS key (non-production key or create a new one). Click **Encrypt**
+
+9. Click **Create function**
+
+Now you can move to [Test](#4-test) to test out this new intergration
+
+## 4. Test 
 
 To test if this configuration works, you can publish this test SNS message below using SNS console and see if it will send a message to your Chime chat room
 
