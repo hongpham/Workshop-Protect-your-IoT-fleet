@@ -6,7 +6,7 @@ In Module 1, you validated environment setup for your IoT devices. Your next tas
 
     1.1 [Check Audit settings](#11-check-audit-settings)
     
-    1.2 [Run an On-Demand Audit](#12-run-an-on-demand-audit)
+    1.2 [Start an On-Demand Audit](#12-start-an-on-demand-audit)
 
 2. [Take actions to mitigate audit findings](#2-take-actions-to-mitigate-audit-findings)
 
@@ -122,9 +122,11 @@ To start an Audit immediately, you create an On-Demand Audit by following these 
 
 Under **Non-compliant checks**, you should see 3 checks:
 
-- [Device certificate shared](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-device-cert-shared.html)
-- [IoT policies overly permissive](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-iot-policy-permissive.html)
-- [Logging disabled](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-logging-disabled.html)
+- [Device certificate shared](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-device-cert-shared.html): indicates multiple, concurrent connections use the same X.509 certificate to authenticate with AWS IoT. Each device should have a unique certificate to authenticate with AWS IoT. When multiple devices use the same certificate, this might indicate that a device has been compromised. Its identity might have been cloned to further compromise the system.
+
+- [IoT policies overly permissive](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-iot-policy-permissive.html): indicates an AWS IoT policy gives permissions that are too broad or unrestricted. In general, a policy for a device should grant access to resources associated with just that device and no or very few other devices.
+
+- [Logging disabled](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-logging-disabled.html): indicates AWS IoT logs are not enabled in Amazon CloudWatch. AWS IoT logs in CloudWatch provide visibility into behaviors in AWS IoT, including authentication failures and unexpected connects and disconnects that might indicate that a device has been compromised.
 
 To view which resources associate which each findings, click on the check name. For example, click on **Device certificate shared** and you will see the Certificate ID that is being shared between SensorDevice01 and SensorDevice02
 
