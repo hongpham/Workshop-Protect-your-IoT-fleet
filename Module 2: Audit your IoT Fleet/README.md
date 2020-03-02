@@ -63,10 +63,11 @@ In this module, you will run all of the checks for your IoT devices. You will ne
 
 You have completed checking setting for Device Defender Audit. Next step is to create an Audit.
    
+</details>
 
 <details><summary>Click here if you manually configure Audit Settings very first time</summary><br>
 
-If you finished [Module 1](/Module%201:%20Environment%20build) before working on this module, an on-demand Device Defender Audit was created in advance for you. Ignore this option if you're in an AWS event.
+If you finished Module 1 before working on this module, an on-demand Device Defender Audit was created in advance for you. Ignore this option if you're in an AWS event.
 
 If you are not following along with Module 1 and this module, and this is the first time you run a Device Defender Audit, you should follow [instruction in this document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-HowToProceed.html). If you use AWS IoT console to start an Audit, follow these steps:
 
