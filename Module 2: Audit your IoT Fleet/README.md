@@ -31,7 +31,7 @@ An Audit Settings has 3 parts:
 
 In this module, you will run all of the checks for your IoT devices. You will need to validate if all checks are enabled in settings. Leave all the check enable. Depending on the scenerios below, expand one of the following dropdowns to start
 
-<details><summary>Click here if you're at an AWS event where the Event Engine is being used or you run CloudFormation template in [Module 1](/Module%201:%20Environment%20build) on your AWS account</summary><br>
+<details><summary>Click here if you're at an AWS event where the Event Engine is being used or you run CloudFormation template in Module 1 on your AWS account</summary><br>
   
    1. If you are at an AWS Sponsored event, an on-demand Audit was created in advanced for you to make sure you can see how an Audit results look like if you can't create an Audit during the event. Thus Audit Settings is already created for you. You can follow steps below to validate Settings
    
