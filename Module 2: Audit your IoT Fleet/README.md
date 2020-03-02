@@ -27,7 +27,7 @@ An Audit Settings has 3 parts:
 * Enable Audits check: you select checks to make it available for audits. You can enable or disable anytime. Disable a check means that Device Defender will not include that type of check when it run an Audit.
 * SNS alerts: This optional session let you choose a SNS topic to receive alerts from Device Defender. Alerts are always displayed in the AWS IoT console.
 
-### 1.1 Check Audit settings
+### 1.1 Check Audit Settings
 
 In this module, you will run all of the checks for your IoT devices. You will need to validate if all checks are enabled in settings. Leave all the check enable. Depending on the scenerios below, expand one of the following dropdowns to start
 
@@ -60,16 +60,17 @@ In this module, you will run all of the checks for your IoT devices. You will ne
    10. When you're ready, click **Update** to enable SNS alerts. 
    
    <img src="../images/snsrole.png"/>
+   
 
-You have completed checking setting for Device Defender Audit. Next step is to create an Audit.
+You have completed checking setting for Device Defender Audit. Go to next session **1.2 Start an On-Demand Audit** to create and start an Audit.
    
 </details>
 
 <details><summary>Click here if you manually configure Audit Settings very first time</summary><br>
 
-If you finished Module 1 before working on this module, an on-demand Device Defender Audit was created in advance for you. Ignore this option if you're in an AWS event.
+If you finished Module 1 before working on this module, an on-demand Device Defender Audit was created in advance. This option will not be suitable for you.
 
-If you are not following along with Module 1 and this module, and this is the first time you run a Device Defender Audit, you should follow [instruction in this document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-HowToProceed.html). If you use AWS IoT console to start an Audit, follow these steps:
+Device Defender will prompt you to configure Audit Settings if this is the first time you [run an Audit](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-HowToProceed.html). To use AWS IoT console to start an Audit, follow these steps:
 
 1. Sign in to AWS Account. From AWS console home, click on IoT Device Defender to go to IoT console
 
@@ -89,21 +90,33 @@ If you are not following along with Module 1 and this module, and this is the fi
 
 </details>
 
-### 1.2 Run an On-Demand Audit
+### 1.2 Start an On-Demand Audit
 
-From the IoT management console, click on **Defend**, **Audit**, **Schedules**. You will then see the current list of scheduled Audits. Click **Create** button on the top right to create a new Audit. From the **Available checks** list, you can enable or disble the checks that you would like to run agains your devices. Click on the question mark next to each check to understand what it will do. In this lab, let's keep all the checks enabled.
+When you create a new Audit, you can choose how often Audit should run:
+
+* On-Demand: Audit starts immediately with no repeats. This option is helpful for ad-hoc audit.
+* Daily: scheduled audit runs every day. The actual start time of each audit is determined by the system.
+* Weekly: scheduled audit runs every week on the day of your choice. The actual start time of each audit is determined by the system.
+* Bi-Weekly: scheduled audit runs every two week on the day of your choice. The actual start time of each audit is determined by the system.
+* Monthly: scheduled audit runs every month on the day of your choice. The actual start time of each audit is determined by the system.
+
+To start an Audit immediately, you create an On-Demand Audit by following these steps:
+
+1. Sign in to AWS Account. From AWS console home, search for **IoT Device Defender** and click on it to go to IoT console
+
+2. From the IoT console, click **Defend**, **Audit**, **Schedules**. Click **Create** button on the top right to create a new Audit. 
+
+3. You will see the list of eligible checks can be included in this Audit. If you disable any checks in Audit Settings, you will not see that checks in this list. In this workshop, you select all of the checks (should be 14 checks in total)
 
 <img src="../images/Auditlist.png" width="600" height="557"/>
 
-You have options to run Audit daily, weekly, bi-weekly, or monthly. With these options, IoT Device Defender will choose a time to start the audit for you. In this lab, let's choose **Run audit now(once)**. Then click **Create** to start the audit immediately
+4. Click the drop down list under **Set schedule**. Choose **Run audit now(once)**. Then click **Create** to start the Audit immediately. Note that there is no option to name an On-Demand Audit. 
 
 <img src="../images/Auditschedule.png"/>
 
-It will take a few minutes for the audit to complete.  
+5. To view Audit's status, go to **Defend**, **Audit**, **Results**. All On-Demand Audit will have the name On-demand.
 
-> Note: since we already create an audit for you, and there aren't many IoT devices in this lab, so the new on-demand Audit should complete quickly. In real life, Audit can take longer time to show you results. 
-
-To see audit results, click on **Defend**, **Audit**, **Results** 
+6. To view Audit's results, click on the name of the Audit **On-demand**
 
 <img src="../images/checkresult.png"/>
 
