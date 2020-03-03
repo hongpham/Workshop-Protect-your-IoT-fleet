@@ -8,7 +8,7 @@ In this extra-credit module, you configure SNS to send Device Defender alerts to
 
 1. [Send SMS message to your phone](#1-send-sms-message-to-your-phone-only-available-in-region-that-supports-sms-messaging)
 2. [Receive alerts on Chime chatroom](#2-receive-alerts-on-chime-chatroom)
-3. [Receive alerts on Slack channel](#3-receive-alerts-on-slack-chatroom)
+3. [Receive alerts on Slack channel](#3-receive-alerts-on-slack-channel)
 4. [Test](#4-test)
 
 
