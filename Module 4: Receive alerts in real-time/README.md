@@ -1,12 +1,10 @@
 # Module 4: Receive alerts in real-time
 
-For many Security Engineers, receiving alerts in real time is critical. They need to act quickly to reduce impact of security issues. Using SMS message, or collaboration tools such as Slack or Chime, are common solutions to notify engineers when thing goes wrong.
+For many Security Engineers, receiving alerts in real time is critical. They need to act quickly to reduce impact of security issues. SMS message, or messaging platform such as Slack or Chime, are common tools to notify engineers when thing goes wrong.
 
-In this extra-credit module, we will show you how to configure SNS to send Device Defender alerts to your phone, or to Amazon Chime chatroom. 
+In this extra-credit module, you configure SNS to send Device Defender alerts to your phone, Amazon Chime chatroom, or Slack channel.
 
-**Prerequisite**
-* To work on solutions below, you need to have a SNS topic that already receives Device Defender alerts. 
-
+> Note: you need to have a SNS topic receives alerts from Device Defender to work on this module
 
 1. [Send SMS message to your phone](#1-send-sms-message-to-your-phone-only-available-in-region-that-supports-sms-messaging)
 2. [Receive alerts on Chime chatroom](#2-receive-alerts-on-chime-chatroom)
@@ -16,7 +14,7 @@ In this extra-credit module, we will show you how to configure SNS to send Devic
 
 ## 1. Send SMS message to your phone (only available in [region that supports SMS messaging](https://docs.aws.amazon.com/sns/latest/dg/sns-supported-regions-countries.html)):
 
-You can subcribe your phone number to SNS topic receive alerts from IoT Device Defender. When a new alert occur, SNS will send you a SMS message (please note that SMS cost may be applied to your phone number)
+You can subcribe your phone number to SNS topic receive alerts from IoT Device Defender. When a new alert occurs, SNS will send you a SMS message (SMS cost will be charged)
 
 1. Sign in to your AWS account. From AWS console home, click **SNS**
 
@@ -72,7 +70,8 @@ def handler(event, context):
   print('Finished sending notification to Amazon Chime room')
 
 ```
-Basically, this function parse the SNS message to retrieve Thing name, Security Profile, and Behavior name, then it use *requests* method to post these information to the webhook URL. In this lab, we have stored the webhook URL as an environment variable **CHIME_WEBHOOK**. In production use cases, we would recommend to store it securely using AWS Secrets Manager or any existing tools/vault that your team is using.
+
+This function parse the SNS message to retrieve Thing name, Security Profile, and Behavior name, then it use *requests* method to post these information to the webhook URL. In this lab, we have stored the webhook URL as an environment variable **CHIME_WEBHOOK**. In production use cases, we would recommend to store it securely using AWS Secrets Manager or any existing tools/vault that your team is using.
 
 When you have succcesfully created this Lambda function, let's add SNS as a trigger. Under **Designer**, click **Add trigger** and select **SNS**. Choose the SNS topic that you configured to receive IoT Device Defender alerts in. Remember to check box **Enable trigger**. Then click **Add**
 
@@ -80,7 +79,7 @@ Now you can move to [Test](#4-test) to test out this new intergration
 
 ## 3. Receive alerts on Slack chatroom
 
-You need to have  Slack channel to configure Device Defender to send alerts to your Slack chatroom by following the steps below.
+You need to have  a Slack channel in this session. To configure Device Defender send alerts to Slack channel, follow steps below
 
 ### 3.1 Create a Slack Incoming WebHook
 
@@ -90,53 +89,77 @@ You need to have  Slack channel to configure Device Defender to send alerts to y
 
 3. Sign in to your AWS account. Go to Lambda console and create a Lambda function to post the message to the channel. 
 
-4. Select **Use a blueprint** to see the list of available blueprint. Blueprint templates are sample code for common use cases of Lambda.
+4. Click **Create function**. Select **Author from Scratch**
 
-5. In the search box, type **Slack** to search for blueprints support Slack. Choose **cloudwatch-alarm-to-slack-python**. Click **Configure**. This template is to send CloudWatch alarm to Slack channel. We will slight change the code in step 7 and 8 to have this Lambda function send Device Defender alerts  instead.
+<img src="../images/lambdaslack.png"/>
 
-6. Name your function. Under **Execution role**, leave default option  **Create a new role from AWS policy templates** as it is. This policy template has permisison to call KMS decrypt. To protect the Webhook URL, you would create a AWS Key Management Service (KMS) key, use it to encrypt the URL of the webhook, and base-64 encode it before pasting it in to the code. Remember to provide Role name for this new role
+5. Name this lambda function. Chose **Python 3.8** for Runtime, and choose **Create a new role with basic Lambda permissions** for Execution Role. Click **Create function**
 
-7. You need to update the code to make this Lambda function send Device Defender alerts to Slack. Under **Lambda function code**, remove this code block (line 73-81)
+6. Replace the code in Lambda function with Python code below. You can also download it from [LambdaWebhookSlack.py](../LambdaWebhookSlack.py). Remember to click Save
 
 ```python
-    alarm_name = message['AlarmName']
-    #old_state = message['OldStateValue']
-    new_state = message['NewStateValue']
-    reason = message['NewStateReason']
+
+import boto3
+import json
+import logging
+import os
+
+from base64 import b64decode
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
+
+#The hook URL of Slcak channel
+HOOK_URL = os.environ['slackHookURL']
+# The Slack channel to send a message to stored in the slackChannel environment variable
+SLACK_CHANNEL = os.environ['slackChannel']
+
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+
+def lambda_handler(event, context):
+    logger.info("Event: " + str(event))
+    message = json.loads(event['Records'][0]['Sns']['Message'])
+    logger.info("Message: " + str(message))
     
-    slack_message = {
-        'channel': SLACK_CHANNEL,
-        'text': "%s state is now %s: %s" % (alarm_name, new_state, reason)
-    }
-```
-
-8. Replace it with these lines of code
-
-```python
-
     thing = 'Thing name: ' + message['thingName']
     securityprofile = 'Security profile: ' + message['securityProfileName']
     behaviorname = 'Behavior name: ' + message['behavior']['name']
 
     slack_message = {
         'channel': SLACK_CHANNEL,
-        'text': "%s You have a new violation %s: %s" % (thing, securityprofile, behaviorname)
+        'text': " You have a new Device Defender alert:  %s, %s, %s" % (thing, securityprofile, behaviorname)
     }
 
+    req = Request(HOOK_URL, json.dumps(slack_message).encode('utf-8'))
+    try:
+        response = urlopen(req)
+        response.read()
+        logger.info("Message posted to %s", slack_message['channel'])
+    except HTTPError as e:
+        logger.error("Request failed: %d %s", e.code, e.reason)
+    except URLError as e:
+        logger.error("Server connection failed: %s", e.reason)
 ```
 
+7. Under **Environment variables**, click **Edit** and **Add environment variable**. You need to add two environmen variables **slackHookURL** and **slackChannel**. Then click **Save**
 
-7. Under **SNS trigger**, choose the SNS topic that Device Defender sends alerts to. From previous Modules, a SNS topic **BadIoTDevices** was created. You can use this SNS topic or create a new one. Remember to check box **Enable trigger**
+<img src="../images/envvarslack.png"/>
 
-8. Under **Encryption configuration**, check box **Enable helpers for encryption in transit**. After that, click **Encrypt** or Environment variable **kmsEncryptedHookUrl**. Choose appropriate AWS KMS key (non-production key or create a new one). Click **Encrypt**
-
-9. Click **Create function**
+8. Now add SNS as a trigger for this function. Under **SNS trigger**, choose the SNS topic that Device Defender sends alerts to. From previous modules, a SNS topic **BadIoTDevices** was created. You can use this SNS topic or create a new one. Remember to check box **Enable trigger**. Then click **Add**
 
 Now you can move to [Test](#4-test) to test out this new intergration
 
 ## 4. Test 
 
 To test if notification works, you can publish this test SNS message below using SNS console. This is an example alerts generated by Device Defender.
+
+1. Sign in to your AWS account, click **SNS** to go to SNS console
+
+2.  On the left side, click on menu bar, and click **Topics** to see the list of SNS topics. In this module, select **BadIoTDevices** topic.
+
+3. Click **Publish message** on the top right corner. Copy the json blob below to **Message body to send to the endpoint**. Then click **Publish message**
 
 ```json
 {
@@ -162,3 +185,5 @@ To test if notification works, you can publish this test SNS message below using
   "securityProfileName": "LargeMessageSize"
 }
 ```
+
+Congratulations! You have succesfully sent Device Defender alerts in real time to your favourite communication tools. 
