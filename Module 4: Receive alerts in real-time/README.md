@@ -43,7 +43,7 @@ Click **Add webhook** and give it a name. Your webhook will have a unique URL. Y
 
 Since SNS doesn't intergrate with Chime directly, we will use a Lambda function to post the SNS message to the Chime chatroom. From Lambda management console, create a new Lambda function. Give this new function a name and choose Python3.* as runtime with default permissions. 
 
-Now we already write the code for this lambda function and install all dependencies. Download [IoTWebhookFunction.zip](/LambdaWebhookChime/IoTWebhookFunction.zip) to your laptop. And upload this Python  deploymet packages to the Lambda function. Under **Function code**, click the drop down **Code entry type**, and choose **Upload a .zip file**. Here is the code snippet of this Lambda function
+Now we already write the code for this lambda function and install all dependencies. Download [IoTWebhookFunction.zip](LambdaWebhookChime/IoTWebhookFunction.zip) to your laptop. And upload this Python  deploymet packages to the Lambda function. Under **Function code**, click the drop down **Code entry type**, and choose **Upload a .zip file**. Here is the code snippet of this Lambda function
 
 ```python
 import json
