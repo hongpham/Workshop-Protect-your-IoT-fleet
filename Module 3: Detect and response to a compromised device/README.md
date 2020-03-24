@@ -54,7 +54,7 @@ After you figure out how to detect unusual device's behaviors, next step is to r
 
 This session walk you through how to create a simple automation that will move violated device to an IoT Thing Group specifically for investigation. You attach an IAM policy to this Thing Group so that the devices in this Thing Group do not have any permision to perform any IoT actions.
 
-### 2.1 Create IoT Thing Group denies all IoT actions
+### 2.1 Create IoT Thing Group that denies all IoT actions
 
 1. Sign in to your AWS account, click on IoT Device Defender.
 2. From IoT management console, click **Manage**, **Thing groups**, **Create**, **Create Thing Group** . Name your thing group  as **IsolatedDevices** and click **Create thing group**
