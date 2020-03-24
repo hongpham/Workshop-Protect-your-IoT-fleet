@@ -24,13 +24,15 @@ In this case, you will create a Security Profile to allow Device Defender monito
 
 3. Under **Behaviors**, create a behavior named **LargeMessageSize**. We ask Device Defender to observe message size and alert us it transmits messages whose cumulative size is more than 1000bytes in a minute. 
 
-4. Click on drop down list under **Metric**, and choose metric **Message Size**. Choose **Check Type** as **Absolute Value**. That means an alarm occurs for a device if a specify number of message cross the threshold. If you choose **Statistical Threshold**, an alarm occurs for a device if, during specific number of consecutive five-minute periods, it transmits messages whose cumulative size is more than that measured for 90 percent of all other devices reporting for this security profile behavior. For simplicity, keep Check Type as **Absolute Value** for now.
+4. Click on drop down list under **Metric**, and choose metric **Message Size**. Choose **Check Type** as **Statistical Threshold**.  A '**Statistical Threshold** check first computes the statistical rank of the raw behavior metric then compares it with a threshold value. 
 
-5. For **Operator**, choose **Greater than**. Specify **1000** for **Value**.
+5. For **Operator**, choose **Greater than**. Specify **p50** for **Statistical Threshold**.
 
-6. For **Datapoints to Alarm**, specify **6**. Because you choose **Absolute Value** as Check Type, each message size is one datapoint. After 6 datapoints, the alarm will occur.
+6. Choose **5 minutes** for **Duration**. For a Statistical Threshold check type, this is the time window during which metrics are collected from all devices to determine the statistical ranking of the data from an individual device.
 
-7. For **Datapoints to Clear**, specify **6**. That means the alarm is cleared if the offending device is no longer in violation of this behavior for 6 conservative datapoints.
+6. For **Datapoints to Alarm**, specify **1**. If a device is in violation of this behavior for 1 datapoints, an alarm occurs.
+
+7. For **Datapoints to Clear**, specify **2**. If an alarm has occured, and the offending device is no longer in violation of the behavior for 1 consecutive datapoints, the alarm is cleared.
 
 <img src="../images/behaviors.png"/>
 
