@@ -150,17 +150,13 @@ Two AWS IoT Things **SensorDevice01** and **SensorDevice02** are already created
 
 ### 3. Check if your devices are sending data to AWS IoT
 
-1. To check device's activity, go to **Manage, Things, SensorDevice01, Activity**. You will see the timestamp of each activities and the metadata json object:
+You can view the messages that devices publish to AWS IoT topics. To view these messages,  go to AWS IoT MQTT client by following these steps
 
-<img src="../images/thingconnect.png"/>
-
-3. Devices publish messages to AWS IoT topics. To view the messages,  you can use the AWS IoT MQTT client. 
-
-    1. From AWS IoT console, click on **Test, Subscribe to a topic**
+   1. From AWS IoT console, click on **Test, Subscribe to a topic**
     
-    2. Type in the topic name **temperature-device-01** that your IoT Devices send telemetry data to. In this workshop, the topic names will be "temperature-device-01" and "temperature-device-02". If you're running this workshop on your AWS account, and provide unique name for these topics when you use CloudFormation template to create resources, you will need to type in the unique topic name instead of temperature-device-01
+   2. Type in the topic name **temperature-device-01** that your IoT Devices send telemetry data to. In this workshop, the topic names will be "temperature-device-01" and "temperature-device-02". If you're running this workshop on your AWS account, and provide unique name for these topics when you use CloudFormation template to create resources, you will need to type in the unique topic name instead of temperature-device-01
     
-    3. Click "Subscribe to topic". 
+   3. Click "Subscribe to topic". 
 
 <img src="../images/mqttclient.png"/>
 
