@@ -20,7 +20,7 @@ Metadata:
           - IoTTopic02
 
 Parameters:
-  MyS3bucket: 
+  MyS3bucket: # Provide S3 bucket name that has device.zip, registerDevice.zip, startAudit.zip
     Type: String 
     Description: name of S3 bucket that store deployment packages for Lambda function
   ThingName01:
@@ -59,7 +59,7 @@ Resources:
       Runtime: nodejs12.x
       Code:
         S3Bucket: !Ref MyS3bucket
-        S3Key: registerDevice.zip 
+        S3Key: registerDevice.zip # Please make sure the key is correct
 
   CreateCertExecutionRole:
     Type: AWS::IAM::Role
@@ -127,7 +127,7 @@ Resources:
       Runtime: nodejs12.x
       Code:
         S3Bucket: !Ref MyS3bucket
-        S3Key: startaudit.zip 
+        S3Key: startaudit.zip # Please make sure the key is correct
 
   TriggerAuditExecutionRole:
     Type: AWS::IAM::Role
@@ -214,7 +214,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref MyS3bucket
-        S3Key: device.zip 
+        S3Key: device.zip # Please make sure the key is correct
       Runtime: python3.7
       FunctionName: !Join ["-",[!Ref ThingName01,'function']]
       Environment:
@@ -232,7 +232,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref MyS3bucket
-        S3Key: device.zip 
+        S3Key: device.zip # Please make sure the key is correct
       Runtime: python3.7
       FunctionName: !Join ["-",[!Ref ThingName02,'function']]
       Environment:

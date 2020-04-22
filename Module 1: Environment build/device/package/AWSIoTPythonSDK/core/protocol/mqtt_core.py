@@ -296,7 +296,7 @@ class MqttCore(object):
         self._logger.info("Performing sync subscribe...")
         ret = False
         if ClientStatus.STABLE != self._client_status.get_status():
-            self._handle_offline_request(RequestTypes.SUBSCRIBE, (topic, qos, message_callback))
+            self._handle_offline_request(RequestTypes.SUBSCRIBE, (topic, qos, message_callback, None))
         else:
             event = Event()
             rc, mid = self._subscribe_async(topic, qos, self._create_blocking_ack_callback(event), message_callback)
@@ -310,14 +310,14 @@ class MqttCore(object):
     def subscribe_async(self, topic, qos, ack_callback=None, message_callback=None):
         self._logger.info("Performing async subscribe...")
         if ClientStatus.STABLE != self._client_status.get_status():
-            self._handle_offline_request(RequestTypes.SUBSCRIBE, (topic, qos, message_callback))
+            self._handle_offline_request(RequestTypes.SUBSCRIBE, (topic, qos, message_callback, ack_callback))
             return FixedEventMids.QUEUED_MID
         else:
             rc, mid = self._subscribe_async(topic, qos, ack_callback, message_callback)
             return mid
 
     def _subscribe_async(self, topic, qos, ack_callback=None, message_callback=None):
-        self._subscription_manager.add_record(topic, qos, message_callback)
+        self._subscription_manager.add_record(topic, qos, message_callback, ack_callback)
         rc, mid = self._internal_async_client.subscribe(topic, qos, ack_callback)
         if MQTT_ERR_SUCCESS != rc:
             self._logger.error("Subscribe error: %d", rc)
@@ -328,7 +328,7 @@ class MqttCore(object):
         self._logger.info("Performing sync unsubscribe...")
         ret = False
         if ClientStatus.STABLE != self._client_status.get_status():
-            self._handle_offline_request(RequestTypes.UNSUBSCRIBE, topic)
+            self._handle_offline_request(RequestTypes.UNSUBSCRIBE, (topic, None))
         else:
             event = Event()
             rc, mid = self._unsubscribe_async(topic, self._create_blocking_ack_callback(event))
@@ -342,7 +342,7 @@ class MqttCore(object):
     def unsubscribe_async(self, topic, ack_callback=None):
         self._logger.info("Performing async unsubscribe...")
         if ClientStatus.STABLE != self._client_status.get_status():
-            self._handle_offline_request(RequestTypes.UNSUBSCRIBE, topic)
+            self._handle_offline_request(RequestTypes.UNSUBSCRIBE, (topic, ack_callback))
             return FixedEventMids.QUEUED_MID
         else:
             rc, mid = self._unsubscribe_async(topic, ack_callback)
