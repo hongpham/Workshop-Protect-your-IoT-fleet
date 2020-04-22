@@ -63,7 +63,7 @@ Here is the list of resources:
 
 Below is the architecture diagram:
 
-<img src="../images/IoTSecurityWorkshopInfra.png" width="500" height="610"/>
+<img src="../images/IoTSecurityWorkshopInfra.png"/>
 
 Let's move to the next step, where you can validate if the environment setup is correct
 
