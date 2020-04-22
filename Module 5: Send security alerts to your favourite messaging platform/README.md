@@ -1,4 +1,4 @@
-# Module 4: Receive alerts in real-time
+# Module 5: Send security alerts to your favourite messaging platform
 
 For many Security Engineers, receiving alerts in real time is critical. They need to act quickly to reduce impact of security issues. SMS message, or messaging platform such as Slack or Chime, are common tools to notify engineers when thing goes wrong.
 
