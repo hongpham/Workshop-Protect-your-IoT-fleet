@@ -36,8 +36,8 @@ In Moduel 2, you create an AWS IoT Audit to check for miss-configuration for all
 ### 3. [Module 3: Detect a compromised device using cloud-side metrics](/Module%203:%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics)
 Module 3 shows you how to detect if devices are compromised and participates in bad actions using cloud-side metrics from AWS IoT. You will simulate a scenerios when a device is sending significantly larger message size than it's normal message size. Using metrics provided by AWS IoT, you build an automation to detect this abnormal behavior. You then will build a Quarantive Thing Group, and move bad device into this Thing Group to take away device's permission to send data to AWS IoT. 
 
-### 3. [Module 4: Detect a compromised device using device-side metrics](/Module%204:%20Detect%20a%20compromised%20device%20using%20device-side%20metrics)
+### 4. [Module 4: Detect a compromised device using device-side metrics](/Module%204:%20Detect%20a%20compromised%20device%20using%20device-side%20metrics)
 In this module, you will learn how to capture metrics on your device by installing Device Defender agent on the device itself. Using these device-side metrics, you can detect if the device is changing in behavior. You will simulate a scenerios when a device is sending significantly larger message size than it's normal message size. Using metrics capture on your device, you build an automation to detect this abnormal behavior. You then will build a Quarantive Thing Group, and move bad device into this Thing Group to take away device's permission to send data to AWS IoT. 
 
-### 4. [Module 5: Send security alerts to your favourite messaging platform](/Module%205:%20Send%20security%20alerts%20to%20your%20favourite%20messaging%20platform)
+### 5. [Module 5: Send security alerts to your favourite messaging platform](/Module%205:%20Send%20security%20alerts%20to%20your%20favourite%20messaging%20platform)
 This extra-credit module shows you how to receive a real-time notification  when your devices misbehave. You can choose to work with multiple messaging tools: Amazon Chime, Slack, or SMS
