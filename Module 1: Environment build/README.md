@@ -41,7 +41,11 @@ You will need to provision nessesary AWS resources for this lab following these 
       
 </details>
 
-## Available resources:
+1. [Available resources](#1-available-resources)
+2. [Validate environment setup](#2-validate-environment-setup)
+3. [Check if your devices are sending data to AWS IoT](#3-check-if-your-devices-are-sending-data-to-aws-iot)
+
+## 1. Available resources:
 
 If you are at an AWS Event, you are provided an AWS Account with the resources below ready to use. Otherwise, you will need to use a provided CloudFormation template to create these resources in your AWS Account by following ["Click here if you are using your own AWS account"](/Module%201:%20Environment%20build/README.md) at the beginning of this module
 
@@ -63,7 +67,7 @@ Below is the architecture diagram:
 
 Let's move to the next step, where you can validate if the environment setup is correct
 
-## Validate environment setup
+## 2. Validate environment setup
 
 ### 1. IoT devices
 
