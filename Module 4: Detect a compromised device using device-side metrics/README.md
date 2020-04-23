@@ -13,7 +13,7 @@ Device SensorDevice03 hasn't sent any temperature data to AWS IoT. In this step,
         cd Workshop-Protect-your-IoT-fleet/
         cd 'Module 5: Send security alerts to your favourite messaging platform'
         
-**Need to update git repo name after it's published. Also need to put a screen shot of these command.
+**Need to update git repo name after it's published. Also need to put a screen shot of these command.**
 
 2. Retrieve nesseary parameters to run bootstrap script.
 
@@ -35,6 +35,36 @@ Device SensorDevice03 hasn't sent any temperature data to AWS IoT. In this step,
 <img src="../images/bootstrapscript.png"/>
   
 ## 2. Install AWS Device Defender Agent to collect metrics on the device
+
+In this step, you will install [AWS Device Defender Agent (Python version)](https://github.com/aws-samples/aws-iot-device-defender-agent-sdk-python) on this device **SensorDevice03**
+
+1. Run these commands to install Agent
+
+         cd /home/ec2-user/environment/workshop
+         sudo pip install -r requirements.txt 
+         sudo pip install AWSIoTDeviceDefenderAgentSDK
+         
+2. Open a text editor, retrieve neccesary parameters below and save it in your text editor. You will need these parameters to start Device Defender Agent
+    
+    a. AWS IoT Endpoint: to find AWS IoT Endpoint, go to **AWS IoT Core console**. Make sure that you are in the correct region. Click **Manage** to view list of IoT things. Click on any thing, for example **Thing01**. Click **Interact**. Copy the Rest API endpoint under **HTTPS**
+    
+      <img src="../images/endpoint.png"/>
+      
+    b. Device name: in this workshop, we name this device **SensorDevice03**
+    c. Thing name: in this workshop, thing name for device SensorDevice03 is **Thing03**
+
+3. Start Device defender agent by running this command
+        
+        python agent.py --endpoint [your AWS IoT endpoint retrieved from step 2.a above]  \
+        --rootCA /tmp/rootca.pem  --cert /tmp/cert.pem --key /tmp/private.key \
+        --client_id [Device name] --thing_name [Thing name] --format json -i 300
+
+<img src="../images/startagent.png"/>
+
+* If you notice, you will see that X.509 certificate and it's private key is requried to start Device Defender Agent. These are credentials that Agent will use to send to AWS IoT. These credentials are already download for you under /tmp directory.
+* The Agent will collect metrics and sends to AWS IoT as json format every 300 seconds (or 5 minutes - which is minimum reporting interval)
+** Note: need to update connection timeout**
+Let the Agent run for a few minutes. 
 
 ## 3. Define unusall behaviors
 
