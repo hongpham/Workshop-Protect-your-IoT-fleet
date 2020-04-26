@@ -41,8 +41,8 @@ def startdevice(topicname, devicename):
         )
 
     stackname = retrievetag['Tags'][0]['Value']
-    print(stackname)
-    #retrieve IoT endpoint and secrets
+
+    #retrieve IoT endpoint pull certificate from Secrets Manager
     iot = boto3.client('iot', region_name=region)
     secretmanager = boto3.client('secretsmanager', region_name=region)
 
