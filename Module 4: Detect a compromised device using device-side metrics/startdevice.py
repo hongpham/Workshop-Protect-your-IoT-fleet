@@ -11,16 +11,38 @@ import sys
 import getopt
 import json
 
-def startdevice(stackname, topicname, devicename):
+def startdevice(topicname, devicename):
 
-    stackname = stackname
     topicname = topicname
     devicename = devicename
 
+    #retrieve region from metadata
     metadata_request = requests.get('http://169.254.169.254/latest/dynamic/instance-identity/document')
     json_metadata = json.loads(metadata_request.text)
     region = json_metadata['region']
 
+    #retrieve CloudFormation Stackname from Tags
+    ec2 = boto3.client('ec2', region_name=region)
+    retrievetag = ec2.describe_tags(
+            Filters=[
+                {
+                    'Name': 'key',
+                    'Values': [
+                        'aws:cloudformation:stack-name',
+                    ],
+                },
+                {
+                    'Name': 'resource-type',
+                    'Values': [
+                        'vpc',
+                    ],
+                }
+            ],
+        )
+
+    stackname = retrievetag['Tags'][0]['Value']
+    print(stackname)
+    #retrieve IoT endpoint and secrets
     iot = boto3.client('iot', region_name=region)
     secretmanager = boto3.client('secretsmanager', region_name=region)
 
@@ -84,28 +106,25 @@ def startdevice(stackname, topicname, devicename):
 
 def main(argv):
 
-    stackname = ''
     topicname = ''
     devicename = ''
 
     try:
-        opts, args = getopt.getopt(argv,"hs:t:d:",["stackname=", "topicname=","devicename="])
+        opts, args = getopt.getopt(argv,"ht:d:",["topicname=","devicename="])
     except getopt.GetoptError:
-        print('startdevice.py -s <stackname> -t <topicname> -d <devicename>')
+        print('startdevice.py -t <topicname> -d <devicename>')
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print('startdevice.py -s <stackname> -t <topicname> -d <devicename>')
+            print('startdevice.py -t <topicname> -d <devicename>')
             sys.exit()
-        elif opt in ("-s", "--stackname"):
-            stackname = arg
         elif opt in ("-t", "--topicname"):
             topicname = arg
         elif opt in ("-d", "--devicename"):
             devicename = arg
 
-    startdevice(stackname, topicname, devicename)
+    startdevice(topicname, devicename)
 
 if __name__ == "__main__":
    main(sys.argv[1:])
