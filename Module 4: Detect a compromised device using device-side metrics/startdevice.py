@@ -48,6 +48,9 @@ def startdevice(topicname, devicename):
 
     endpoint = iot.describe_endpoint(endpointType='iot:Data-ATS')
     endpointaddress = endpoint['endpointAddress']
+    endpoint = open('/tmp/endpoint', 'w+')
+    endpoint.write(endpointaddress)
+    endpoint.close()
 
     if os.path.isfile('/tmp/cert.pem'):
         print('/tmp/cert.pem is available')
