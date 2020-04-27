@@ -70,7 +70,7 @@ In this step, you will install [AWS Device Defender Agent (Python version)](http
         
       b. Change the values of **configureConnectDisconnectTimeout** and **configureMQTTOperationTimeout** to **1800** seconds (30 minutes) 
       
-         <img src="../images/contimeout.png"/>
+      <img src="../images/contimeout.png"/>
 
       c. Save and close agent.py by pressing **Esc** on the keyboard, then type **:wq**
       
