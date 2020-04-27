@@ -40,9 +40,11 @@ In this step, you will install [AWS Device Defender Agent (Python version)](http
          sudo pip install AWSIoTDeviceDefenderAgentSDK
          
 2. Open a text editor, retrieve neccesary parameters below and save it in your text editor. You will need these parameters to start Device Defender Agent
+
       a. AWS IoT Endpoint: when you run bootstrap.sh script to bootstrap the device, the script retrieve AWS IoT endpoint and save it under /tmp/endpoint. In the terminal, you can run the command  below to retrieve the endpoint:
        
           cat /tmp/endpoint
+          
  
    **<details><summary>Click here if you can't find AWS IoT endpoint in /tmp/endpoint</summary><br>**
   
@@ -54,10 +56,25 @@ In this step, you will install [AWS Device Defender Agent (Python version)](http
 
    </details>
    
+   
     b. Device name: in this workshop, default device name is  **SensorDevice03**
+    
     c. Thing name: in this workshop, default thing name is **Thing03**
 
-3. Start Device defender agent by running this command
+3. Extend Agent Connection timeout: the minimum interval to send device metrics to Device Defender is 5 minutes (300 s). In this workshop, to make sure the established connection between device and AWS IoT will not be closed when the Agent is collecting data, you will need to increase ConnectionTimeout
+      
+      a. Make sure you are in directory AWSIoTDeviceDefenderAgentSDK. Change timeout configuration by editing agent.py 
+      
+        cd /home/ec2-user/environment/workshop/AWSIoTDeviceDefenderAgentSDK
+        vi agent.py
+        
+      b. Change the values of **configureConnectDisconnectTimeout** and **configureMQTTOperationTimeout** to **1800** seconds (30 minutes) 
+      
+         <img src="../images/contimeout.png"/>
+
+      c. Save and close agent.py by pressing **Esc** on the keyboard, then type **:wq**
+      
+4. Start Device Defender Agent by running this command
         
         python agent.py --endpoint [your AWS IoT endpoint retrieved from step 2.a above]  \
         --rootCA /tmp/rootca.pem  --cert /tmp/cert.pem --key /tmp/private.key \
@@ -65,11 +82,10 @@ In this step, you will install [AWS Device Defender Agent (Python version)](http
 
 <img src="../images/startagent.png"/>
 
-* If you notice, you will see that X.509 certificate and it's private key is requried to start Device Defender Agent. These are credentials the Agent will use to send to AWS IoT. These credentials are already download for you under /tmp directory.
 
-* The Agent will collect metrics and sends to AWS IoT as json format every 300 seconds (or 5 minutes - which is minimum reporting interval)
+If you notice, you will see that X.509 certificate and it's private key is requried to start Device Defender Agent. These are credentials the Agent will use to send to AWS IoT. These credentials are already download for you under /tmp directory.
 
-** Note: need to update connection timeout**
+The Agent will collect metrics and sends to AWS IoT as json format every 300 seconds (or 5 minutes - which is minimum reporting interval)
 
 Let the Agent run for a 10-15 minutes. 
 
