@@ -87,7 +87,12 @@ If you notice, you will see that X.509 certificate and it's private key is requr
 
 The Agent will collect metrics and sends to AWS IoT as json format every 300 seconds (or 5 minutes - which is minimum reporting interval)
 
-Let the Agent run for a 10-15 minutes. 
+5. After a few minutes, you should see a message confirm that Agent is sending metrics data to AWS IoT
+
+<img src="../images/metricssent.png"/>
+
+
+Let the Agent run for a 10-15 minutes. Move to next step to configure device behaviors on Device Defender.
 
 ## 3. Define unusall behaviors
 
