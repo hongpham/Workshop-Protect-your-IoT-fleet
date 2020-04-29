@@ -52,11 +52,11 @@ Here is the list of resources:
 - 3 AWS IoT Things named **Thing01**, **Thing02**, **Thing03**
 - 3 AWS IoT Topic **temperature-device-01**, **temperature-device-02**, **temperature-device-03**
 - 1 X.509 Certificate and it's private key stored in AWS Secrets Manager
-- 1 AWS IoT Core Policy
+- 1 AWS IoT Core Policy named as **DevicePolicy-[CloudFormationStackname]**
 - 1 on-demand Audit
-- 1 SNS topic with naming convention as **BadIoTDevices-[cloudformation stackname]**.  You will use this SNS topic to receive security realated alerts from AWS IoT Device Defender. 
+- 1 SNS topic named as **BadIoTDevices-[CloudFormation stackname]**.  You will use this SNS topic to receive security realated alerts from AWS IoT Device Defender. 
 
-**>IMPORTANT: You need to subscribe your email to this SNS topic to receive notifications. If this is the first time you subscribe to a SNS topic, follow this [tutorial](https://docs.aws.amazon.com/sns/latest/dg/sns-tutorial-create-subscribe-endpoint-to-topic.html#create-subscribe-endpoint-to-topic-aws-console). After subscribe your email address, remember to CONFIRM YOUR SUBSCRIPTION**
+**IMPORTANT: You need to subscribe your email to this SNS topic to receive notifications. If this is the first time you subscribe to a SNS topic, follow this [tutorial](https://docs.aws.amazon.com/sns/latest/dg/sns-tutorial-create-subscribe-endpoint-to-topic.html#create-subscribe-endpoint-to-topic-aws-console). After subscribe your email address, remember to CONFIRM YOUR SUBSCRIPTION**
 
 Here is the architecture diagram for the environment setup:
 
