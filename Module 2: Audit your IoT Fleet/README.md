@@ -17,7 +17,7 @@ In Module 1, you validated environment setup for your IoT devices. Your next tas
 
 ## 1. Audit your IoT Fleet
 
-AWS provides a service called AWS IoT Device Defender to help you looks at account- and device-related settings and policies to ensure security measures are in place. Device Defender provides a tool call Audit. An Audit can help you detect any drifts from security best practices or access policies.
+AWS provides a service called AWS IoT Device Defender to help you looks at account and device settings to ensure security measures are in place. Device Defender provides a feature called Audit. An Audit can help you detect any drifts from security best practices or access policies.
 
 Audit provides [14 type of checks](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-audit-checks.html). You can configure audit settings in your AWS account to choose which checks will be available when you set up audits. These Settings are effective at regional level. That means, settings in region A will not affect region B. 
 
@@ -142,7 +142,7 @@ To start an Audit immediately, you create an On-Demand Audit by following these 
 <img src="../images/thingswithcert.png"/>
 
 
-Now you know exactly that 2 Things SensorDevice01 and SensorDevice02 are using the same X.509 to connect to AWS IoT. This is not a good configuration. Move to the next step to mitigate this noncompliant finding.
+Now you know exactly that 3 Things **Thing01, Thing02, Thing03** are using the same X.509 to connect to AWS IoT. This is not a good configuration. Move to the next step to mitigate this noncompliant finding.
 
 ## 2. Mitigate noncompliant findings
 
@@ -202,6 +202,6 @@ After we define mitigation actions for Device Defender, you need to apply these 
 
 <img src="../images/inactivecert.png"/>
 
-> Note: If you will work on next module [Module 3: Detect and response to a compromised device](../Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device), then you will need to re-activate this certificate.
+** Note: If you will work on next module [Module 3: Detect and response to a compromised device](../Module%203:%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics), then you will need to re-activate this certificate.**
 
-Congratulations! You have mitigated a noncompliant findings in your device configuration. Your next task is to detect if a devices are being used for wrong purpose (for example, particiate in a DDoS attack). Move to [Module 3: Detect and response to a compromised device](../Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device) to learn what you can do to accomplish this task.
+Congratulations! You have mitigated a noncompliant findings in your device configuration. Your next task is to detect if a devices are being used for wrong purpose (for example, particiate in a DDoS attack). Move to [Module 3: Detect and response to a compromised device](../Module%203:%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics) to learn what you can do to accomplish this task.
