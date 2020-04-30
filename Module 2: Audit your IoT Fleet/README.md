@@ -202,6 +202,6 @@ After we define mitigation actions for Device Defender, you need to apply these 
 
 <img src="../images/inactivecert.png"/>
 
-** Note: If you will work on next module [Module 3: Detect a compromised device using cloud-side metrics](../Module%203:%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics), then you will need to re-activate this certificate.**
+**Note: If you will work on next module [Module 3: Detect a compromised device using cloud-side metrics](../Module%203:%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics), then you will need to re-activate this certificate.**
 
 Congratulations! You have mitigated a noncompliant findings in your device configuration. Your next task is to detect if a devices are being used for wrong purpose (for example, particiate in a DDoS attack). Move to [Module 3: Detect a compromised device using cloud-side metrics](../Module%203:%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics) to learn what you can do to accomplish this task.
