@@ -2,7 +2,7 @@
 
 In Module 2, you learned how to set up automation to audit devices configuration and implement mitigation actions. With additional security requirements from your IT organization, you need to have a solution in place to detect unusual behaviors of IoT devices, which can indicate that devices are compromised and participate in bad activities (for example, participate in a DDoS attack). You also need to find a solution to quickly response to this changes in device's behaviors. Becuase these IoT devices are used to send temperature telemetry, you identify one behavior indicates that a device is compromised: sending very large message compared to the regular message, which only has temperature telemetry.
 
-This module will walk you through neccessary steps to build solutions for requirements above by following these steps.
+This module will walk you through neccessary steps to use metrics collected by AWS IoT (cloud-side metrics) to detect a compromised devices.
 
 1. [Define unusual behaviors of your devices](#1-define-unusual-behaviors-of-your-devices)
 2. [Respond to a violation](#2-respond-to-a-violation)
@@ -10,13 +10,13 @@ This module will walk you through neccessary steps to build solutions for requir
 
 ## 1. Define unusual behaviors of your devices
 
-Your first task is to implement a solution to detect unusual behaviors of IoT devices. How do you know if devices act differently than its regular behavior? You need to have metrics related to device's activities, and you need to define when the value of each metric is considered outside of regularity.
+Your task is to implement a solution to detect unusual behaviors of IoT devices. How do you know if devices act differently than its regular behavior? You need to have metrics related to device's activities, and you need to define when the value of each metric is considered outside of regularity.
 
-AWS IoT Device Defender Detect looks at cloud-side metrics (from AWS IoT) and device-side metrics (from agents you install on your devices), and help you detect changes in these metrics. However, you need to tell Device Defender when these metrics aren't normal and need human's attention.
+AWS IoT Device Defender Detect monitor cloud-side metricsto detect abnormal behaviors (such as the number of authorization failures, or the number or size of messages a device sends or receives through AWS IoT). However, you need to tell Device Defender when these metrics aren't normal.
 
-To do that, you need to create a **Security Profile**. A security profile defines anomalous behaviors for a group of devices (a thing group) or for all devices in your account, and specifies which actions to take when an anomaly is detected. 
+To do that, you need to create a **Security Profile**. A security profile defines abnomal behaviors for a group of devices (a thing group) or for all devices in your account, and specifies which actions to take when an anomaly is detected. 
 
-In this case, you will create a Security Profile to allow Device Defender monitor message size of devices SensorDevice01 and SensorDevice02. The Software Developer Teams shared with you that each message size is around 120bytes, and devices send 6 messages in 1 minute (equivilant to 1 message/10 seconds). That means, each device should not send more than 720bytes in 1 minute. Now you can use this data point as a threashold for Security Profile.
+In this case, you will create a Security Profile to allow Device Defender monitor message size of all three devices. The Software Development Team didn't share with you average message size of each message. But Device Defender can use [statisticalThreshold](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-detect.html#detect-behaviors)  to detect if incoming messages have larger size then average message size. 
 
 1. Sign in to your AWS account. From AWS console home, go to IoT console
 
@@ -24,25 +24,25 @@ In this case, you will create a Security Profile to allow Device Defender monito
 
 3. Under **Behaviors**, create a behavior named **LargeMessageSize**. We ask Device Defender to observe message size and alert us it transmits messages whose cumulative size is more than 1000bytes in a minute. 
 
-4. Click on drop down list under **Metric**, and choose metric **Message Size**. Choose **Check Type** as **Statistical Threshold**.  A '**Statistical Threshold** check first computes the statistical rank of the raw behavior metric then compares it with a threshold value. 
+4. Click on drop down list under **Metric**, and choose metric **Message Size**. Choose **Check Type** as **Statistical Threshold**. 
 
-5. For **Operator**, choose **Greater than**. Specify **p50** for **Statistical Threshold**.
+5. For **Operator**, choose **Greater than**. Specify **p50** for **Statistical Threshold**. That means, the criteria to trigger alert is when the incoming message size is larger than the 50% of all measurements.
 
 6. Choose **5 minutes** for **Duration**. For a Statistical Threshold check type, this is the time window during which metrics are collected from all devices to determine the statistical ranking of the data from an individual device.
 
 6. For **Datapoints to Alarm**, specify **1**. If a device is in violation of this behavior for 1 datapoints, an alarm occurs.
 
-7. For **Datapoints to Clear**, specify **2**. If an alarm has occured, and the offending device is no longer in violation of the behavior for 1 consecutive datapoints, the alarm is cleared.
+7. For **Datapoints to Clear**, specify **1**. If an alarm has occured, and the offending device is no longer in violation of the behavior for 1 consecutive datapoints, the alarm is cleared.
 
 <img src="../images/behaviors.png"/>
 
 8. You need to keep the mesage size metrics of each message for investigation. Under **Addionional Metrics to retain**, click on **Select** on the right corner to see drop down list of metrics that we can retain. Select **Message size**. You also need to keep track of how many messages are sent and received between AWS IoT and each device in a given period. To keep this metric, select **Message received**. Then click **Next**
 
-9. Select a SNS topic for alerts when a device violates a behavior in this profile. An SNS topic was created for you in advance. This step is similar to [Module 2, session 1.1, Option 1, step 9 and 10](/Module%202:%20Audit%20your%20IoT%20Fleet/README.md#11-check-audit-settings). Select SNS topic **BadIoTDevices**. For IAM Role, select IAM role with this naming convention [CloudFormation-stack-name]-SNSTopicRole-[random-value]. If you worked on Module 2 of this workshop, you should already subcribed your email to this topic **BadIoTDevices**. If you haven't subscribed your email, don't forget to do so.
+9. Select a SNS topic for alerts when a device violates a behavior in this profile. An SNS topic was created for you in advance. This step is similar to [Module 2, session 1.1, Option 1, step 9 and 10](/Module%202:%20Audit%20your%20IoT%20Fleet/README.md#11-check-audit-settings). Select SNS topic **BadIoTDevices-[CloudFormation stackname]**. For IAM Role, select IAM role with this naming convention **[CloudFormation-stack-name]-SNSTopicRole-[random-value]**. If you worked on Module 2 of this workshop, you should already subcribed your email to this topic **BadIoTDevices-[CloudFormation stackname]**. If you haven't subscribed your email, don't forget to do so.
 
 <img src="../images/snsdetect.png"/>
 
-10. You need to attach this security profile to a target. A target can be a thing, or a thing group. For simplicity, we will attach this security profile with **All things** for now.
+10. You need to attach this security profile to a target. A target can be a thing, or a thing group, or every devices. For simplicity, we will attach this security profile with **All things** for now.
 
 <img src="../images/target.png"/>
 
@@ -88,7 +88,7 @@ In this step, you use a Lambda function to move offending device to **IsolatedDe
 
 2. To understand what this Lambda function does, go to Lambda console, click **Function**. Click **IsolateDevice**
 
-3. Under **Function Code**, you will see Python code below. When alert from Device Defender Detect is sent to SNS topic **BadIoTDevices**, SNS will trigger this Lambda function. This function will parse the SNS message to retrieve offending device's name, and add this device to Thing Group **IsolateDevice**
+3. Under **Function Code**, you will see Python code below. When alert from Device Defender Detect is sent to SNS topic **BadIoTDevices-[CloudFormation stackname]**, SNS will trigger this Lambda function. This function will parse the SNS message to retrieve offending device's name, and add this device to Thing Group **IsolateDevice**
 
 > Note: you need to  provide Thing Group name to this function, and subscribe Lambda function to SNS topic by following steps below.
 
@@ -121,11 +121,11 @@ def lambda_handler(event, context):
 
 <img src="../images/designerlambda.png"/>
 
-9. Click **Add trigger**. Select **SNS**. Select topic **BadIoTDevices**. Check **Enable trigger**. And click **Add** to make this SNS topic as a trigger of your function.
+9. Click **Add trigger**. Select **SNS**. Select topic **BadIoTDevices-[CloudFormation stackname]**. Check **Enable trigger**. And click **Add** to make this SNS topic as a trigger of your function.
 
 <img src="../images/snstriggerlambda.png"/>
 
-**IsolateDevices** is now receiving events from trigger SNS topic **BadIoTDevices**. That means, it will move offending device to Thing Group **IsolatedDevice** when Device Defender alerts a violation. Next step, you are going to test if this automation works as expected.
+**IsolateDevices** is now receiving events from trigger SNS topic **BadIoTDevices-[CloudFormation stackname]**. That means, it will move offending device to Thing Group **IsolatedDevice** when Device Defender alerts a violation. Next step, you are going to test if this automation works as expected.
 
 ## 3. Simulate a compromised device 
 
@@ -133,13 +133,13 @@ In this step, you update SensorDevice02's code to similate a situation that its 
 
 ### 3.1 Update message size
 
-1. To update the message size SensorDevice02 is sending to AWS IoT, go to Lambda management console, click on function **SensorDevice02-function**. Scroll down to comment out the code that generate random temperature telemetry data (line 57), which is usually about 120bytes in size:
+1. To update the message size SensorDevice02 is sending to AWS IoT, go to Lambda management console, click on function **SensorDevice02**. Scroll down to comment out the code that generate random temperature telemetry data (line 57):
 
 ```
 	telemetrydata = round(random.uniform(15.1,29.9),2)
 ```
 
-2. Instead, create a large random string has 3000 characters (3000bytes in size). To do so, uncomment the line of code below (line 60)
+2. Instead, create a large random string has 3000 characters. To do so, uncomment the line of code below (line 60)
 
 ```
 	telemetrydata = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 3000)) 
@@ -148,12 +148,12 @@ In this step, you update SensorDevice02's code to similate a situation that its 
 
 <img src="../images/codechange.png"/>
 
-After this change, each message from **SensorDevice02** device will be about 3000bytes - which is very abnormal compared to regular message size (120bytes)
+After this change, each message from **SensorDevice02** device will have 3000 characters - which is very abnormal compared to regular message size (only have a 3-4 characters)
 
-Now we wait for a few minutes until you receive email from SNS. After that you can go to **Manage, Thing Groups, IsolatedDevices, Things** to see that **SensorDevice02** should be added to this group. Now let's check if this device has stopped sending telemetry data by going to **Test, Subscribe to a topic**, enter the topic **temperature-device-02**. 
+Now we wait for a few minutes until you receive email from SNS. After that you can go to **Manage, Thing Groups, IsolatedDevices, Things** to see that **Thing02** should be added to this group. Now let's check if this device has stopped sending telemetry data by going to **Test, Subscribe to a topic**, enter the topic **temperature-device-02**. 
 
 If your automation in step 2 works. You shouldn't see any message there because we have associated **DenyAll** policy to Thing Group **IsolatedDevices**
 
 Congratulations! By completing this module, you have learned how to detect unusual behaviors of IoT devices, and stop offending devices to take any IoT actions. 
 
-For extra-credit, move to [Module 4: Receive alerts in real-time](/Module%204:%20Receive%20alerts%20in%20real-time) to learn how to setup real-time notification from AWS IoT Device Defender on your phone or communication tools.
+Next, move to [Module 4: Detect a compromised device using device-side metrics](../Module%204:%20Detect%20a%20compromised%20device%20using%20device-side%20metrics) to use device-side metrics to detect compromised devices.
