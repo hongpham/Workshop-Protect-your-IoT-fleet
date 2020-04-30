@@ -99,3 +99,6 @@ Let the Agent run for a 10-15 minutes. Move to next step to configure device beh
 ## 4. Respond to violations
 
 ## 5. Simulate a compromised device
+
+
+Congrationlations! You have successfully used Device Defender Agent to monitor device behaviors. If you have time to work on extra-credit challenges, move on to [Module 5: Send security alerts to your favourite messaging platform](../Module%205:%20Send%20security%20alerts%20to%20your%20favourite%20messaging%20platform/README.md)
