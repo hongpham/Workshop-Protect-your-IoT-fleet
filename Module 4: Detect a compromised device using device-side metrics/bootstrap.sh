@@ -10,13 +10,13 @@ while getopts 't:d:' OPTION; do
     t)
       tvalue=${OPTARG};;
 
-    d)
-      dvalue=${OPTARG};;
+    n)
+      nvalue=${OPTARG};;
 
     ?)
-      echo "script usage: $(basename $0) [-t] [-d]" >&2
+      echo "script usage: $(basename $0) [-t] [-n]" >&2
       echo "	-t:	Name of AWS IoT Topic that device will send data to" >&2
-      echo "	-d:	Device Name" >&2
+      echo "	-n:	Thing name" >&2
 
       exit 1
       ;;
@@ -26,9 +26,9 @@ shift "$(($OPTIND -1))"
 
 if [ $# -eq 1 ]
 then
-    echo "script usage: $(basename $0) [-t] [-d]" >&2
+    echo "script usage: $(basename $0) [-t] [-n]" >&2
     echo "      -t:     Name of AWS IoT Topic that device will send data to" >&2
-    echo "      -d:     Deviøce Name">&2
+    echo "      -n:     Thing Name">&2
     exit 0
 else
 

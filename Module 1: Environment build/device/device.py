@@ -10,7 +10,7 @@ def lambda_handler(event, context):
 	
 	stackname = os.environ['CFNstackname']
 	topicname = os.environ['topicname']
-	devicename = os.environ['devicename']
+	thingname = os.environ['thingname']
 
 	iot = boto3.client('iot')
 	secretmanager = boto3.client('secretsmanager')
@@ -42,7 +42,7 @@ def lambda_handler(event, context):
 		newrootcapem = requests.get(url)
 		open('/tmp/rootca.pem', 'wb').write(newrootcapem.content)
 
-	myMQTTClient = AWSIoTMQTTClient(devicename)
+	myMQTTClient = AWSIoTMQTTClient(thingname)
 	myMQTTClient.configureEndpoint(endpointaddress, 8883)
 	myMQTTClient.configureCredentials("/tmp/rootca.pem", "/tmp/private.key", "/tmp/cert.pem")
 	

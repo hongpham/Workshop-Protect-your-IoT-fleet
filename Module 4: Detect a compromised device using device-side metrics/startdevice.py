@@ -11,10 +11,10 @@ import sys
 import getopt
 import json
 
-def startdevice(topicname, devicename):
+def startdevice(topicname, thingname):
 
     topicname = topicname
-    devicename = devicename
+    thingname = thingname
 
     #retrieve region from metadata
     metadata_request = requests.get('http://169.254.169.254/latest/dynamic/instance-identity/document')
@@ -76,7 +76,7 @@ def startdevice(topicname, devicename):
         newrootcapem = requests.get(url)
         open('/tmp/rootca.pem', 'wb').write(newrootcapem.content)
 
-    myMQTTClient = AWSIoTMQTTClient(devicename)
+    myMQTTClient = AWSIoTMQTTClient(thingname)
     myMQTTClient.configureEndpoint(endpointaddress, 8883)
     myMQTTClient.configureCredentials("/tmp/rootca.pem", "/tmp/private.key", "/tmp/cert.pem")
     
@@ -110,24 +110,24 @@ def startdevice(topicname, devicename):
 def main(argv):
 
     topicname = ''
-    devicename = ''
+    thingname = ''
 
     try:
-        opts, args = getopt.getopt(argv,"ht:d:",["topicname=","devicename="])
+        opts, args = getopt.getopt(argv,"ht:n:",["topicname=","thingname="])
     except getopt.GetoptError:
-        print('startdevice.py -t <topicname> -d <devicename>')
+        print('startdevice.py -t <topicname> -n <thingname>')
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print('startdevice.py -t <topicname> -d <devicename>')
+            print('startdevice.py -t <topicname> -n <thingname>')
             sys.exit()
         elif opt in ("-t", "--topicname"):
             topicname = arg
-        elif opt in ("-d", "--devicename"):
+        elif opt in ("-n", "--thingname"):
             devicename = arg
 
-    startdevice(topicname, devicename)
+    startdevice(topicname, thingname)
 
 if __name__ == "__main__":
    main(sys.argv[1:])

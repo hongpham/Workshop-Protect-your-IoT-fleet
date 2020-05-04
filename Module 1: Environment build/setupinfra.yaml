@@ -263,7 +263,7 @@ Resources:
         Variables:
           CFNstackname: !Ref AWS::StackName
           topicname: !Ref IoTTopic01  
-          devicename: !Ref DeviceName01
+          thingname: !Ref ThingName01
       Timeout: 5
       MemorySize: 128
       Handler: device.lambda_handler
@@ -281,7 +281,7 @@ Resources:
         Variables:
           CFNstackname: !Ref AWS::StackName
           topicname: !Ref IoTTopic02
-          devicename: !Ref DeviceName02
+          thingname: !Ref ThingName02
       Timeout: 5
       MemorySize: 128
       Handler: device.lambda_handler
