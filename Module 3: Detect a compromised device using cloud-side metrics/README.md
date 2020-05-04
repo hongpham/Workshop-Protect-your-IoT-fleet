@@ -63,7 +63,7 @@ This session walk you through how to create a simple automation that will move v
 
 3. Next, create a policy that deny all **IoT actions** 
 
-4. Click on **Secure, Policies, Create**. Name your new policy. 
+4. Go back to main AWS IoT console, click on **Secure, Policies, Create**. Name your new policy. 
 
 5. Under **Add statements**, type **iot:*** for **Action**, and **'\*'** for **Resource ARN**. Check **Deny** box, and click **Create**. 
 > Note that this policy only denies all IoT actions. If your devices have additional permission to work with others AWS services (for example, permission to Put an item in DynamoDB table), this policy won't deny those permission.
