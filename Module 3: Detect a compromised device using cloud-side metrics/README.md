@@ -66,11 +66,12 @@ This session walk you through how to create a simple automation that will move v
 4. Go back to main AWS IoT console, click on **Secure, Policies, Create**. Name your new policy. 
 
 5. Under **Add statements**, type **iot:*** for **Action**, and **'\*'** for **Resource ARN**. Check **Deny** box, and click **Create**. 
-> Note that this policy only denies all IoT actions. If your devices have additional permission to work with others AWS services (for example, permission to Put an item in DynamoDB table), this policy won't deny those permission.
+
+**Note that this policy only denies all IoT actions. If your devices have additional permission to work with others AWS services (for example, permission to Put an item in DynamoDB table), this policy won't deny those permission.**
 
 <img src="../images/DenyAll.png"/>
 
-6. Associate this policy with Thing Group that we create earlier. Go to **Manage, Thing groups, Security, Edit**. Select the policy that you create earlier, and click **Save**
+6. Associate this policy with Thing Group that we create earlier. Go to **Manage, Thing groups**. Click on the Thing Group **IsolatedDevices, Security, Edit**. Select the policy that you create earlier, and click **Save**
 
 <img src="../images/AttachDenyAll.png"/>
 
@@ -80,7 +81,7 @@ Next, you use a Lambda function to move offending devices to this Thing Group
 
 ### 2.2 Use Lambda function to move device into Thing Group
 
-In this step, you use a Lambda function to move offending device to **IsolatedDevices** thing group for forensic. When Device Defender finds a violation and sends alerts to SNS topic that you created earlier, SNS will trigger this Lambda function.
+In this step, you use a Lambda function to move offending device to **IsolateDevice** thing group for forensic. When Device Defender finds a violation and sends alerts to SNS topic that you created earlier, SNS will trigger this Lambda function.
 
 > Note: in this Lab, we expect to have 1-2 violation, which means the Lambda function will be trigger no more than 2 times. 
 
@@ -88,7 +89,7 @@ In this step, you use a Lambda function to move offending device to **IsolatedDe
 
 2. To understand what this Lambda function does, go to Lambda console, click **Function**. Click **IsolateDevice**
 
-3. Under **Function Code**, you will see Python code below. When alert from Device Defender Detect is sent to SNS topic **BadIoTDevices-[CloudFormation stackname]**, SNS will trigger this Lambda function. This function will parse the SNS message to retrieve offending device's name, and add this device to Thing Group **IsolateDevice**
+3. Under **Function Code**, you will see Python code below. When alert from Device Defender Detect is sent to SNS topic **BadIoTDevices-[CloudFormation stackname]**, SNS will trigger this Lambda function. This function will parse the SNS message to retrieve offending device's name, and add this device to Thing Group **IsolatedDevices**
 
 > Note: you need to  provide Thing Group name to this function, and subscribe Lambda function to SNS topic by following steps below.
 
@@ -113,7 +114,7 @@ def lambda_handler(event, context):
 
 5. Scroll down to **Environment Variables**, click **Manage environment variables**
 
-6. Click **Add environment variable**. Type **ThingGroupName** as Key (need to be exactly as ThingGroupName), and **IsolatedDevice** as Value. Click Save.
+6. Click **Add environment variable**. Type **ThingGroupName** as Key (need to be exactly as ThingGroupName), and **IsolatedDevices** as Value. Click Save.
 
 7. Now this function is ready to be invoked. The next thing to do is to configure SNS topic to trigger this function.
 
@@ -125,7 +126,7 @@ def lambda_handler(event, context):
 
 <img src="../images/snstriggerlambda.png"/>
 
-**IsolateDevices** is now receiving events from trigger SNS topic **BadIoTDevices-[CloudFormation stackname]**. That means, it will move offending device to Thing Group **IsolatedDevice** when Device Defender alerts a violation. Next step, you are going to test if this automation works as expected.
+**IsolateDevice** is now receiving events from trigger SNS topic **BadIoTDevices-[CloudFormation stackname]**. That means, it will move offending device to Thing Group **IsolatedDevice** when Device Defender alerts a violation. Next step, you are going to test if this automation works as expected.
 
 ## 3. Simulate a compromised device 
 
