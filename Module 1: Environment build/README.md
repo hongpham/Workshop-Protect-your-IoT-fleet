@@ -160,6 +160,13 @@ Three AWS IoT Things **Thing01, Thing02, Thing03** are already created for you. 
 
 ### 3. Check if your devices are sending data to AWS IoT
 
+To check if you devices are connected to AWS IoT endpoint, go to **Manage, Things**
+
+   1. Click on any Thing, for examble **Thing01**.
+   2. Click on **Activity**. Under **Activity**, you will see the history of Thing connectivity. Click on any entry, you can find more details about the thing name, and the cert that it uses to connect to AWS IoT endpoint.
+   
+   <img src="../images/thingactivity.png"/>
+
 You can view the messages that devices publish to AWS IoT topics. To view these messages,  go to AWS IoT MQTT client by following these steps
 
    1. From AWS IoT console, click on **Test, Subscribe to a topic**
