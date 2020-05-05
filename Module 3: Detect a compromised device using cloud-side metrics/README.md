@@ -10,13 +10,13 @@ This module will walk you through neccessary steps to use metrics collected by A
 
 ## 1. Define unusual behaviors of your devices
 
-Your task is to implement a solution to detect unusual behaviors of IoT devices. How do you know if devices act differently than its regular behavior? You need to have metrics related to device's activities, and you need to define when the value of each metric is considered outside of regularity.
+Your task is to implement a solution to detect unusual behaviors of IoT devices. How do you know if a device acts differently than its regular behavior? You need to have metrics related to the device's activities, and you need to define when the value of each metric is considered outside of regularity.
 
-AWS IoT Device Defender Detect monitor cloud-side metricsto detect abnormal behaviors (such as the number of authorization failures, or the number or size of messages a device sends or receives through AWS IoT). However, you need to tell Device Defender when these metrics aren't normal.
+AWS IoT Device Defender Detect monitor cloud-side metrics to detect abnormal behaviors (such as the number of authorization failures, or the number or size of messages a device sends or receives through AWS IoT). However, you need to tell Device Defender when these metrics aren't normal.
 
-To do that, you need to create a **Security Profile**. A security profile defines abnomal behaviors for a group of devices (a thing group) or for all devices in your account, and specifies which actions to take when an anomaly is detected. 
+To do that, you need to create a **Security Profile**. A security profile defines abnomal behaviors for a group of devices (a thing group) or for all devices in your account, and specifies what actions to take when an anomaly is detected. 
 
-In this case, you will create a Security Profile to allow Device Defender monitor message size of all three devices. The Software Development Team didn't share with you average message size of each message. But Device Defender can use [statisticalThreshold](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-detect.html#detect-behaviors)  to detect if incoming messages have larger size then average message size. 
+In this case, you will create a Security Profile to allow Device Defender to monitor the message size of all three devices. The Software Development Team didn't share with you average message size of each message. But Device Defender can use [statisticalThreshold](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-detect.html#detect-behaviors) to detect if incoming messages are larger then the average message size. 
 
 1. Sign in to your AWS account. From AWS console home, go to IoT console
 
@@ -81,9 +81,9 @@ Next, you use a Lambda function to move offending devices to this Thing Group
 
 ### 2.2 Use Lambda function to move device into Thing Group
 
-In this step, you use a Lambda function to move offending device to **IsolateDevice** thing group for forensic. When Device Defender finds a violation and sends alerts to SNS topic that you created earlier, SNS will trigger this Lambda function.
+In this step, you use a Lambda function to move offending device to **IsolatedDevices** thing group for forensics. When Device Defender finds a violation and sends alerts to SNS topic that you created earlier, SNS will trigger this Lambda function.
 
-> Note: in this Lab, we expect to have 1-2 violation, which means the Lambda function will be trigger no more than 2 times. 
+> Note: in this Lab, we expect to have 1-2 violations, which means the Lambda function will be triggered no more than 2 times. 
 
 1. A Lambda function **IsolateDevice** was already created in advance for you.
 
@@ -134,10 +134,10 @@ In this step, you update SensorDevice02's code to similate a situation that its 
 
 ### 3.1 Update message size
 
-1. To update the message size SensorDevice02 is sending to AWS IoT, go to Lambda management console, click on function **SensorDevice02**. Scroll down to comment out the code that generate random temperature telemetry data (line 57):
+1. To update the message size SensorDevice02 is sending to AWS IoT, go to Lambda management console, click on function **SensorDevice02**. Scroll down and comment out the code that generate random temperature telemetry data so line 57 looks like the following:
 
 ```
-	telemetrydata = round(random.uniform(15.1,29.9),2)
+	#telemetrydata = round(random.uniform(15.1,29.9),2)
 ```
 
 2. Instead, create a large random string has 3000 characters. To do so, uncomment the line of code below (line 60)

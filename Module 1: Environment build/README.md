@@ -145,7 +145,7 @@ Three AWS IoT Things **Thing01, Thing02, Thing03** are already created for you. 
 
 6. Remember that X.509 certificate is for Authentication. Now you need to validate device's Authorization - what actions this device is allowed to perform. AWS IoT use IoT Core Policy and IAM Policy. In this workshop, we will use IoT Core Policy to grant permission to devices. To understand how AWS use IAM Policy, take a look at [this IAM policies document](https://docs.aws.amazon.com/iot/latest/developerguide/iam-policies.html)
 
-7. AWS IoT Core policies determine which operations are allowed. Operations are divided into two groups: data plan and control plan. 
+7. AWS IoT Core policies determine which operations are allowed. Operations are divided into two groups: data plane and control plane. 
     - Control plane API allows you to perform administrative tasks like creating or updating certificates, things, rules, and so on.
     - Data plane API allows you send data to and receive data from AWS IoT Core.
    If you would like to dive deeper into AWS IoT Core policies, follow [this AWS IoT Core Policies document](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) 
