@@ -5,7 +5,7 @@ set -u
 set -o pipefail
 
 #retrieve arguments
-while getopts 't:d:' OPTION; do
+while getopts 't:n:' OPTION; do
   case "$OPTION" in
     t)
       tvalue=${OPTARG};;
@@ -37,6 +37,6 @@ else
     sudo pip install requests >/dev/null
     sudo pip install boto3 > /dev/null
     sudo pip install AWSIoTPythonSDK > /dev/null
-    nohup python startdevice.py -t $tvalue -d $dvalue >/dev/null 2>&1 &
+    nohup python startdevice.py -t $tvalue -n $nvalue >/dev/null 2>&1 &
     echo "Sending telemetry data to AWS IoT topic " $tvalue
 fi
