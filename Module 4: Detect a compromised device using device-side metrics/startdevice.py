@@ -21,7 +21,7 @@ def startdevice(topicname, thingname):
     json_metadata = json.loads(metadata_request.text)
     region = json_metadata['region']
 
-    #retrieve CloudFormation Stackname from Tags
+    #retrieve CloudFormation Stackname 
     cfn = boto3.client('cloudformation', region_name=region)
     stacks = cfn.describe_stacks()['Stacks']
     for stack in stacks:
