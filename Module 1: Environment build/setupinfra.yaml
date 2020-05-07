@@ -54,7 +54,6 @@ Parameters:
     Type: String
     Default: Thing03
     Description: IoT Thing name for SensorDevice03
-
   IoTTopic01:
     Type: String
     Default: temperature-device-01
@@ -556,6 +555,9 @@ Resources:
     Type: AWS::EC2::VPC
     Properties:
         CidrBlock: '10.192.0.0/16'
+        Tags:
+        - Key: Workshop
+          Value: Workshop-Protect-your-IoT-fleet
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -617,3 +619,6 @@ Outputs:
   SNSTopic:
     Description: SNS topic receives IoT Device Defender alerts
     Value: !Ref SNSTopicForAlert
+  Workshop:
+    Description: Workshop to learn how to protect your IoT fleet
+    Value: Workshop-Protect-your-IoT-fleet
