@@ -22,25 +22,13 @@ def startdevice(topicname, thingname):
     region = json_metadata['region']
 
     #retrieve CloudFormation Stackname from Tags
-    ec2 = boto3.client('ec2', region_name=region)
-    retrievetag = ec2.describe_tags(
-            Filters=[
-                {
-                    'Name': 'key',
-                    'Values': [
-                        'aws:cloudformation:stack-name',
-                    ],
-                },
-                {
-                    'Name': 'resource-type',
-                    'Values': [
-                        'vpc',
-                    ],
-                }
-            ],
-        )
-
-    stackname = retrievetag['Tags'][0]['Value']
+    cfn = boto3.client('cloudformation', region_name=region)
+    stacks = cfn.describe_stacks()['Stacks']
+    for stack in stacks:
+      if 'Outputs' in stack.keys():
+        for output in stack['Outputs']:
+          if output['OutputValue'] == 'Workshop-Protect-your-IoT-fleet':
+            stackname = stack['StackName']
 
     #retrieve IoT endpoint pull certificate from Secrets Manager
     iot = boto3.client('iot', region_name=region)
