@@ -94,7 +94,7 @@ The Agent will collect metrics and sends to AWS IoT as json format every 300 sec
 
 Let the Agent run for a 10-15 minutes. Move to next step to configure device behaviors on Device Defender.
 
-## 3. Define unusall behaviors
+## 3. Define unusual behaviors
 
 Your task is to implement a solution to detect unusual behaviors on the IoT device itself. Like in Module 3, you need to define when the value of each metric is considered outside of regularity.
 
