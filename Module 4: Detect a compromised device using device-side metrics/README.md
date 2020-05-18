@@ -78,7 +78,7 @@ In this step, you will install [AWS Device Defender Agent (Python version)](http
         
         python agent.py --endpoint [your AWS IoT endpoint retrieved from step 2.a above]  \
         --rootCA /tmp/rootca.pem  --cert /tmp/cert.pem --key /tmp/private.key \
-        --client_id [Device name] --thing_name [Thing name] --format json -i 300 &
+        --client_id [Device name] --thing_name [Thing name] --format json -i 300 > agent.out 2>&1
 
 <img src="../images/startagent.png"/>
 
