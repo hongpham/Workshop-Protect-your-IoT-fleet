@@ -1,4 +1,4 @@
-# Module 4: Receive alerts in real-time
+# Module 5: Send security alerts to your favourite messaging platform
 
 For many Security Engineers, receiving alerts in real time is critical. They need to act quickly to reduce impact of security issues. SMS message, or messaging platform such as Slack or Chime, are common tools to notify engineers when thing goes wrong.
 
@@ -147,7 +147,7 @@ def lambda_handler(event, context):
 
 <img src="../images/envvarslack.png"/>
 
-8. Now add SNS as a trigger for this function. Under **SNS trigger**, choose the SNS topic that Device Defender sends alerts to. From previous modules, a SNS topic **BadIoTDevices** was created. You can use this SNS topic or create a new one. Remember to check box **Enable trigger**. Then click **Add**
+8. Now add SNS as a trigger for this function. Under **SNS trigger**, choose the SNS topic that Device Defender sends alerts to. From previous modules, a SNS topic **BadIoTDevices-[CloudFormation stackname]** was created. You can use this SNS topic or create a new one. Remember to check box **Enable trigger**. Then click **Add**
 
 > Note: we recommend to protect your WebHookURL just like you pretect a password. You can use KMS to encrypt the URL of the webhook, and base-64 encode it before pasting it in to the code. An example can be found in [Slack Integration Blueprint for Lambda](https://aws.amazon.com/blogs/aws/new-slack-integration-blueprints-for-aws-lambda/)
 
@@ -159,7 +159,7 @@ To test if notification works, you can publish this test SNS message below using
 
 1. Sign in to your AWS account, click **SNS** to go to SNS console
 
-2.  On the left side, click on menu bar, and click **Topics** to see the list of SNS topics. In this module, select **BadIoTDevices** topic.
+2.  On the left side, click on menu bar, and click **Topics** to see the list of SNS topics. In this module, select **BadIoTDevices-[CloudFormation stackname]** topic.
 
 3. Click **Publish message** on the top right corner. Copy the json blob below to **Message body to send to the endpoint**. Then click **Publish message**
 

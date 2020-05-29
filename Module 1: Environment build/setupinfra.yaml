@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 
-Description: Provision an IoT Device and connect to AWS IoT
+Description: Provision IoT Devices and connect to AWS IoT
 
 Metadata: 
   AWS::CloudFormation::Interface: 
@@ -14,31 +14,58 @@ Metadata:
         Label:
           default: "IoT resources"
         Parameters:
+          - DeviceName01
+          - DeviceName02
+          - DeviceName03
           - ThingName01
           - ThingName02
+          - ThingName03
           - IoTTopic01
           - IoTTopic02
+          - IoTTopic03
 
 Parameters:
-  MyS3bucket: 
+  MyS3bucket: # Provide S3 bucket name that has device.zip, registerDevice.zip, startAudit.zip
     Type: String 
     Description: name of S3 bucket that store deployment packages for Lambda function
-  ThingName01:
+  
+  DeviceName01:
     Type: String
     Default: SensorDevice01
-    Description: IoT Thing name for Device 01
-  ThingName02:
+    Description: Name for Device 01
+  DeviceName02:
     Type: String
     Default: SensorDevice02
-    Description: IoT Thing name for Device 02
+    Description: Name for Device 02
+  DeviceName03:
+    Type: String
+    Default: SensorDevice03
+    Description: Name for Device 03
+
+  ThingName01:
+    Type: String
+    Default: Thing01
+    Description: IoT Thing name for SensorDevice01
+  ThingName02:
+    Type: String
+    Default: Thing02
+    Description: IoT Thing name for SensorDevice02
+  ThingName03:
+    Type: String
+    Default: Thing03
+    Description: IoT Thing name for SensorDevice03
   IoTTopic01:
     Type: String
     Default: temperature-device-01
-    Description: IoT Topic receives data from Device 01
+    Description: IoT Topic receives data from SensorDevice01
   IoTTopic02:
     Type: String
     Default: temperature-device-02
-    Description: IoT Topic receives data from Device 02
+    Description: IoT Topic receives data from SensorDevice02
+  IoTTopic03:
+    Type: String
+    Default: temperature-device-03
+    Description: IoT Topic receives data from SensorDevice03
 
 Resources:
   MyCertificate:
@@ -59,7 +86,7 @@ Resources:
       Runtime: nodejs12.x
       Code:
         S3Bucket: !Ref MyS3bucket
-        S3Key: registerDevice.zip 
+        S3Key: registerDevice.zip # Please make sure prefix key is correct
 
   CreateCertExecutionRole:
     Type: AWS::IAM::Role
@@ -127,7 +154,7 @@ Resources:
       Runtime: nodejs12.x
       Code:
         S3Bucket: !Ref MyS3bucket
-        S3Key: startaudit.zip 
+        S3Key: startaudit.zip # Please make sure prefix key is correct
 
   TriggerAuditExecutionRole:
     Type: AWS::IAM::Role
@@ -174,6 +201,14 @@ Resources:
       AttributePayload: 
         Attributes: 
           SensorType: 'DHT22'
+  
+  Thing03:
+    Type: AWS::IoT::Thing
+    Properties: 
+      ThingName: !Ref ThingName03
+      AttributePayload: 
+        Attributes: 
+          SensorType: 'DHT22'
 
   AttachCertToDevice01: 
     Type: AWS::IoT::ThingPrincipalAttachment
@@ -185,6 +220,12 @@ Resources:
     Type: AWS::IoT::ThingPrincipalAttachment
     Properties: 
       ThingName: !Ref ThingName02
+      Principal: !GetAtt MyCertificate.certARN
+
+  AttachCertToDevice03: 
+    Type: AWS::IoT::ThingPrincipalAttachment
+    Properties: 
+      ThingName: !Ref ThingName03
       Principal: !GetAtt MyCertificate.certARN
 
   DeviceIAMPolicy:
@@ -214,14 +255,14 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref MyS3bucket
-        S3Key: device.zip 
+        S3Key: device.zip # Please make sure prefix key is correct
       Runtime: python3.7
-      FunctionName: !Join ["-",[!Ref ThingName01,'function']]
+      FunctionName: !Ref DeviceName01
       Environment:
         Variables:
           CFNstackname: !Ref AWS::StackName
           topicname: !Ref IoTTopic01  
-          devicename: !Join ["-",[!Ref ThingName01,'function']]
+          thingname: !Ref ThingName01
       Timeout: 5
       MemorySize: 128
       Handler: device.lambda_handler
@@ -232,14 +273,14 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Ref MyS3bucket
-        S3Key: device.zip 
+        S3Key: device.zip # Please make sure prefix key is correct
       Runtime: python3.7
-      FunctionName: !Join ["-",[!Ref ThingName02,'function']]
+      FunctionName: !Ref DeviceName02
       Environment:
         Variables:
           CFNstackname: !Ref AWS::StackName
           topicname: !Ref IoTTopic02
-          devicename: !Join ["-",[!Ref ThingName02,'function']]
+          thingname: !Ref ThingName02
       Timeout: 5
       MemorySize: 128
       Handler: device.lambda_handler
@@ -452,7 +493,7 @@ Resources:
   SNSTopicForAlert:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: "BadIoTDevices"
+      TopicName: !Sub 'BadIoTDevices-${AWS::StackName}' 
 
   SNSTopicRole:
     Type: AWS::IAM::Role
@@ -509,22 +550,75 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - arn:aws:iam::aws:policy/service-role/AWSIoTDeviceDefenderAddThingsToThingGroupMitigationAction
 
+    # Creating VPC for Cloud9 instance  
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+        CidrBlock: '10.192.0.0/16'
+        Tags:
+        - Key: Workshop
+          Value: Workshop-Protect-your-IoT-fleet
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+  
+  InternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+        InternetGatewayId: !Ref InternetGateway
+        VpcId: !Ref VPC
+
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+        VpcId: !Ref VPC
+        AvailabilityZone: !Select [ 0, !GetAZs ]
+        CidrBlock: '10.192.10.0/28'
+        MapPublicIpOnLaunch: true
+        Tags:
+            - Key: Name
+              Value: Public Subnet (AZ1)
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+        VpcId: !Ref VPC
+        Tags:
+            - Key: Name
+              Value: Public Routes
+
+  DefaultPublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGatewayAttachment
+    Properties:
+        RouteTableId: !Ref PublicRouteTable
+        DestinationCidrBlock: 0.0.0.0/0
+        GatewayId: !Ref InternetGateway
+
+  PublicSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+        RouteTableId: !Ref PublicRouteTable
+        SubnetId: !Ref PublicSubnet1
+
+  Device03Cloud9Instance:
+    Type: AWS::Cloud9::EnvironmentEC2
+    Properties:
+      Repositories: #can have multiple repos
+      - RepositoryUrl: https://github.com/aws-samples/aws-iot-device-defender-agent-sdk-python.git
+        PathComponent: workshop
+      InstanceType: t3.small
+      Name: !Ref DeviceName03
+      SubnetId: !Ref PublicSubnet1
+
+
 Outputs:
   CertARN:
     Description: 'ARN of new Cert'
     Value: !GetAtt MyCertificate.certARN
-  Thing01:
-    Description: 'Thing name for first device'
-    Value: !Ref Thing01
-  Device01:
-    Description: 'Name of Lambda function acting as Device 01'
-    Value: !Ref Device01
-  Thing02:
-    Description: 'Thing name for second device'
-    Value: !Ref Thing02
-  Device02:
-    Description: 'Name of Lambda function acting as Device 02'
-    Value: !Ref Device02
   SNSTopic:
     Description: SNS topic receives IoT Device Defender alerts
     Value: !Ref SNSTopicForAlert
+  Workshop:
+    Description: Workshop to learn how to protect your IoT fleet
+    Value: Workshop-Protect-your-IoT-fleet
