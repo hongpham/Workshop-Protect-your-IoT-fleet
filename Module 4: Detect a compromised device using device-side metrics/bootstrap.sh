@@ -34,9 +34,9 @@ else
 
 	#install dependencies to run a script to send telemetry data to AWS 
     echo "Install dependencies..."
-    sudo pip install requests >/dev/null
-    sudo pip install boto3 > /dev/null
-    sudo pip install AWSIoTPythonSDK > /dev/null
+    pip install requests >/dev/null
+    pip install boto3 > /dev/null
+    pip install AWSIoTPythonSDK > /dev/null
     nohup python startdevice.py -t $tvalue -n $nvalue >/dev/null 2>&1 &
     echo "Sending telemetry data to AWS IoT topic " $tvalue
 fi

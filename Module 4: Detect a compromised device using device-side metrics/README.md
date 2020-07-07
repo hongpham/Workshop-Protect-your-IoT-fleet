@@ -17,13 +17,13 @@ Device SensorDevice03 hasn't sent any temperature data to AWS IoT. In this step,
 
 2. Run script bootstrap.sh to install dependencies and make this device to send data to AWS IoT (make sure you are at directory 'Module 4: Detect a compromised device using device-side metrics'). In this workshop, the default topic name is **temperature-device-03**, default device name is **SensorDevice03**. See screenshot in step 4 for an example. 
 
-        ./bootstrap.sh -t [topic name] -d [device name]
+        ./bootstrap.sh -t [topic name] -n [device name]
         
 3. The script will write AWS IoT Endpoint to a temporary file under /tmp/endpoint. You will need this endpoint later. 
 
 4. This bootstrap script will start a python program in the background to send data to AWS IoT topic **temperature-device-03**. To validate if this device is sendind telemetry data, you can check if the script is running by the command below.
         
-         px aux |grep python   #this command search for the current running processes that has 'python' in it's name
+         ps aux |grep python   #this command search for the current running processes that has 'python' in it's name
          
 If you see a process like **'python startdevice.py -t [topic name] -d [device name]**, this device is sending telemetry data to AWS IoT.
  
