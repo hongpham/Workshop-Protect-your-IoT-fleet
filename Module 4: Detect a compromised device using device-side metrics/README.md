@@ -110,7 +110,7 @@ You need to create a new **Security Profile**. In this case, you will create a S
 
 5. Click on drop down list under **Metric**, and choose metric **Bytes out**. Choose **Check Type** as **Absolute value** to check the exact number of bytes sent.
 
-6. For **Operator**, choose **Greater than**. Specify **200** for **Vale**. That means if the number of bytes in a message sent from the device is more than 200 bytes, it will tregger an alert.
+6. For **Operator**, choose **Greater than**. Specify **200** for **Vale**. That means if the number of bytes in a message sent from the device is more than 200 bytes, it will trigger an alert.
 
 7. Choose **5 minutes** for **Duration** and leave the default **1** for both **Datapoints to alarm** and **Datapoints to clear**.
 
@@ -163,7 +163,7 @@ vim startdevice.py
 ```
 3. Save this code change and re-run the bootstrap script:
 ```
-./bootstrap.sh -t [topic name] -d [device name]
+./bootstrap.sh -t [topic name] -n [device name]
 ```
 
 4. The device is now sending more bytes out than it should be. After 5 minutes, the device should show up in the **IsolatedDevices**.
