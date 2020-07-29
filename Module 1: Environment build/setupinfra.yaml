@@ -78,7 +78,7 @@ Resources:
     Properties:
       Description: Create Cerfiticate for IoT Thing
       FunctionName: createCert
-      Handler: registerDevice.handler
+      Handler: registerdevice.handler
       Environment:
         Variables:
           CFNstackname: !Ref AWS::StackName
@@ -144,7 +144,7 @@ Resources:
     Properties:
       Description: 'Start IoT On-Demand Audit for all Checks'
       FunctionName: createAudit
-      Handler: create_audit.handler
+      Handler: startaudit.handler
       Environment:
         Variables:
           CFNstackname: !Ref AWS::StackName
