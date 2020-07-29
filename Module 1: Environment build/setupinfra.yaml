@@ -77,7 +77,7 @@ Resources:
     Type: 'AWS::Lambda::Function'
     Properties:
       Description: Create Cerfiticate for IoT Thing
-      FunctionName: createCert
+      FunctionName: registerdevice
       Handler: registerdevice.handler
       Environment:
         Variables:
@@ -143,7 +143,7 @@ Resources:
     Type: 'AWS::Lambda::Function'
     Properties:
       Description: 'Start IoT On-Demand Audit for all Checks'
-      FunctionName: createAudit
+      FunctionName: startaudit
       Handler: startaudit.handler
       Environment:
         Variables:
