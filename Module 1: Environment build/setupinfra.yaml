@@ -25,7 +25,7 @@ Metadata:
           - IoTTopic03
 
 Parameters:
-  MyS3bucket: # Provide S3 bucket name that has device.zip, registerDevice.zip, startAudit.zip
+  MyS3bucket: # Provide S3 bucket name that has device.zip, registerdevice.zip, startaudit.zip
     Type: String 
     Description: name of S3 bucket that store deployment packages for Lambda function
   
@@ -86,7 +86,7 @@ Resources:
       Runtime: nodejs12.x
       Code:
         S3Bucket: !Ref MyS3bucket
-        S3Key: registerDevice.zip # Please make sure prefix key is correct
+        S3Key: registerdevice.zip # Please make sure prefix key is correct
 
   CreateCertExecutionRole:
     Type: AWS::IAM::Role
