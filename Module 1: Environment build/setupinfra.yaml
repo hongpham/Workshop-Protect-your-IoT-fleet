@@ -78,7 +78,7 @@ Resources:
     Properties:
       Description: Create Cerfiticate for IoT Thing
       FunctionName: createCert
-      Handler: create_cert.handler
+      Handler: registerDevice.handler
       Environment:
         Variables:
           CFNstackname: !Ref AWS::StackName
