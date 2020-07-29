@@ -62,7 +62,7 @@ You will need to set up environment for this lab following these steps:
       zip startaudit.zip startaudit.js
       ```
 
-      5.3. Upload this zip file to your S3 bucket. **Note:** This deployment package need to be at the top level, and not in any folder of the S3 bucket
+      6.3. Upload this zip file to your S3 bucket. **Note:** This deployment package need to be at the top level, and not in any folder of the S3 bucket
 
       
   7. Create a new CloudFormation stack to provision AWS resources:
