@@ -39,11 +39,40 @@ Click on the gear icon top right of the chat room. Then click **Manage webhooks 
 
 Click **Add webhook** and give it a name. Your webhook will have a unique URL e.g. https://hooks.chime.aws/incomingwebhooks/<guid>?token=xxxxxxxxxxxxxxxxxxxx). You need to protect this URL just as you protect any secret materials (API keys, username-password,..) because anyone has this URL can post a message to your chat room. Copy this URL and save it in a touchpad. You will need this URL to config Lamdbda function in step 2.2
 
-### 2.2 Configure Lambda function
+### 2.2 Create deployment package for Lambda function
 
-Since SNS doesn't intergrate with Chime directly, we will use a Lambda function to post the SNS message to the Chime chatroom. From Lambda management console, create a new Lambda function. Give this new function a name and choose Python3.* as runtime with default permissions. 
+Since SNS doesn't intergrate with Chime directly, we will use a Lambda function to post the SNS message to the Chime chatroom. You will need to create a deployment package for this Lambda function by following these steps:
+  
+   a. Clone this workshop github repo, change directory to 'Module 5: Send security alerts to your favourite messaging platform', navigate to folder 'LambdaWebhookChime'. This folder should only have a python script index.py at the moment.
 
-Now we already write the code for this lambda function and install all dependencies. Download [IoTWebhookFunction.zip](LambdaWebhookChime/IoTWebhookFunction.zip) to your laptop. And upload this Python  deploymet packages to the Lambda function. Under **Function code**, click the drop down **Code entry type**, and choose **Upload a .zip file**. Make sure the function hander is 'index.handler'. Here is the code snippet of this Lambda function
+   b. We will install neccessary dependecies for this python script. Under device folder, create a subfolder called Package. 
+      ```bash
+      mkdir Package
+      cd Package
+      ```
+
+   c. Install these dependencies, choose Package as target folder. 
+      ```bash
+      pip install --target . requests
+      ```
+
+   d. Create a zip archive of the dependencies named webhookchime.zip in Package and store it in LambdaWebhookChime folder. Run this command when you currently in Package folder
+      ```bash
+      zip -r9 ../webhookchime.zip .
+      ```
+
+   e. Add python script device.py to the archive
+      ```bash
+      cd ..
+      zip -g webhookchime.zip index.py
+      ```
+   f. You will upload this zip file when you create lambda function next step
+
+### 2.3 Configure Lambda function
+
+From Lambda management console, create a new Lambda function. Give this new function a name and choose Python3.* as runtime with default permissions. 
+
+Now we already write the code for this lambda function and install all dependencies in previous step. Upload this deploymet packages webhookchime.zip to the Lambda function. Under **Function code**, click the drop down **Code entry type**, and choose **Upload a .zip file**. Make sure the function hander is 'index.handler'. Here is the code snippet of this Lambda function
 
 ```python
 import json
