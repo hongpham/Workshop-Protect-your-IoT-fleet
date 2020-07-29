@@ -32,18 +32,18 @@ Now you can move to [Test Alerts](#4-test-alerts) to test out this new intergrat
 
 Amazon Chime is a communication tool that lets you chat and place calls. Chime provide a feature call Incoming Webhook to allow applications post message to Chime chatroom. You can configure SNS to send a message to your Chime chatroom when Device Defender generates an alert.
 
-### 1. Configure Chime Webhook
+### 2.1 Configure Chime Webhook
 
 If you don't have a chat room, you can create a new one. From Chime App, click **Rooms, Create a chat room, Done**
 Click on the gear icon top right of the chat room. Then click **Manage webhooks and bots**. 
 
-Click **Add webhook** and give it a name. Your webhook will have a unique URL. You need to protect this URL just as you protect any secret materials (API keys, username-password,..) because anyone has this URL can post a message to your chat room. Copy this URL and save it in a touchpad for later use
+Click **Add webhook** and give it a name. Your webhook will have a unique URL e.g. https://hooks.chime.aws/incomingwebhooks/<guid>?token=xxxxxxxxxxxxxxxxxxxx). You need to protect this URL just as you protect any secret materials (API keys, username-password,..) because anyone has this URL can post a message to your chat room. Copy this URL and save it in a touchpad. You will need this URL to config Lamdbda function in step 2.2
 
-### 2. Configure Lambda function
+### 2.2 Configure Lambda function
 
 Since SNS doesn't intergrate with Chime directly, we will use a Lambda function to post the SNS message to the Chime chatroom. From Lambda management console, create a new Lambda function. Give this new function a name and choose Python3.* as runtime with default permissions. 
 
-Now we already write the code for this lambda function and install all dependencies. Download [IoTWebhookFunction.zip](LambdaWebhookChime/IoTWebhookFunction.zip) to your laptop. And upload this Python  deploymet packages to the Lambda function. Under **Function code**, click the drop down **Code entry type**, and choose **Upload a .zip file**. Here is the code snippet of this Lambda function
+Now we already write the code for this lambda function and install all dependencies. Download [IoTWebhookFunction.zip](LambdaWebhookChime/IoTWebhookFunction.zip) to your laptop. And upload this Python  deploymet packages to the Lambda function. Under **Function code**, click the drop down **Code entry type**, and choose **Upload a .zip file**. Make sure the function hander is 'index.handler'. Here is the code snippet of this Lambda function
 
 ```python
 import json
@@ -70,6 +70,8 @@ def handler(event, context):
   print('Finished sending notification to Amazon Chime room')
 
 ```
+
+Next create an environment variables to provide Chime Webhook URL to Lamdba function. Scroll to **Environment Variables**. From the right side, click **Edit --> Add environment variables**. Add **CHIME_WEBHOOK** as the Key and provide webhook URL as the Value. Click Save
 
 This function parse the SNS message to retrieve Thing name, Security Profile, and Behavior name, then it use *requests* method to post these information to the webhook URL. In this lab, we have stored the webhook URL as an environment variable **CHIME_WEBHOOK**. In production use cases, we would recommend to store it securely using AWS Secrets Manager or any existing tools/vault that your team is using.
 
@@ -143,7 +145,7 @@ def lambda_handler(event, context):
         logger.error("Server connection failed: %s", e.reason)
 ```
 
-7. Under **Environment variables**, click **Edit** and **Add environment variable**. You need to add two environmen variables **slackHookURL** and **slackChannel**. Then click **Save**
+7. Under **Environment variables**, click **Edit** and **Add environment variable**. You need to add two environmen variables **slackHookURL** and **slackChannel**. Provide values for these variables. Then click **Save**
 
 <img src="../images/envvarslack.png"/>
 
@@ -151,7 +153,7 @@ def lambda_handler(event, context):
 
 > Note: we recommend to protect your WebHookURL just like you pretect a password. You can use KMS to encrypt the URL of the webhook, and base-64 encode it before pasting it in to the code. An example can be found in [Slack Integration Blueprint for Lambda](https://aws.amazon.com/blogs/aws/new-slack-integration-blueprints-for-aws-lambda/)
 
-Now you can move to [Test](#4-test) to test out this new intergration
+Now you can move to [Test Alerts](#4-test-alerts) to test out this new intergration
 
 ## 4. Test alerts
 
