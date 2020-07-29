@@ -26,7 +26,7 @@ You can subcribe your phone number to SNS topic receive alerts from IoT Device D
 
 You will need to confirm your subscription in order to start receiving SMS message.
 
-Now you can move to [Test](#4-test-alerts) to test out this new intergration
+Now you can move to [Test Alerts](#4-test-alerts) to test out this new intergration
 
 ## 2. Receive alerts on Chime chatroom
 
