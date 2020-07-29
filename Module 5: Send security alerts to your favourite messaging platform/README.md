@@ -9,7 +9,7 @@ In this extra-credit module, you configure SNS to send Device Defender alerts to
 1. [Send SMS message to your phone](#1-send-sms-message-to-your-phone-only-available-in-region-that-supports-sms-messaging)
 2. [Receive alerts on Chime chatroom](#2-receive-alerts-on-chime-chatroom)
 3. [Receive alerts on Slack channel](#3-receive-alerts-on-slack-channel)
-4. [Test](#4-test)
+4. [Test Alerts](#4-test-alerts)
 
 
 ## 1. Send SMS message to your phone (only available in [region that supports SMS messaging](https://docs.aws.amazon.com/sns/latest/dg/sns-supported-regions-countries.html)):
@@ -75,7 +75,7 @@ This function parse the SNS message to retrieve Thing name, Security Profile, an
 
 When you have succcesfully created this Lambda function, let's add SNS as a trigger. Under **Designer**, click **Add trigger** and select **SNS**. Choose the SNS topic that you configured to receive IoT Device Defender alerts in. Remember to check box **Enable trigger**. Then click **Add**
 
-Now you can move to [Test](#4-test) to test out this new intergration
+Now you can move to [Test Alerts](#4-test-alerts) to test out this new intergration
 
 ## 3. Receive alerts on Slack channel
 
