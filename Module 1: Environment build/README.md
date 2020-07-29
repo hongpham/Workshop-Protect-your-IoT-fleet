@@ -3,38 +3,81 @@
 This module walks your through IoT environment setup for this workshop. You will need an AWS account. Depending on the scenerios below, expand one of the following dropdowns to start.
 
 **<details><summary>Click here if you are at an AWS event where the Event Engine is being used</summary><br>**
-  
-   1. If you are at an AWS Sponsored event, you will be provided with either an AWS account or a hash key for Event Engine. Environment setup has been completed for you. You don't need to perform any provisioning in this module. To get start, go to [Available resources](#available-resources) to check what are already provisioned.
+If you are at an AWS Sponsored event, you will be provided with either an AWS account or a hash key for Event Engine. Environment setup has been completed for you. You don't need to perform any provisioning in this module. To get start, go to [Available resources](#available-resources) to check what are already provisioned.
 </details>
 
 **<details><summary>Click here if you are using your own AWS account (whether you are at an AWS event, a separate event or online)</summary><br>**
-  
 You will need to set up environment for this lab following these steps:
   
   1. **Choose a region:** sign in to your AWS Account. From AWS console home, choose a region that works best for you from the top right corner of the console. For example, Ohio or Oregon if you're in North America. 
-  2. **Create a S3 bucket:** You will use CloudFormation to provision neccesary resources, including multiple Lambda functions. We need to use a S3 bucket to store deployment packages of these Lambda functions. If you don't have a S3 bucket, create a new one. Or you can using an existing non-prod bucket.
-  3. Download CloudFormation template [setupinfra.yml](setupinfra.yml) and save it locally on your laptop/computer.
-  4. Download these Lambda deployment packages and upload it to your S3 bucket. **Note:** these deployment packages need to be at the top level, and not in any folder of the S3 bucket
+  2. **Create a S3 bucket:** You will use CloudFormation to provision neccesary resources, including multiple Lambda functions. You need to use a S3 bucket to store deployment packages of these Lambda functions. If you don't have a S3 bucket, create a new one. Or you can use an existing non-prod bucket.
+  3. Download CloudFormation template [setupinfra.yml](setupinfra.yml) and save it locally on your laptop/computer. Next you will create deployment package for 3 Lambda functions
+  4. Create deployment package for Lambda function 'Device': This deployment package is for Lambda functions act as IoT Devices. To create deployment package, follow these steps
+
+      4.1. Clone this workshop github repo, change directory to 'Module 1: Environment build', navigate to folder 'device'. This folder should only have a python script device.py at the moment.
+
+      4.2. We will install neccessary dependecies for this python script. Under device folder, create a subfolder called Package. 
+      ```bash
+      mkdir Package
+      cd Package
+      ```
+
+      4.3. Install these dependencies, choose Package as target folder
+      ```bash
+      pip install --target . AWSIoTPythonSDK boto3 requests
+      ```
+
+      4.4. Create a zip archive of the dependencies in Package and store it in device folder. Run this command when you currently in Package folder
+      ```bash
+      zip -r9 ../device.zip .
+      ```
+
+      4.5. Add python script device.py to the archive
+      ```bash
+      cd ..
+      zip -g device.zip device.py
+      ```
+
+      4.6. Upload this zip file to your S3 bucket. **Note:** This deployment package need to be at the top level, and not in any folder of the S3 bucket
       
-      a. [registerDevice.zip](registerDevice/registerDevice.zip)--> this deployment package is for a Lambda function that creates X.509 certificate, its private key and store it in AWS Secrets Manager. This function also creates an IoT Core policy and attachs it to X.509 certificate.
+  5. Create deployment package for Lambda function 'registerdevice': This deployment package is for a Lambda function that creates X.509 certificate, its private key and store it in AWS Secrets Manager. This function also creates an IoT Core policy and attachs it to X.509 certificate. To create deployment package, follow these steps
+     
+      5.1. From directory 'Module 1: Environment build', navigate to folder 'registerDevice'. This folder should only have a javascript registerdevice.js at the moment.
       
-      b. [staraudit.zip](startaudit/startaudit.zip)--> this deployment package is for a Lambda function that start an on-demand Device Defender Audit
+      5.2 Create a zip file from this javascript: 
+
+      ```bash
+      zip registerdevice.zip registerdevice.js
+      ```
+
+      5.3. Upload this zip file to your S3 bucket. **Note:** This deployment package need to be at the top level, and not in any folder of the S3 bucket
+
+  6. Create deployment package for Lamdba function 'startaudit': this deployment package is for a Lambda function that start an on-demand Device Defender Audit
+    
+      6.1. From directory 'Module 1: Environment build', navigate to folder 'startaudit'. This folder should only have a javascript startaudit.js at the moment.
       
-      c. [device.zip](device/device.zip)--> this deployment package is for a Lambda function acts as IoT Device. CloudFormation template will create 2 Lambda functions acting as 2 IoT devices.
+      6.2 Create a zip file from this javascript: 
+
+      ```bash
+      zip startaudit.zip startaudit.js
+      ```
+
+      5.3. Upload this zip file to your S3 bucket. **Note:** This deployment package need to be at the top level, and not in any folder of the S3 bucket
+
       
-  5. Create a new CloudFormation stack to provision AWS resources:
+  7. Create a new CloudFormation stack to provision AWS resources:
   
-      a. From CloudFormation console, click **Create stacks, With new resources (standard)**
+      7.1. From CloudFormation console, click **Create stacks, With new resources (standard)**
       
-      b. Choose **Upload a new template**, and upload the CloudFormation template that you download to your laptop/computer earlier in step 3. Click **Next**
+      7.2. Choose **Upload a new template**, and upload the CloudFormation template that you download to your laptop/computer earlier in step 3. Click **Next**
       
-      c. Name this new CloudFormation stack. Under Parameter session, provide the **name of the S3 bucket** that you create in step 2. We recommend you to keep the default values of **IoT Parameters** for easy reference when you go through this workshop. You can provide values for these parameters if you are comfortable working with AWS IoT Thing and Topics.  
+      7.3. Name this new CloudFormation stack. Under Parameter session, provide the **name of the S3 bucket** that you create in step 2. We recommend you to keep the default values of **IoT Parameters** for easy reference when you go through this workshop. You can provide values for these parameters if you are comfortable working with AWS IoT Thing and Topics.  
       
         <img src="../images/s3parameter.png"/>
 
-      d. Leave everything by default in **Configure stack options**. Click **Next** to go to review step
+      7.4. Leave everything by default in **Configure stack options**. Click **Next** to go to review step
       
-      e. In **Review**, scroll down to **The following resource(s) require capabilities: [AWS::IAM::ManagedPolicy]**. Check the box next to **I acknowledge that AWS CloudFormation might create IAM resources.**. Click **Create stack**. The stack  will take 5-10 minutes to complete. When the stack completes, move to [Available resources](#1-available-resources)
+      7.5. In **Review**, scroll down to **The following resource(s) require capabilities: [AWS::IAM::ManagedPolicy]**. Check the box next to **I acknowledge that AWS CloudFormation might create IAM resources.**. Click **Create stack**. The stack  will take 5-10 minutes to complete. When the stack completes, move to [Available resources](#1-available-resources)
       
 </details>
 
