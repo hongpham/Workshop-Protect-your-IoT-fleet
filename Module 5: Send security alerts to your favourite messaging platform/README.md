@@ -42,31 +42,28 @@ Click **Add webhook** and give it a name. Your webhook will have a unique URL e.
 ### 2.2 Create deployment package for Lambda function
 
 Since SNS doesn't intergrate with Chime directly, we will use a Lambda function to post the SNS message to the Chime chatroom. You will need to create a deployment package for this Lambda function by following these steps:
-  
-   a. Clone this workshop github repo, change directory to 'Module 5: Send security alerts to your favourite messaging platform', navigate to folder 'LambdaWebhookChime'. This folder should only have a python script index.py at the moment.
 
-   b. We will install neccessary dependecies for this python script. Under device folder, create a subfolder called Package. 
-      ```bash
-      mkdir Package
-      cd Package
-      ```
 
-   c. Install these dependencies, choose Package as target folder. 
-      ```bash
-      pip install --target . requests
-      ```
+      a. Clone this workshop github repo, change directory to 'Module 5: Send security alerts to your favourite messaging platform', navigate to folder 'LambdaWebhookChime'. This folder should only have a python script index.py at the moment.
 
-   d. Create a zip archive of the dependencies named webhookchime.zip in Package and store it in LambdaWebhookChime folder. Run this command when you currently in Package folder
-      ```bash
+      b. We will install neccessary dependecies for this python script. Under device folder, create a subfolder called Package. 
+        
+            mkdir Package
+            cd Package
+
+      c. Install these dependencies, choose Package as target folder. 
+        
+            pip install --target . requests
+
+      d. Create a zip archive of the dependencies named webhookchime.zip in Package and store it in LambdaWebhookChime folder. Run this command when you currently in Package folder
+   
       zip -r9 ../webhookchime.zip .
-      ```
 
-   e. Add python script device.py to the archive
-      ```bash
+      e. Add python script device.py to the archive
       cd ..
       zip -g webhookchime.zip index.py
-      ```
-   f. You will upload this zip file when you create lambda function next step
+    
+      f. You will upload this zip file when you create lambda function next step
 
 ### 2.3 Configure Lambda function
 
