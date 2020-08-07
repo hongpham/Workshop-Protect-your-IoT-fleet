@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Before deploying IoT Devices into production environment, it is crucial to have a strategy to identity potential security risks, and to respond quickly to the problem. This session shows you how to address security risks when managing IoT devices at scale. Using AWS IoT Device Defender, you audit device configuration and permission to ensure that desired security settings are in place. Next, you use cloud-side metrics provided by AWS IoT to detect unusual behaviors that could be coming from a compromised device. Finally, you implement solutions to take actions on these devices, using Device Defender Mitigation Actions, and AWS Lambda.">
+  <meta name="author" content="aws-security-workshops@amazon.com">
+  
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <title>Protect your IoT Fleet</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="stylesheets/custom.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Protect your IoT Fleet";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> Protect your IoT Fleet</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="Module%201%3A%20Environment%20build/">Module 1: Environment setup</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="Module%202%3A%20Audit%20your%20IoT%20Fleet/">Module 2: Audit your IoT Fleet</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="Module%203%3A%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics/">Module 3: Detect a compromised device using cloud-side metrics</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="Module%204%3A%20Detect%20a%20compromised%20device%20using%20device-side%20metrics/">Module 4: Detect a compromised device using device-side metrics</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="Module%205%3A%20Send%20security%20alerts%20to%20your%20favourite%20messaging%20platform/">Module 5: Send security alerts to your favourite messaging platform</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">Protect your IoT Fleet</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Protect your IoT Fleet</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/aws-samples/protect-your-iot-fleet/edit/master/docs/index.md"> Edit on aws-samples/protect-your-iot-fleet</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="protect-your-iot-fleet">Protect your IoT Fleet</h1>
+<p>You are a Security Engineer for a retail company that has fulfillment centers all across North America. Each fulfillment centers have thousands of IoT (Internet of Thing) devices measure the temperature of equipment. The Software Engineer teams decided to send telemetry data generated by IoT devices to the cloud for scalability. As a Security Engineer, you are tasked with securing the IoT devices from deployment through decommissioning. The QA team has provided simulated IoT devices for you to use in building those security controls.</p>
+<p>To achieve these requirements, you need to:</p>
+<ol>
+<li>Make sure devices security configuration is correct</li>
+<li>Use automation to detect devices compromised from bad actors</li>
+<li>Implement real-time notification solutions to react quickly to compromised devices. </li>
+</ol>
+<h2 id="terminology">Terminology</h2>
+<ul>
+<li><strong>AWS IoT Core:</strong> A platform that enables you to connect devices to AWS Services and other devices, secure data and interactions, process and act upon device data. It also enables applications to interact with devices even when they are offline and also allows you to produce low-cost Alexa built-in devices.</li>
+<li><strong>AWS IoT Thing:</strong> AWS IoT provides a registry that helps you manage things. A thing is a representation of a specific device or logical entity. It can be a physical device or sensor (for example, a light bulb or a switch on a wall). It can also be a logical entity like an instance of an application or physical entity that does not connect to AWS IoT but is related to other devices that do (for example, a car that has engine sensors or a control panel).</li>
+<li><strong>IoT Thing Group:</strong> allow you to manage several things at once by categorizing them into groups</li>
+<li><strong>X-509 Certificate:</strong> digital certificates that can be used to authenticate IoT devices</li>
+<li><strong>IoT Core Policy:</strong> AWS IoT Core policies allow you to control access to the AWS IoT Core data plane. The AWS IoT Core data plane consists of operations that allow you to connect to the AWS IoT Core message broker, send and receive MQTT messages, and get or update a device's shadow. You can attach a policy to a Thing group and it is inherited by its child groups, and by all of the things in the group and in its child groups. This makes the control of permissions easy for large numbers of things. </li>
+<li><strong>IoT Topics:</strong> When devices send messages to AWS IoT, it needs to to AWS IoT the topic name. AWS IoT looks at topic names to route messages.</li>
+<li><strong>IoT Device Defender:</strong> a security service that allows you to audit the configuration of your devices, monitor connected devices to detect abnormal behavior, and mitigate security risks.</li>
+<li><strong>IoT Device Defender Audit:</strong> An AWS IoT Device Defender audit looks at account- and device-related settings and policies to ensure security measures are in place. </li>
+<li><strong>IoT Device Defender Mitigation Actions:</strong> You can use Mitigation Actions to mitigate issues that were found during an audit</li>
+<li><strong>IoT Device Defender Detect:</strong> AWS IoT Device Defender Detect allows you to identify unusual behavior that might indicate a compromised device by monitoring the behavior of your devices. You can use a combination of cloud-side metrics (from AWS IoT) and device-side metrics (from agents you install on your devices) to detects change in devices</li>
+<li><strong>Security profile:</strong> A security profile defines anomalous behaviors for a group of devices (a thing group) or for all devices in your account, and specifies which actions to take when an anomaly is detected. </li>
+<li><strong>Behaviors:</strong> A behavior tells AWS IoT Device Defender Detect how to recognize when a device is doing something abnormal.</li>
+</ul>
+<h2 id="agenda">Agenda</h2>
+<h3 id="1-module-1-environment-build">1. <a href="/Module%201:%20Environment%20build">Module 1: Environment build</a></h3>
+<p>This module walks you through the environment setup. This includes provisioning a CloudFormation stack (if you run this lab by yourself), validate IoT devices configuration, and check if telemetry data is sent to AWS IoT.</p>
+<h3 id="2-module-2-audit-your-iot-fleet">2. <a href="/Module%202:%20Audit%20your%20IoT%20Fleet">Module 2: Audit your IoT Fleet</a></h3>
+<p>In Module 2, you create an AWS IoT Audit to check for misconfiguration for all of you devices. You will learn how to start an audit, and apply Mitigation Actions to remediate problem with devices have bad configurations</p>
+<h3 id="3-module-3-detect-a-compromised-device-using-cloud-side-metrics">3. <a href="/Module%203:%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics">Module 3: Detect a compromised device using cloud-side metrics</a></h3>
+<p>Module 3 shows you how to detect if devices are compromised and participate in wrong actions using cloud-side metrics from AWS IoT. You will simulate a scenerio when a device is sending significantly larger message size than it's normal message size. Using metrics provided by AWS IoT, you build an automation to detect this abnormal behavior. You then will build a Quarantine Thing Group, and move the bad device into this Thing Group to take away the device's permission to send data to AWS IoT. </p>
+<h3 id="4-module-4-detect-a-compromised-device-using-device-side-metrics">4. <a href="/Module%204:%20Detect%20a%20compromised%20device%20using%20device-side%20metrics">Module 4: Detect a compromised device using device-side metrics</a></h3>
+<p>In this module, you will learn how to capture metrics on your device by installing Device Defender agent on the device itself. Using these device-side metrics, you can detect if the device is changing in behavior. You will simulate a scenerio when a device is sending a significantly larger message size than the normal message size. Using metrics capture on your device, you will build automation to detect this abnormal behavior. You then will build a Quarantine Thing Group, and move the bad device into this Thing Group to take away device's permission to send data to AWS IoT. </p>
+<h3 id="5-module-5-send-security-alerts-to-your-favourite-messaging-platform">5. <a href="/Module%205:%20Send%20security%20alerts%20to%20your%20favourite%20messaging%20platform">Module 5: Send security alerts to your favourite messaging platform</a></h3>
+<p>This extra-credit module shows you how to receive a real-time notification  when your devices misbehave. You can choose to work with multiple messaging tools: Amazon Chime, Slack, or SMS</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>&copy; 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.1.2
+Build Date UTC : 2020-08-07 18:16:08.433156+00:00
+-->

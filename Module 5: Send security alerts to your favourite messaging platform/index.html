@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="aws-security-workshops@amazon.com">
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Module 5: Send security alerts to your favourite messaging platform - Protect your IoT Fleet</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../stylesheets/custom.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Module 5: Send security alerts to your favourite messaging platform";
+    var mkdocs_page_input_path = "Module 5: Send security alerts to your favourite messaging platform/README.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Protect your IoT Fleet</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%201%3A%20Environment%20build/">Module 1: Environment setup</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%202%3A%20Audit%20your%20IoT%20Fleet/">Module 2: Audit your IoT Fleet</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%203%3A%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics/">Module 3: Detect a compromised device using cloud-side metrics</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%204%3A%20Detect%20a%20compromised%20device%20using%20device-side%20metrics/">Module 4: Detect a compromised device using device-side metrics</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Module 5: Send security alerts to your favourite messaging platform</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-send-sms-message-to-your-phone-only-available-in-region-that-supports-sms-messaging">1. Send SMS message to your phone (only available in region that supports SMS messaging):</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-receive-alerts-on-chime-chatroom">2. Receive alerts on Chime chatroom</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#21-configure-chime-webhook">2.1 Configure Chime Webhook</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#22-create-deployment-package-for-lambda-function">2.2 Create deployment package for Lambda function</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#23-configure-lambda-function">2.3 Configure Lambda function</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-receive-alerts-on-slack-channel">3. Receive alerts on Slack channel</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#31-create-a-slack-incoming-webhook">3.1 Create a Slack Incoming WebHook</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#32-create-lambda-function-to-post-messages-to-slack">3.2 Create Lambda function to post messages to Slack</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-test-alerts">4. Test alerts</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Protect your IoT Fleet</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Module 5: Send security alerts to your favourite messaging platform</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/aws-samples/protect-your-iot-fleet/edit/master/docs/Module 5: Send security alerts to your favourite messaging platform/README.md"> Edit on aws-samples/protect-your-iot-fleet</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>eneccccjlubbcrcjnkrvrihugthkfgjfebgjueguidrd</p>
+<h1 id="module-5-send-security-alerts-to-your-favourite-messaging-platform">Module 5: Send security alerts to your favourite messaging platform</h1>
+<p>For many Security Engineers, receiving alerts in real time is critical. They need to act quickly to reduce impact of security issues. SMS message, or messaging platform such as Slack or Chime, are common tools to notify engineers when thing goes wrong.</p>
+<p>In this extra-credit module, you configure SNS to send Device Defender alerts to your phone, Amazon Chime chatroom, or Slack channel.</p>
+<blockquote>
+<p>Note: you need to have a SNS topic receives alerts from Device Defender to work on this module</p>
+</blockquote>
+<ol>
+<li><a href="#1-send-sms-message-to-your-phone-only-available-in-region-that-supports-sms-messaging">Send SMS message to your phone</a></li>
+<li><a href="#2-receive-alerts-on-chime-chatroom">Receive alerts on Chime chatroom</a></li>
+<li><a href="#3-receive-alerts-on-slack-channel">Receive alerts on Slack channel</a></li>
+<li><a href="#4-test-alerts">Test Alerts</a></li>
+</ol>
+<h2 id="1-send-sms-message-to-your-phone-only-available-in-region-that-supports-sms-messaging">1. Send SMS message to your phone (only available in <a href="https://docs.aws.amazon.com/sns/latest/dg/sns-supported-regions-countries.html">region that supports SMS messaging</a>):</h2>
+<p>You can subcribe your phone number to SNS topic receive alerts from IoT Device Defender. When a new alert occurs, SNS will send you a SMS message (SMS cost will be charged)</p>
+<ul>
+<li>
+<p>Sign in to your AWS account. From AWS console home, click <strong>SNS</strong></p>
+</li>
+<li>
+<p>On the left hand side, click on menu bar to show the list of SNS features. Click <strong>Subscriptions</strong></p>
+</li>
+<li>
+<p>Choose SNS topic that you use to receive alerts from IoT Device Defender. Choose <strong>SMS</strong> as protocal. Type in your phone number in <strong>EndPoint</strong>. Click <strong>Create subscription</strong></p>
+</li>
+</ul>
+<p><img src="../images/snssub.png"/></p>
+<p>You will need to confirm your subscription in order to start receiving SMS message.</p>
+<p>Now you can move to <a href="#4-test-alerts">Test Alerts</a> to test out this new intergration</p>
+<h2 id="2-receive-alerts-on-chime-chatroom">2. Receive alerts on Chime chatroom</h2>
+<p>Amazon Chime is a communication tool that lets you chat and place calls. Chime provide a feature call Incoming Webhook to allow applications post message to Chime chatroom. You can configure SNS to send a message to your Chime chatroom when Device Defender generates an alert.</p>
+<h3 id="21-configure-chime-webhook">2.1 Configure Chime Webhook</h3>
+<p>If you don't have a chat room, you can create a new one. From Chime App, click <strong>Rooms, Create a chat room, Done</strong>
+Click on the gear icon top right of the chat room. Then click <strong>Manage webhooks and bots</strong>. </p>
+<p>Click <strong>Add webhook</strong> and give it a name. Your webhook will have a unique URL e.g. https://hooks.chime.aws/incomingwebhooks/<guid>?token=xxxxxxxxxxxxxxxxxxxx). You need to protect this URL just as you protect any secret materials (API keys, username-password,..) because anyone has this URL can post a message to your chat room. Copy this URL and save it in a touchpad. You will need this URL to config Lamdbda function in step 2.2</p>
+<h3 id="22-create-deployment-package-for-lambda-function">2.2 Create deployment package for Lambda function</h3>
+<p>Since SNS doesn't intergrate with Chime directly, we will use a Lambda function to post the SNS message to the Chime chatroom. You will need to create a deployment package for this Lambda function by following these steps:</p>
+<p>a. Clone this workshop github repo, change directory to 'Module 5: Send security alerts to your favourite messaging platform', navigate to folder 'LambdaWebhookChime'. This folder should only have a python script index.py at the moment.</p>
+<p>b. We will install neccessary dependecies for this python script. Under device folder, create a subfolder called Package. </p>
+<div class="codehilite"><pre><span></span><code><span class="err">        mkdir Package</span>
+<span class="err">        cd Package</span>
+</code></pre></div>
+
+
+<p>c. Install these dependencies, choose Package as target folder. </p>
+<div class="codehilite"><pre><span></span><code><span class="err">        pip install --target . requests</span>
+</code></pre></div>
+
+
+<p>d. Create a zip archive of the dependencies named webhookchime.zip in Package and store it in LambdaWebhookChime folder. Run this command when you currently in Package folder</p>
+<div class="codehilite"><pre><span></span><code><span class="err">  zip -r9 ../webhookchime.zip .</span>
+</code></pre></div>
+
+
+<p>e. Add python script device.py to the archive</p>
+<div class="codehilite"><pre><span></span><code><span class="err">  cd ..</span>
+<span class="err">  zip -g webhookchime.zip index.py</span>
+</code></pre></div>
+
+
+<p>f. You will upload this zip file when you create lambda function next step</p>
+<h3 id="23-configure-lambda-function">2.3 Configure Lambda function</h3>
+<p>From Lambda management console, create a new Lambda function. Give this new function a name and choose Python3.* as runtime with default permissions. </p>
+<p>Now we already write the code for this lambda function and install all dependencies in previous step. Upload this deploymet packages webhookchime.zip to the Lambda function. Under <strong>Function code</strong>, click the drop down <strong>Code entry type</strong>, and choose <strong>Upload a .zip file</strong>. Make sure the function hander is 'index.handler'. Here is the code snippet of this Lambda function</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64decode</span>
+
+<span class="k">def</span> <span class="nf">get_message</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;Records&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Sns&#39;</span><span class="p">][</span><span class="s1">&#39;Message&#39;</span><span class="p">])</span> 
+    <span class="n">thing</span> <span class="o">=</span> <span class="s1">&#39;Thing name: &#39;</span> <span class="o">+</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;thingName&#39;</span><span class="p">]</span>
+    <span class="n">securityprofile</span> <span class="o">=</span> <span class="s1">&#39;Security profile: &#39;</span> <span class="o">+</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;securityProfileName&#39;</span><span class="p">]</span>
+    <span class="n">behaviorname</span> <span class="o">=</span> <span class="s1">&#39;Behavior name: &#39;</span> <span class="o">+</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;behavior&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">thing</span><span class="p">,</span><span class="n">securityprofile</span><span class="p">,</span><span class="n">behaviorname</span><span class="p">])</span>
+  <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s1">&#39;test message&#39;</span>
+
+<span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting ready to send message to Amazon Chime room&#39;</span><span class="p">)</span>
+  <span class="n">content</span> <span class="o">=</span> <span class="s1">&#39;IoT Device Defender alert! </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">get_message</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+  <span class="n">webhook_uri</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CHIME_WEBHOOK&#39;</span><span class="p">]</span>
+  <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">webhook_uri</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;Content&#39;</span><span class="p">:</span> <span class="n">content</span> <span class="p">})</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Finished sending notification to Amazon Chime room&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>Next create an environment variables to provide Chime Webhook URL to Lamdba function. Scroll to <strong>Environment Variables</strong>. From the right side, click <strong>Edit --&gt; Add environment variables</strong>. Add <strong>CHIME_WEBHOOK</strong> as the Key and provide webhook URL as the Value. Click Save</p>
+<p>This function parse the SNS message to retrieve Thing name, Security Profile, and Behavior name, then it use <em>requests</em> method to post these information to the webhook URL. In this lab, we have stored the webhook URL as an environment variable <strong>CHIME_WEBHOOK</strong>. In production use cases, we would recommend to store it securely using AWS Secrets Manager or any existing tools/vault that your team is using.</p>
+<p>When you have succcesfully created this Lambda function, let's add SNS as a trigger. Under <strong>Designer</strong>, click <strong>Add trigger</strong> and select <strong>SNS</strong>. Choose the SNS topic that you configured to receive IoT Device Defender alerts in. Remember to check box <strong>Enable trigger</strong>. Then click <strong>Add</strong></p>
+<p>Now you can move to <a href="#4-test-alerts">Test Alerts</a> to test out this new intergration</p>
+<h2 id="3-receive-alerts-on-slack-channel">3. Receive alerts on Slack channel</h2>
+<p>You need to have  a Slack channel in this session. To configure Device Defender send alerts to Slack channel, follow steps below</p>
+<h3 id="31-create-a-slack-incoming-webhook">3.1 Create a Slack Incoming WebHook</h3>
+<p>Start by setting up an <a href="https://my.slack.com/services/new/incoming-webhook/">incoming webhook integration</a>. Choose the channel that Webhook will post messages to and click <strong>Add Incoming Webhooks integration</strong></p>
+<p>Note down the <strong>Webhook URL</strong> and save it in your favourite text editor.</p>
+<h3 id="32-create-lambda-function-to-post-messages-to-slack">3.2 Create Lambda function to post messages to Slack</h3>
+<p>Sign in to your AWS account. Go to Lambda console and create a Lambda function to post the message to the channel. </p>
+<p>Click <strong>Create function</strong>. Select <strong>Author from Scratch</strong>.</p>
+<p><img src="../images/lambdaslack.png"/></p>
+<p>Name this lambda function. Chose <strong>Python 3.8</strong> for Runtime, and choose <strong>Create a new role with basic Lambda permissions</strong> for Execution Role. Click <strong>Create function</strong></p>
+<p>Replace the code in Lambda function with Python code below. You can also download it from <a href="../LambdaWebhookSlack.py">LambdaWebhookSlack.py</a>. Remember to click Save</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64decode</span>
+<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">Request</span><span class="p">,</span> <span class="n">urlopen</span>
+<span class="kn">from</span> <span class="nn">urllib.error</span> <span class="kn">import</span> <span class="n">URLError</span><span class="p">,</span> <span class="n">HTTPError</span>
+
+<span class="c1">#The hook URL of Slcak channel</span>
+<span class="n">HOOK_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;slackHookURL&#39;</span><span class="p">]</span>
+<span class="c1"># The Slack channel to send a message to stored in the slackChannel environment variable</span>
+<span class="n">SLACK_CHANNEL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;slackChannel&#39;</span><span class="p">]</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Event: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;Records&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Sns&#39;</span><span class="p">][</span><span class="s1">&#39;Message&#39;</span><span class="p">])</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Message: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
+
+    <span class="n">thing</span> <span class="o">=</span> <span class="s1">&#39;Thing name: &#39;</span> <span class="o">+</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;thingName&#39;</span><span class="p">]</span>
+    <span class="n">securityprofile</span> <span class="o">=</span> <span class="s1">&#39;Security profile: &#39;</span> <span class="o">+</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;securityProfileName&#39;</span><span class="p">]</span>
+    <span class="n">behaviorname</span> <span class="o">=</span> <span class="s1">&#39;Behavior name: &#39;</span> <span class="o">+</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;behavior&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+
+    <span class="n">slack_message</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;channel&#39;</span><span class="p">:</span> <span class="n">SLACK_CHANNEL</span><span class="p">,</span>
+        <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s2">&quot; You have a new Device Defender alert:  </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thing</span><span class="p">,</span> <span class="n">securityprofile</span><span class="p">,</span> <span class="n">behaviorname</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">HOOK_URL</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">slack_message</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Message posted to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">slack_message</span><span class="p">[</span><span class="s1">&#39;channel&#39;</span><span class="p">])</span>
+    <span class="k">except</span> <span class="n">HTTPError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Request failed: </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">URLError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Server connection failed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>Under <strong>Environment variables</strong>, click <strong>Edit</strong> and <strong>Add environment variable</strong>. You need to add two environmen variables <strong>slackHookURL</strong> and <strong>slackChannel</strong>. Provide values for these variables. Then click <strong>Save</strong></p>
+<p><img src="../images/envvarslack.png"/></p>
+<p>Now add SNS as a trigger for this function. Under <strong>SNS trigger</strong>, choose the SNS topic that Device Defender sends alerts to. From previous modules, a SNS topic <strong>BadIoTDevices-[CloudFormation stackname]</strong> was created. You can use this SNS topic or create a new one. Remember to check box <strong>Enable trigger</strong>. Then click <strong>Add</strong></p>
+<blockquote>
+<p>Note: we recommend to protect your WebHookURL just like you pretect a password. You can use KMS to encrypt the URL of the webhook, and base-64 encode it before pasting it in to the code. An example can be found in <a href="https://aws.amazon.com/blogs/aws/new-slack-integration-blueprints-for-aws-lambda/">Slack Integration Blueprint for Lambda</a></p>
+</blockquote>
+<p>Now you can move to <a href="#4-test-alerts">Test Alerts</a> to test out this new intergration</p>
+<h2 id="4-test-alerts">4. Test alerts</h2>
+<p>To test if notification works, you can publish this test SNS message below using SNS console. This is an example alerts generated by Device Defender.</p>
+<ul>
+<li>
+<p>Sign in to your AWS account, click <strong>SNS</strong> to go to SNS console</p>
+</li>
+<li>
+<p>On the left side, click on menu bar, and click <strong>Topics</strong> to see the list of SNS topics. In this module, select <strong>BadIoTDevices-[CloudFormation stackname]</strong> topic.</p>
+</li>
+<li>
+<p>Click <strong>Publish message</strong> on the top right corner. Copy the json blob below to <strong>Message body to send to the endpoint</strong>. Then click <strong>Publish message</strong></p>
+</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;violationEventTime&quot;</span><span class="p">:</span> <span class="mi">1582745400000</span><span class="p">,</span>
+  <span class="nt">&quot;thingName&quot;</span><span class="p">:</span> <span class="s2">&quot;myIoTDevice&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;behavior&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;criteria&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;consecutiveDatapointsToClear&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">5000</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;consecutiveDatapointsToAlarm&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nt">&quot;comparisonOperator&quot;</span><span class="p">:</span> <span class="s2">&quot;greater-than&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;messageSize&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;metric&quot;</span><span class="p">:</span> <span class="s2">&quot;aws:message-byte-size&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;violationEventType&quot;</span><span class="p">:</span> <span class="s2">&quot;in-alarm&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;metricValue&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">26</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;violationId&quot;</span><span class="p">:</span> <span class="s2">&quot;123456789&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;securityProfileName&quot;</span><span class="p">:</span> <span class="s2">&quot;LargeMessageSize&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>Congratulations! You have succesfully sent Device Defender alerts in real time to your favourite communication tools. </p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../Module%204%3A%20Detect%20a%20compromised%20device%20using%20device-side%20metrics/" class="btn btn-neutral" title="Module 4: Detect a compromised device using device-side metrics"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>&copy; 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../Module%204%3A%20Detect%20a%20compromised%20device%20using%20device-side%20metrics/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

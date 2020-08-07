@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="aws-security-workshops@amazon.com">
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Module 4: Detect a compromised device using device-side metrics - Protect your IoT Fleet</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../stylesheets/custom.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Module 4: Detect a compromised device using device-side metrics";
+    var mkdocs_page_input_path = "Module 4: Detect a compromised device using device-side metrics/README.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Protect your IoT Fleet</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%201%3A%20Environment%20build/">Module 1: Environment setup</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%202%3A%20Audit%20your%20IoT%20Fleet/">Module 2: Audit your IoT Fleet</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%203%3A%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics/">Module 3: Detect a compromised device using cloud-side metrics</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Module 4: Detect a compromised device using device-side metrics</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-configure-sensordevice03-to-send-telemetry-data-to-aws-iot">1. Configure SensorDevice03 to send telemetry data to AWS IoT</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-install-aws-device-defender-agent-to-collect-metrics-on-the-device">2. Install AWS Device Defender Agent to collect metrics on the device</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-define-unusual-behaviors">3. Define unusual behaviors</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-respond-to-violations">4. Respond to violations</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-simulate-a-compromised-device">5. Simulate a compromised device</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#51-update-message-size">5.1 Update message size</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%205%3A%20Send%20security%20alerts%20to%20your%20favourite%20messaging%20platform/">Module 5: Send security alerts to your favourite messaging platform</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Protect your IoT Fleet</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Module 4: Detect a compromised device using device-side metrics</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/aws-samples/protect-your-iot-fleet/edit/master/docs/Module 4: Detect a compromised device using device-side metrics/README.md"> Edit on aws-samples/protect-your-iot-fleet</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="module-4-detect-a-compromised-device-using-device-side-metrics">Module 4: Detect a compromised device using device-side metrics</h1>
+<p>In previous module, you used cloud-side metrics capture by AWS IoT to monitor and detect if a device has an abnormal behavior. You also built a solution to automatically isolate the device for quarantine. In this module you will learn how to monitor and stop suspicious device from any actions, by using metrics capture from the device itself. </p>
+<h2 id="1-configure-sensordevice03-to-send-telemetry-data-to-aws-iot">1. Configure SensorDevice03 to send telemetry data to AWS IoT</h2>
+<p>Device SensorDevice03 hasn't sent any temperature data to AWS IoT. In this step, you will need to start a bootstrap script on the device. This script will generate random temperature data and send it to AWS IoT endpoint.</p>
+<ul>
+<li>Open your Cloud9 environment. From Cloud9 environment terminal, go to directory below to run bootstrap script:<div class="codehilite"><pre><span></span><code><span class="err">cd /home/ec2-user/environment</span>
+<span class="err">git clone https://github.com/hongpham/Workshop-Protect-your-IoT-fleet.git</span>
+<span class="err">cd Workshop-Protect-your-IoT-fleet/</span>
+<span class="err">cd &#39;Module 4: Detect a compromised device using device-side metrics&#39;</span>
+</code></pre></div>
+
+
+</li>
+</ul>
+<p><strong>After repo is published, use CFN to download repo to Cloud9 during provisioning. Need to update git repo name after it's published. Also need to put a screen shot of these command.</strong></p>
+<ul>
+<li>
+<p>Run script bootstrap.sh to install dependencies and make this device to send data to AWS IoT (make sure you are at directory 'Module 4: Detect a compromised device using device-side metrics'). In this workshop, the default topic name is <strong>temperature-device-03</strong>, default device name is <strong>SensorDevice03</strong>. See screenshot in step 4 for an example. </p>
+<div class="codehilite"><pre><span></span><code><span class="p">.</span><span class="o">/</span><span class="n">bootstrap</span><span class="p">.</span><span class="n">sh</span> <span class="o">-</span><span class="n">t</span> <span class="p">[</span><span class="n">topic</span> <span class="n">name</span><span class="p">]</span> <span class="o">-</span><span class="n">n</span> <span class="p">[</span><span class="n">device</span> <span class="n">name</span><span class="p">]</span>
+</code></pre></div>
+
+
+</li>
+<li>
+<p>The script will write AWS IoT Endpoint to a temporary file under /tmp/endpoint. You will need this endpoint later. </p>
+</li>
+<li>
+<p>This bootstrap script will start a python program in the background to send data to AWS IoT topic <strong>temperature-device-03</strong>. To validate if this device is sendind telemetry data, you can check if the script is running by the command below.</p>
+<div class="codehilite"><pre><span></span><code><span class="err"> ps aux |grep python   #this command search for the current running processes that has &#39;python&#39; in it&#39;s name</span>
+</code></pre></div>
+
+
+</li>
+</ul>
+<p>If you see a process like <strong>'python startdevice.py -t [topic name] -d [device name]</strong>, this device is sending telemetry data to AWS IoT.</p>
+<p><img src="../images/bootstrapscript.png"/></p>
+<h2 id="2-install-aws-device-defender-agent-to-collect-metrics-on-the-device">2. Install AWS Device Defender Agent to collect metrics on the device</h2>
+<p>In this step, you will install <a href="https://github.com/aws-samples/aws-iot-device-defender-agent-sdk-python">AWS Device Defender Agent (Python version)</a> on this device <strong>SensorDevice03</strong></p>
+<ul>
+<li>
+<p>Run these commands to install Agent</p>
+<div class="codehilite"><pre><span></span><code><span class="err"> cd /home/ec2-user/environment/workshop</span>
+<span class="err"> sudo pip install -r requirements.txt </span>
+<span class="err"> sudo pip install AWSIoTDeviceDefenderAgentSDK</span>
+</code></pre></div>
+
+
+</li>
+<li>
+<p>Open a text editor, retrieve neccesary parameters below and save it in your text editor. You will need these parameters to start Device Defender Agent</p>
+<p>a. AWS IoT Endpoint: when you run bootstrap.sh script to bootstrap the device, the script retrieve AWS IoT endpoint and save it under /tmp/endpoint. In the terminal, you can run the command  below to retrieve the endpoint:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">  cat /tmp/endpoint</span>
+</code></pre></div>
+
+
+</li>
+</ul>
+<p><strong><details><summary>Click here if you can't find AWS IoT endpoint in /tmp/endpoint</summary><br></strong></p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">don</span><span class="err">&#39;</span><span class="n">t</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">AWS</span><span class="w"> </span><span class="n">IoT</span><span class="w"> </span><span class="n">Endpoint</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">file</span><span class="w"> </span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">endpoint</span><span class="p">,</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">retrieve</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">manually</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">AWS</span><span class="w"> </span><span class="n">IoT</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="w"></span>
+
+<span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="k">Go</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="o">**</span><span class="n">AWS</span><span class="w"> </span><span class="n">IoT</span><span class="w"> </span><span class="n">Core</span><span class="w"> </span><span class="n">console</span><span class="o">**</span><span class="p">.</span><span class="w"> </span><span class="n">Make</span><span class="w"> </span><span class="n">sure</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">correct</span><span class="w"> </span><span class="n">region</span><span class="p">.</span><span class="w"> </span><span class="n">Click</span><span class="w"> </span><span class="o">**</span><span class="n">Manage</span><span class="o">**</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">view</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">IoT</span><span class="w"> </span><span class="n">things</span><span class="p">.</span><span class="w"> </span><span class="n">Click</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="ow">any</span><span class="w"> </span><span class="n">thing</span><span class="p">,</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">example</span><span class="w"> </span><span class="o">**</span><span class="n">Thing01</span><span class="o">**</span><span class="p">.</span><span class="w"> </span><span class="n">Click</span><span class="w"> </span><span class="o">**</span><span class="n">Interact</span><span class="o">**</span><span class="p">.</span><span class="w"> </span><span class="n">Copy</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Rest</span><span class="w"> </span><span class="n">API</span><span class="w"> </span><span class="n">endpoint</span><span class="w"> </span><span class="k">under</span><span class="w"> </span><span class="o">**</span><span class="n">HTTPS</span><span class="o">**</span><span class="w"></span>
+
+<span class="w">    </span><span class="o">&lt;</span><span class="n">img</span><span class="w"> </span><span class="n">src</span><span class="o">=</span><span class="ss">&quot;../images/endpoint.png&quot;</span><span class="o">/&gt;</span><span class="w"></span>
+</code></pre></div>
+
+
+</details>
+
+<div class="codehilite"><pre><span></span><code><span class="n">b</span><span class="p">.</span> <span class="n">Device</span> <span class="n">name</span><span class="p">:</span> <span class="k">in</span> <span class="n">this</span> <span class="n">workshop</span><span class="p">,</span> <span class="k">default</span> <span class="n">device</span> <span class="n">name</span> <span class="k">is</span>  <span class="o">**</span><span class="n">SensorDevice03</span><span class="o">**</span>
+
+<span class="k">c</span><span class="p">.</span> <span class="n">Thing</span> <span class="n">name</span><span class="p">:</span> <span class="k">in</span> <span class="n">this</span> <span class="n">workshop</span><span class="p">,</span> <span class="k">default</span> <span class="n">thing</span> <span class="n">name</span> <span class="k">is</span> <span class="o">**</span><span class="n">Thing03</span><span class="o">**</span>
+</code></pre></div>
+
+
+<ul>
+<li>
+<p>Extend Agent Connection timeout: the minimum interval to send device metrics to Device Defender is 5 minutes (300 s). In this workshop, to make sure the established connection between device and AWS IoT will not be closed when the Agent is collecting data, you will need to increase ConnectionTimeout</p>
+<p>a. Make sure you are in directory AWSIoTDeviceDefenderAgentSDK. Change timeout configuration by editing agent.py </p>
+<div class="codehilite"><pre><span></span><code><span class="err">cd /home/ec2-user/environment/workshop/AWSIoTDeviceDefenderAgentSDK</span>
+<span class="err">vi agent.py</span>
+</code></pre></div>
+
+
+<p>b. Change the values of <strong>configureConnectDisconnectTimeout</strong> and <strong>configureMQTTOperationTimeout</strong> to <strong>1800</strong> seconds (30 minutes) </p>
+<p><img src="../images/contimeout.png"/></p>
+<p>c. Save and close agent.py by pressing <strong>Esc</strong> on the keyboard, then type <strong>:wq</strong></p>
+</li>
+<li>
+<p>Start Device Defender Agent by running this command</p>
+<div class="codehilite"><pre><span></span><code><span class="n">python</span> <span class="n">agent</span><span class="p">.</span><span class="n">py</span> <span class="o">--</span><span class="n">endpoint</span> <span class="p">[</span><span class="n">your</span> <span class="n">AWS</span> <span class="n">IoT</span> <span class="n">endpoint</span> <span class="n">retrieved</span> <span class="n">from</span> <span class="n">step</span> <span class="mf">2.</span><span class="n">a</span> <span class="n">above</span><span class="p">]</span>  \
+<span class="o">--</span><span class="n">rootCA</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">rootca</span><span class="p">.</span><span class="n">pem</span>  <span class="o">--</span><span class="n">cert</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">cert</span><span class="p">.</span><span class="n">pem</span> <span class="o">--</span><span class="n">key</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">private</span><span class="p">.</span><span class="n">key</span> \
+<span class="o">--</span><span class="n">client_id</span> <span class="p">[</span><span class="n">Device</span> <span class="n">name</span><span class="p">]</span> <span class="o">--</span><span class="n">thing_name</span> <span class="p">[</span><span class="n">Thing</span> <span class="n">name</span><span class="p">]</span> <span class="o">--</span><span class="n">format</span> <span class="n">json</span> <span class="o">-</span><span class="n">i</span> <span class="mi">300</span> <span class="o">&gt;</span> <span class="n">agent</span><span class="p">.</span><span class="k">out</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span>
+</code></pre></div>
+
+
+</li>
+</ul>
+<p><img src="../images/startagent.png"/></p>
+<p>If you notice, you will see that X.509 certificate and it's private key is requried to start Device Defender Agent. These are credentials the Agent will use to send to AWS IoT. These credentials are already download for you under /tmp directory.</p>
+<p>The Agent will collect metrics and sends to AWS IoT as json format every 300 seconds (or 5 minutes - which is minimum reporting interval)</p>
+<ul>
+<li>After a few minutes, you should see a message confirm that Agent is sending metrics data to AWS IoT</li>
+</ul>
+<p><img src="../images/metricssent.png"/></p>
+<p>Let the Agent run for a 10-15 minutes. Move to next step to configure device behaviors on Device Defender.</p>
+<h2 id="3-define-unusual-behaviors">3. Define unusual behaviors</h2>
+<p>Your task is to implement a solution to detect unusual behaviors on the IoT device itself. Like in Module 3, you need to define when the value of each metric is considered outside of regularity.</p>
+<p>You need to create a new <strong>Security Profile</strong>. In this case, you will create a Security Profile to allow Device Defender to monitor the bytes sent from the device. Device Defender can use <a href="https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-detect.html#detect-behaviors">statisticalThreshold</a> to detect if outgoing messages from your device are larger then the average number of bytes sent. </p>
+<ul>
+<li>
+<p>Go to the IoT console.</p>
+</li>
+<li>
+<p>On the left side of IoT Console, Click <strong>Defend, Detect, Security Profiles</strong>. Click the <strong>Create</strong> button on the upper right hand corner. </p>
+</li>
+<li>
+<p>Name this security profile as <strong>DetectSendingMoreThanAverageBytes</strong>.</p>
+</li>
+<li>
+<p>Under <strong>Behaviors</strong>, create a behavior named <strong>MoreBytesSent</strong>. We ask Device Defender to observe the number of bytes and alert us it transmits sends a message that's more than 200 bytes. </p>
+</li>
+<li>
+<p>Click on drop down list under <strong>Metric</strong>, and choose metric <strong>Bytes out</strong>. Choose <strong>Check Type</strong> as <strong>Absolute value</strong> to check the exact number of bytes sent.</p>
+</li>
+<li>
+<p>For <strong>Operator</strong>, choose <strong>Greater than</strong>. Specify <strong>200</strong> for <strong>Vale</strong>. That means if the number of bytes in a message sent from the device is more than 200 bytes, it will trigger an alert.</p>
+</li>
+<li>
+<p>Choose <strong>5 minutes</strong> for <strong>Duration</strong> and leave the default <strong>1</strong> for both <strong>Datapoints to alarm</strong> and <strong>Datapoints to clear</strong>.</p>
+</li>
+<li>
+<p>Expand the <strong>Additional Metrics to retain</strong> and check the box next to <strong>Bytes out</strong>. Click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>On the next page, send messages to the same SNS topic from Module 3 - <strong>BadIoTDevices-<CFNStackName></strong> and select the role that starts with <strong><CFNStackName>-SNSTopicRole-</strong> to grant permission for Device Defender to publish on the SNS topic. Click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>Check the box next to <strong>All things</strong> too attach the security profile to all IoT things. Click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>Review that the configuration is as detailed above and click <strong>Save</strong>, then <strong>Continue</strong>.</p>
+</li>
+</ul>
+<h2 id="4-respond-to-violations">4. Respond to violations</h2>
+<p>Once your message violates the security profile, it will trigger a message to be sent to the SNS topic.
+The SNS topic will trigger the same lambda function as Module 3. As before, when this lambda function is triggered, it will move the IoT Thing that represents your Cloud9 instance, to the isolated thing group.</p>
+<h2 id="5-simulate-a-compromised-device">5. Simulate a compromised device</h2>
+<p>In this section, we will be simulating a device that has been compromised and sending more data than it is supposed to send. </p>
+<h3 id="51-update-message-size">5.1 Update message size</h3>
+<ul>
+<li>
+<p>To update the number of bytes the Cloud9 instance will send to AWS IoT, go to the Cloud9 service page, under <strong>Your environments</strong>, click  <strong>Open IDE</strong> in the environment named <strong>SensorDevice03</strong>. </p>
+</li>
+<li>
+<p>From Cloud9 environment terminal, go to directory below to run bootstrap script:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">cd /home/ec2-user/environment</span>
+<span class="err">git clone https://github.com/hongpham/Workshop-Protect-your-IoT-fleet.git</span>
+<span class="err">cd Workshop-Protect-your-IoT-fleet/</span>
+<span class="err">cd &#39;Module 4: Detect a compromised device using device-side metrics&#39;</span>
+</code></pre></div>
+
+
+</li>
+</ul>
+<p><strong>After repo is published, use CFN to download repo to Cloud9 during provisioning. Need to update git repo name after it's published. Also need to put a screen shot of these command.</strong></p>
+<ul>
+<li>Open the <code>startdevice.py</code> file:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="err">vim startdevice.py</span>
+</code></pre></div>
+
+
+<ul>
+<li>Go to line 86 and comment out the current telementrydata that generate random temperature telemetry data so line 86 looks like the following:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="err">    #telemetrydata = round(random.uniform(15.1,29.9),2)</span>
+</code></pre></div>
+
+
+<ul>
+<li>Instead, create a large random string has 3000 characters. To do so, uncomment the line of code below (line 89)</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="err">    telemetrydata = &#39;&#39;.join(random.choices(string.ascii_uppercase + string.digits, k = 3000)) </span>
+</code></pre></div>
+
+
+<ul>
+<li>Save this code change and re-run the bootstrap script:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="p">.</span><span class="o">/</span><span class="n">bootstrap</span><span class="p">.</span><span class="n">sh</span> <span class="o">-</span><span class="n">t</span> <span class="p">[</span><span class="n">topic</span> <span class="n">name</span><span class="p">]</span> <span class="o">-</span><span class="n">n</span> <span class="p">[</span><span class="n">device</span> <span class="n">name</span><span class="p">]</span>
+</code></pre></div>
+
+
+<ul>
+<li>The device is now sending more bytes out than it should be. After 5 minutes, the device should show up in the <strong>IsolatedDevices</strong>.</li>
+</ul>
+<p>Congrationlations! You have successfully used Device Defender Agent to monitor device behaviors from the device itself. If you have time to work on extra-credit challenges, move on to <a href="../Module%205%3A%20Send%20security%20alerts%20to%20your%20favourite%20messaging%20platform/">Module 5: Send security alerts to your favourite messaging platform</a></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Module%205%3A%20Send%20security%20alerts%20to%20your%20favourite%20messaging%20platform/" class="btn btn-neutral float-right" title="Module 5: Send security alerts to your favourite messaging platform">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../Module%203%3A%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics/" class="btn btn-neutral" title="Module 3: Detect a compromised device using cloud-side metrics"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>&copy; 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../Module%203%3A%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../Module%205%3A%20Send%20security%20alerts%20to%20your%20favourite%20messaging%20platform/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

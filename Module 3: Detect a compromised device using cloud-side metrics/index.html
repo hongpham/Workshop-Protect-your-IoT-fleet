@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="aws-security-workshops@amazon.com">
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Module 3: Detect a compromised device using cloud-side metrics - Protect your IoT Fleet</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../stylesheets/custom.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Module 3: Detect a compromised device using cloud-side metrics";
+    var mkdocs_page_input_path = "Module 3: Detect a compromised device using cloud-side metrics/README.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Protect your IoT Fleet</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%201%3A%20Environment%20build/">Module 1: Environment setup</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%202%3A%20Audit%20your%20IoT%20Fleet/">Module 2: Audit your IoT Fleet</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Module 3: Detect a compromised device using cloud-side metrics</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-define-unusual-behaviors-of-your-devices">1. Define unusual behaviors of your devices</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-respond-to-a-violation">2. Respond to a violation</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#21-create-iot-thing-group-that-denies-all-iot-actions">2.1 Create IoT Thing Group that denies all IoT actions</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#22-use-lambda-function-to-move-device-into-thing-group">2.2 Use Lambda function to move device into Thing Group</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-simulate-a-compromised-device">3. Simulate a compromised device</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#31-update-message-size">3.1 Update message size</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%204%3A%20Detect%20a%20compromised%20device%20using%20device-side%20metrics/">Module 4: Detect a compromised device using device-side metrics</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%205%3A%20Send%20security%20alerts%20to%20your%20favourite%20messaging%20platform/">Module 5: Send security alerts to your favourite messaging platform</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Protect your IoT Fleet</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Module 3: Detect a compromised device using cloud-side metrics</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/aws-samples/protect-your-iot-fleet/edit/master/docs/Module 3: Detect a compromised device using cloud-side metrics/README.md"> Edit on aws-samples/protect-your-iot-fleet</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="module-3-detect-a-compromised-device-using-cloud-side-metrics">Module 3: Detect a compromised device using cloud-side metrics</h1>
+<p>In Module 2, you learned how to set up automation to audit devices configuration and implement mitigation actions. With additional security requirements from your IT organization, you need to have a solution in place to detect unusual behaviors of IoT devices, which can indicate that devices are compromised and participate in bad activities (for example, participate in a DDoS attack). You also need to find a solution to quickly response to this changes in device's behaviors. Becuase these IoT devices are used to send temperature telemetry, you identify one behavior indicates that a device is compromised: sending very large message compared to the regular message, which only has temperature telemetry.</p>
+<p>This module will walk you through neccessary steps to use metrics collected by AWS IoT (cloud-side metrics) to detect a compromised devices.</p>
+<ol>
+<li><a href="#1-define-unusual-behaviors-of-your-devices">Define unusual behaviors of your devices</a></li>
+<li><a href="#2-respond-to-a-violation">Respond to a violation</a></li>
+<li><a href="#3-simulate-a-compromised-device">Simulate a compromised device</a></li>
+</ol>
+<h2 id="1-define-unusual-behaviors-of-your-devices">1. Define unusual behaviors of your devices</h2>
+<p>Your task is to implement a solution to detect unusual behaviors of IoT devices. How do you know if a device acts differently than its regular behavior? You need to have metrics related to the device's activities, and you need to define when the value of each metric is considered outside of regularity.</p>
+<p>AWS IoT Device Defender Detect monitor cloud-side metrics to detect abnormal behaviors (such as the number of authorization failures, or the number or size of messages a device sends or receives through AWS IoT). However, you need to tell Device Defender when these metrics aren't normal.</p>
+<p>To do that, you need to create a <strong>Security Profile</strong>. A security profile defines abnomal behaviors for a group of devices (a thing group) or for all devices in your account, and specifies what actions to take when an anomaly is detected. </p>
+<p>In this case, you will create a Security Profile to allow Device Defender to monitor the message size of all three devices. The Software Development Team didn't share with you average message size of each message. But Device Defender can use <a href="https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-detect.html#detect-behaviors">statisticalThreshold</a> to detect if incoming messages are larger then the average message size. </p>
+<ul>
+<li>
+<p>Sign in to your AWS account. From AWS console home, go to IoT console</p>
+</li>
+<li>
+<p>On the left side of IoT Console, Click <strong>Defend, Detect, Security Profiles, Create your first security profile</strong>. Name this security profile as <strong>DetectLargeMessageSize</strong>. </p>
+</li>
+<li>
+<p>Under <strong>Behaviors</strong>, create a behavior named <strong>LargeMessageSize</strong>. We ask Device Defender to observe message size and alert us it transmits messages whose cumulative size is more than 1000bytes in a minute. </p>
+</li>
+<li>
+<p>Click on drop down list under <strong>Metric</strong>, and choose metric <strong>Message Size</strong>. Choose <strong>Check Type</strong> as <strong>Statistical Threshold</strong>. </p>
+</li>
+<li>
+<p>For <strong>Operator</strong>, choose <strong>Greater than</strong>. Specify <strong>p50</strong> for <strong>Statistical Threshold</strong>. That means, the criteria to trigger alert is when the incoming message size is larger than the 50% of all measurements.</p>
+</li>
+<li>
+<p>Choose <strong>5 minutes</strong> for <strong>Duration</strong>. For a Statistical Threshold check type, this is the time window during which metrics are collected from all devices to determine the statistical ranking of the data from an individual device.</p>
+</li>
+<li>
+<p>For <strong>Datapoints to Alarm</strong>, specify <strong>1</strong>. If a device is in violation of this behavior for 1 datapoints, an alarm occurs.</p>
+</li>
+<li>
+<p>For <strong>Datapoints to Clear</strong>, specify <strong>1</strong>. If an alarm has occured, and the offending device is no longer in violation of the behavior for 1 consecutive datapoints, the alarm is cleared.</p>
+</li>
+</ul>
+<p><img src="../images/behaviors.png"/></p>
+<ul>
+<li>
+<p>You need to keep the mesage size metrics of each message for investigation. Under <strong>Addionional Metrics to retain</strong>, click on <strong>Select</strong> on the right corner to see drop down list of metrics that we can retain. Select <strong>Message size</strong>. You also need to keep track of how many messages are sent and received between AWS IoT and each device in a given period. To keep this metric, select <strong>Message received</strong>. Then click <strong>Next</strong></p>
+</li>
+<li>
+<p>Select a SNS topic for alerts when a device violates a behavior in this profile. An SNS topic was created for you in advance. This step is similar to <a href="/Module%202:%20Audit%20your%20IoT%20Fleet/README.md#11-check-audit-settings">Module 2, session 1.1, Option 1, step 9 and 10</a>. Select SNS topic <strong>BadIoTDevices-[CloudFormation stackname]</strong>. For IAM Role, select IAM role with this naming convention <strong>[CloudFormation-stack-name]-SNSTopicRole-[random-value]</strong>. If you worked on Module 2 of this workshop, you should already subcribed your email to this topic <strong>BadIoTDevices-[CloudFormation stackname]</strong>. If you haven't subscribed your email, don't forget to do so.</p>
+</li>
+</ul>
+<p><img src="../images/snsdetect.png"/></p>
+<ul>
+<li>You need to attach this security profile to a target. A target can be a thing, or a thing group, or every devices. For simplicity, we will attach this security profile with <strong>All things</strong> for now.</li>
+</ul>
+<p><img src="../images/target.png"/></p>
+<p>Click <strong>Next</strong> to view summary of this Security Profile. When you confirm everything is correct, then click <strong>Save</strong></p>
+<h2 id="2-respond-to-a-violation">2. Respond to a violation</h2>
+<p>After you figure out how to detect unusual device's behaviors, next step is to respond to this violation. </p>
+<p>This session walk you through how to create a simple automation that will move violated device to an IoT Thing Group specifically for investigation. You attach an IAM policy to this Thing Group so that the devices in this Thing Group do not have any permision to perform any IoT actions.</p>
+<h3 id="21-create-iot-thing-group-that-denies-all-iot-actions">2.1 Create IoT Thing Group that denies all IoT actions</h3>
+<ul>
+<li>Sign in to your AWS account, click on IoT Device Defender.</li>
+<li>From IoT management console, click <strong>Manage</strong>, <strong>Thing groups</strong>, <strong>Create</strong>, <strong>Create Thing Group</strong> . Name your thing group  as <strong>IsolatedDevices</strong> and click <strong>Create thing group</strong></li>
+</ul>
+<p><img src="../images/CreateThingGroup.png"/></p>
+<ul>
+<li>
+<p>Next, create a policy that deny all <strong>IoT actions</strong> </p>
+</li>
+<li>
+<p>Go back to main AWS IoT console, click on <strong>Secure, Policies, Create</strong>. Name your new policy. </p>
+</li>
+<li>
+<p>Under <strong>Add statements*<em>, type **iot:</em></strong> for <strong>Action</strong>, and <strong>'*'</strong> for <strong>Resource ARN</strong>. Check <strong>Deny</strong> box, and click <strong>Create</strong>. </p>
+</li>
+</ul>
+<p><strong>Note that this policy only denies all IoT actions. If your devices have additional permission to work with others AWS services (for example, permission to Put an item in DynamoDB table), this policy won't deny those permission.</strong></p>
+<p><img src="../images/DenyAll.png"/></p>
+<ul>
+<li>Associate this policy with Thing Group that we create earlier. Go to <strong>Manage, Thing groups</strong>. Click on the Thing Group <strong>IsolatedDevices, Security, Edit</strong>. Select the policy that you create earlier, and click <strong>Save</strong></li>
+</ul>
+<p><img src="../images/AttachDenyAll.png"/></p>
+<p>Any device in Thing Group <strong>IsolatedDevices</strong> will not have permission to send data to AWS IoT.</p>
+<p>Next, you use a Lambda function to move offending devices to this Thing Group</p>
+<h3 id="22-use-lambda-function-to-move-device-into-thing-group">2.2 Use Lambda function to move device into Thing Group</h3>
+<p>In this step, you use a Lambda function to move offending device to <strong>IsolatedDevices</strong> thing group for forensics. When Device Defender finds a violation and sends alerts to SNS topic that you created earlier, SNS will trigger this Lambda function.</p>
+<blockquote>
+<p>Note: in this Lab, we expect to have 1-2 violations, which means the Lambda function will be triggered no more than 2 times. </p>
+</blockquote>
+<ul>
+<li>
+<p>A Lambda function <strong>IsolateDevice</strong> was already created in advance for you.</p>
+</li>
+<li>
+<p>To understand what this Lambda function does, go to Lambda console, click <strong>Function</strong>. Click <strong>IsolateDevice</strong></p>
+</li>
+<li>
+<p>Under <strong>Function Code</strong>, you will see Python code below. When alert from Device Defender Detect is sent to SNS topic <strong>BadIoTDevices-[CloudFormation stackname]</strong>, SNS will trigger this Lambda function. This function will parse the SNS message to retrieve offending device's name, and add this device to Thing Group <strong>IsolatedDevices</strong></p>
+</li>
+</ul>
+<blockquote>
+<p>Note: you need to  provide Thing Group name to this function, and subscribe Lambda function to SNS topic by following steps below.</p>
+</blockquote>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">iot</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;iot&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s1">&#39;Records&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Sns&#39;</span><span class="p">][</span><span class="s1">&#39;Message&#39;</span><span class="p">]</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="n">thing</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;thingName&#39;</span><span class="p">]</span>
+
+    <span class="n">addThing</span> <span class="o">=</span> <span class="n">iot</span><span class="o">.</span><span class="n">add_thing_to_thing_group</span><span class="p">(</span>
+        <span class="n">thingGroupName</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ThingGroupName&#39;</span><span class="p">],</span>
+    <span class="n">thingName</span><span class="o">=</span><span class="n">thing</span>
+    <span class="p">)</span>
+</code></pre></div>
+
+
+<ul>
+<li>
+<p>You need to provide Thing Group name for this Lambda function. To do so, you create an Environment Variables.</p>
+</li>
+<li>
+<p>Scroll down to <strong>Environment Variables</strong>, click <strong>Manage environment variables</strong></p>
+</li>
+<li>
+<p>Click <strong>Add environment variable</strong>. Type <strong>ThingGroupName</strong> as Key (need to be exactly as ThingGroupName), and <strong>IsolatedDevices</strong> as Value. Click Save.</p>
+</li>
+<li>
+<p>Now this function is ready to be invoked. The next thing to do is to configure SNS topic to trigger this function.</p>
+</li>
+<li>
+<p>On the function console, expand <strong>Designer</strong> </p>
+</li>
+</ul>
+<p><img src="../images/designerlambda.png"/></p>
+<ul>
+<li>Click <strong>Add trigger</strong>. Select <strong>SNS</strong>. Select topic <strong>BadIoTDevices-[CloudFormation stackname]</strong>. Check <strong>Enable trigger</strong>. And click <strong>Add</strong> to make this SNS topic as a trigger of your function.</li>
+</ul>
+<p><img src="../images/snstriggerlambda.png"/></p>
+<p><strong>IsolateDevice</strong> is now receiving events from trigger SNS topic <strong>BadIoTDevices-[CloudFormation stackname]</strong>. That means, it will move offending device to Thing Group <strong>IsolatedDevice</strong> when Device Defender alerts a violation. Next step, you are going to test if this automation works as expected.</p>
+<h2 id="3-simulate-a-compromised-device">3. Simulate a compromised device</h2>
+<p>In this step, you update SensorDevice02's code to similate a situation that its message is very large compared with regular message size. Because this behavior can indate that the device is compromised, you want to stop this device from taking any IoT actions, and move it to quarantive Thing Group to investigate further.</p>
+<h3 id="31-update-message-size">3.1 Update message size</h3>
+<ul>
+<li>To update the message size SensorDevice02 is sending to AWS IoT, go to Lambda management console, click on function <strong>SensorDevice02</strong>. Scroll down and comment out the code that generate random temperature telemetry data so line 57 looks like the following:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="err">    #telemetrydata = round(random.uniform(15.1,29.9),2)</span>
+</code></pre></div>
+
+
+<ul>
+<li>Instead, create a large random string has 3000 characters. To do so, uncomment the line of code below (line 60)</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="err">    telemetrydata = &#39;&#39;.join(random.choices(string.ascii_uppercase + string.digits, k = 3000)) </span>
+</code></pre></div>
+
+
+<ul>
+<li>Click <strong>Save</strong> on the topc right corner. After saving this code change, your new code should look like this:</li>
+</ul>
+<p><img src="../images/codechange.png"/></p>
+<p>After this change, each message from <strong>SensorDevice02</strong> device will have 3000 characters - which is very abnormal compared to regular message size (only have a 3-4 characters)</p>
+<p>Now we wait for a few minutes until you receive email from SNS. After that you can go to <strong>Manage, Thing Groups, IsolatedDevices, Things</strong> to see that <strong>Thing02</strong> should be added to this group. Now let's check if this device has stopped sending telemetry data by going to <strong>Test, Subscribe to a topic</strong>, enter the topic <strong>temperature-device-02</strong>. </p>
+<p>If your automation in step 2 works. You shouldn't see any message there because we have associated <strong>DenyAll</strong> policy to Thing Group <strong>IsolatedDevices</strong></p>
+<p>Congratulations! By completing this module, you have learned how to detect unusual behaviors of IoT devices, and stop offending devices to take any IoT actions. </p>
+<p>Next, move to <a href="../Module%204:%20Detect%20a%20compromised%20device%20using%20device-side%20metrics">Module 4: Detect a compromised device using device-side metrics</a> to use device-side metrics to detect compromised devices.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Module%204%3A%20Detect%20a%20compromised%20device%20using%20device-side%20metrics/" class="btn btn-neutral float-right" title="Module 4: Detect a compromised device using device-side metrics">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../Module%202%3A%20Audit%20your%20IoT%20Fleet/" class="btn btn-neutral" title="Module 2: Audit your IoT Fleet"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>&copy; 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../Module%202%3A%20Audit%20your%20IoT%20Fleet/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../Module%204%3A%20Detect%20a%20compromised%20device%20using%20device-side%20metrics/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

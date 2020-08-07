@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="aws-security-workshops@amazon.com">
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Module 1: Environment setup - Protect your IoT Fleet</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../stylesheets/custom.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Module 1: Environment setup";
+    var mkdocs_page_input_path = "Module 1: Environment build/README.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Protect your IoT Fleet</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Module 1: Environment setup</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-available-resources">1. Available resources:</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-validate-environment-setup">2. Validate environment setup</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-check-iot-devices-powered-by-lambda-functions">1. Check IoT Devices powered by Lambda functions</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-check-iot-device-powered-by-cloud9-environment">2. Check IoT Device powered by Cloud9 environment</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-aws-iot-things">3. AWS IoT Things</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-check-if-your-devices-are-sending-data-to-aws-iot">3. Check if your devices are sending data to AWS IoT</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%202%3A%20Audit%20your%20IoT%20Fleet/">Module 2: Audit your IoT Fleet</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%203%3A%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics/">Module 3: Detect a compromised device using cloud-side metrics</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%204%3A%20Detect%20a%20compromised%20device%20using%20device-side%20metrics/">Module 4: Detect a compromised device using device-side metrics</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%205%3A%20Send%20security%20alerts%20to%20your%20favourite%20messaging%20platform/">Module 5: Send security alerts to your favourite messaging platform</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Protect your IoT Fleet</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Module 1: Environment setup</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/aws-samples/protect-your-iot-fleet/edit/master/docs/Module 1: Environment build/README.md"> Edit on aws-samples/protect-your-iot-fleet</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="module-1-environment-build">Module 1: Environment build</h1>
+<p>This module walks your through IoT environment setup for this workshop. You will need an AWS account. Depending on the scenerios below, expand one of the following dropdowns to start.</p>
+<p><strong><details><summary>Click here if you are at an AWS event where the Event Engine is being used</summary><br></strong>
+If you are at an AWS Sponsored event, you will be provided with either an AWS account or a hash key for Event Engine. Environment setup has been completed for you. You don't need to perform any provisioning in this module. To get start, go to <a href="#available-resources">Available resources</a> to check what are already provisioned.
+</details></p>
+<p><strong><details><summary>Click here if you are using your own AWS account (whether you are at an AWS event, a separate event or online)</summary><br></strong>
+You will need to set up environment for this lab following these steps:</p>
+<ol>
+<li><strong>Choose a region:</strong> sign in to your AWS Account. From AWS console home, choose a region that works best for you from the top right corner of the console. For example, Ohio or Oregon if you're in North America. </li>
+<li><strong>Create a S3 bucket:</strong> You will use CloudFormation to provision neccesary resources, including multiple Lambda functions. You need to use a S3 bucket to store deployment packages of these Lambda functions. If you don't have a S3 bucket, create a new one. Or you can use an existing non-prod bucket.</li>
+<li>Download CloudFormation template <a href="setupinfra.yml">setupinfra.yml</a> and save it locally on your laptop/computer. Next you will create deployment package for 3 Lambda functions</li>
+<li>
+<p>Create deployment package for Lambda function 'Device': This deployment package is for Lambda functions act as IoT Devices. To create deployment package, follow these steps</p>
+<p>4.1. Clone this workshop github repo, change directory to 'Module 1: Environment build', navigate to folder 'device'. This folder should only have a python script device.py at the moment.</p>
+<p>4.2. We will install neccessary dependecies for this python script. Under device folder, create a subfolder called Package. 
+  <code>bash
+  mkdir Package
+  cd Package</code></p>
+<p>4.3. Install these dependencies, choose Package as target folder
+  <code>bash
+  pip install --target . AWSIoTPythonSDK boto3 requests</code></p>
+<p>4.4. Create a zip archive of the dependencies in Package and store it in device folder. Run this command when you currently in Package folder
+  <code>bash
+  zip -r9 ../device.zip .</code></p>
+<p>4.5. Add python script device.py to the archive
+  <code>bash
+  cd ..
+  zip -g device.zip device.py</code></p>
+<p>4.6. Upload this zip file to your S3 bucket. <strong>Note:</strong> This deployment package need to be at the top level, and not in any folder of the S3 bucket</p>
+</li>
+<li>
+<p>Create deployment package for Lambda function 'registerdevice': This deployment package is for a Lambda function that creates X.509 certificate, its private key and store it in AWS Secrets Manager. This function also creates an IoT Core policy and attachs it to X.509 certificate. To create deployment package, follow these steps</p>
+<p>5.1. From directory 'Module 1: Environment build', navigate to folder 'registerDevice'. This folder should only have a javascript registerdevice.js at the moment.</p>
+<p>5.2 Create a zip file from this javascript: </p>
+<p><code>bash
+  zip registerdevice.zip registerdevice.js</code></p>
+<p>5.3. Upload this zip file to your S3 bucket. <strong>Note:</strong> This deployment package need to be at the top level, and not in any folder of the S3 bucket</p>
+</li>
+<li>
+<p>Create deployment package for Lamdba function 'startaudit': this deployment package is for a Lambda function that start an on-demand Device Defender Audit</p>
+<p>6.1. From directory 'Module 1: Environment build', navigate to folder 'startaudit'. This folder should only have a javascript startaudit.js at the moment.</p>
+<p>6.2 Create a zip file from this javascript: </p>
+<p><code>bash
+  zip startaudit.zip startaudit.js</code></p>
+<p>6.3. Upload this zip file to your S3 bucket. <strong>Note:</strong> This deployment package need to be at the top level, and not in any folder of the S3 bucket</p>
+</li>
+<li>
+<p>Create a new CloudFormation stack to provision AWS resources:</p>
+<p>7.1. From CloudFormation console, click <strong>Create stacks, With new resources (standard)</strong></p>
+<p>7.2. Choose <strong>Upload a new template</strong>, and upload the CloudFormation template that you download to your laptop/computer earlier in step 3. Click <strong>Next</strong></p>
+<p>7.3. Name this new CloudFormation stack. Under Parameter session, provide the <strong>name of the S3 bucket</strong> that you create in step 2. We recommend you to keep the default values of <strong>IoT Parameters</strong> for easy reference when you go through this workshop. You can provide values for these parameters if you are comfortable working with AWS IoT Thing and Topics.  </p>
+<div class="codehilite"><pre><span></span><code><span class="err">&lt;img src=&quot;../images/s3parameter.png&quot;/&gt;</span>
+</code></pre></div>
+
+
+<p>7.4. Leave everything by default in <strong>Configure stack options</strong>. Click <strong>Next</strong> to go to review step</p>
+<p>7.5. In <strong>Review</strong>, scroll down to <strong>The following resource(s) require capabilities: [AWS::IAM::ManagedPolicy]</strong>. Check the box next to <strong>I acknowledge that AWS CloudFormation might create IAM resources.</strong>. Click <strong>Create stack</strong>. The stack  will take 5-10 minutes to complete. When the stack completes, move to <a href="#1-available-resources">Available resources</a></p>
+</li>
+</ol>
+</details>
+
+<ol>
+<li><a href="#1-available-resources">Available resources</a></li>
+<li><a href="#2-validate-environment-setup">Validate environment setup</a></li>
+<li><a href="#3-check-if-your-devices-are-sending-data-to-aws-iot">Check if your devices are sending data to AWS IoT</a></li>
+</ol>
+<h2 id="1-available-resources">1. Available resources:</h2>
+<p>If you are at an AWS Event, you should be provided an AWS Account with the resources below ready to use. Otherwise, you will need to use your AWS Account and provision resources by following <a href="/Module%201:%20Environment%20build/README.md">"Click here if you are using your own AWS account (whether you are at an AWS event, a separate event or online)"</a> at the beginning of this module</p>
+<p>Here is the list of resources:</p>
+<ul>
+<li>3 IoT Devices:  Device <strong>SensorDevice01</strong> and <strong>SensorDevice02</strong> are powered by Lambda functions. Device <strong>SensorDevice03</strong> is a Cloud9 environment (so that you can access this device and install Device Defender agent later in this workshop)</li>
+<li>3 AWS IoT Things named <strong>Thing01</strong>, <strong>Thing02</strong>, <strong>Thing03</strong></li>
+<li>3 AWS IoT Topic <strong>temperature-device-01</strong>, <strong>temperature-device-02</strong>, <strong>temperature-device-03</strong></li>
+<li>1 X.509 Certificate and it's private key stored in AWS Secrets Manager</li>
+<li>1 AWS IoT Core Policy named as <strong>DevicePolicy-[CloudFormationStackname]</strong></li>
+<li>1 on-demand Audit</li>
+<li>1 SNS topic named as <strong>BadIoTDevices-[CloudFormation stackname]</strong>.  You will use this SNS topic to receive security realated alerts from AWS IoT Device Defender. </li>
+</ul>
+<p><strong>IMPORTANT: You need to subscribe your email to this SNS topic to receive notifications. If this is the first time you subscribe to a SNS topic, follow this <a href="https://docs.aws.amazon.com/sns/latest/dg/sns-tutorial-create-subscribe-endpoint-to-topic.html#create-subscribe-endpoint-to-topic-aws-console">tutorial</a>. After subscribe your email address, remember to CONFIRM YOUR SUBSCRIPTION</strong></p>
+<p>Here is the architecture diagram for the environment setup:</p>
+<p><img src="../images/IoTSecurityWorkshopInfra.png"/></p>
+<p>Let's move to the next step, where you can validate if the environment setup is correct</p>
+<h2 id="2-validate-environment-setup">2. Validate environment setup</h2>
+<h3 id="1-check-iot-devices-powered-by-lambda-functions">1. Check IoT Devices powered by Lambda functions</h3>
+<p>In this workshop, we will use 2 Lambda functions acting as 2 seperate IoT Devices: SensorDevice01 and SensorDevice02.  Each device will send temperature telemetry to AWS IoT every 10 seconds. </p>
+<p>To understand how the devices send data, let's look at the code of Lambda functions (writen in Python):</p>
+<ol>
+<li>From the AWS console home, click <strong>Lambda</strong></li>
+<li>
+<p>Once you're in Lambda management console, click <strong>Functions</strong> on the left side. Then click on <strong>SensorDevice01</strong> (you can search for 'SensorDevice' name if you have too many funtions.</p>
+</li>
+<li>
+<p>Scroll down to <strong>Function code</strong> and you will see  the Python code of this Lambda function. Here is a quick walk through what it does:</p>
+<p>a. First, the function will retrieve <a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-custom-endpoints.html">AWS IoT Endpoint</a> to send telemetry data to. </p>
+<div class="codehilite"><pre><span></span><code><span class="err">          endpoint = iot.describe_endpoint(endpointType=&#39;iot:Data-ATS&#39;)</span>
+<span class="err">          endpointaddress = endpoint[&#39;endpointAddress&#39;]</span>
+</code></pre></div>
+
+
+<p>b. Next, it checks if there is  a X.509 device certificate, private key, and <a href="https://docs.aws.amazon.com/iot/latest/developerguide/server-authentication.html#server-authentication-certs">root CA certificate</a>(for server authentication) available in /tmp (<a href="https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html#function-code">local storage directory for Lambda function</a>). If not, it will retrieve these files from AWS Secrets Manager. IoT device needs these files to connect to AWS IoT.</p>
+<div class="codehilite"><pre><span></span><code><span class="err">    if os.path.isfile(&#39;/tmp/cert.pem&#39;):</span>
+<span class="err">       print(&#39;/tmp/cert.pem is available&#39;)</span>
+<span class="err">    else:</span>
+<span class="err">       certpem = secretmanager.get_secret_value(SecretId=&#39;CertPem&#39;+stackname)</span>
+<span class="err">       newcert = open(&#39;/tmp/cert.pem&#39;, &#39;w+&#39;)</span>
+<span class="err">       newcert.write(certpem[&#39;SecretString&#39;])</span>
+<span class="err">       newcert.close()</span>
+<span class="err">          ....more code </span>
+<span class="err">    //download Amazon RootCA1 certificate</span>
+<span class="err">    if os.path.isfile(&#39;/tmp/rootca.pem&#39;):</span>
+<span class="err">       print(&#39;/tmp/rootca.pem is available&#39;)</span>
+<span class="err">    else:</span>
+<span class="err">       url = &#39;https://www.amazontrust.com/repository/AmazonRootCA1.pem&#39;</span>
+<span class="err">       newrootcapem = requests.get(url)</span>
+<span class="err">       open(&#39;/tmp/rootca.pem&#39;, &#39;wb&#39;).write(newrootcapem.content)</span>
+</code></pre></div>
+
+
+<p>c. Next, it connects with AWS IoT using AWS IoT Python SDK </p>
+<div class="codehilite"><pre><span></span><code><span class="err">    myMQTTClient = AWSIoTMQTTClient(devicename)</span>
+<span class="err">    myMQTTClient.configureEndpoint(endpointaddress, 8883)</span>
+<span class="err">    myMQTTClient.configureCredentials(&quot;/tmp/rootca.pem&quot;, &quot;/tmp/private.key&quot;, &quot;/tmp/cert.pem&quot;)</span>
+</code></pre></div>
+
+
+<p>d. Finally, It generates random temperature telemetry data and sends it to AWS IoT Endpoint</p>
+<div class="codehilite"><pre><span></span><code><span class="err">    telemetrydata = round(random.uniform(15.1,29.9),2)</span>
+<span class="err">    #Connect to AWS IoT</span>
+<span class="err">    myMQTTClient.connect()</span>
+<span class="err">    myMQTTClient.publish(topicname, telemetrydata, 0)</span>
+<span class="err">    myMQTTClient.disconnect()</span>
+</code></pre></div>
+
+
+</li>
+</ol>
+<h3 id="2-check-iot-device-powered-by-cloud9-environment">2. Check IoT Device powered by Cloud9 environment</h3>
+<p>The third IoT device <strong>SensorDevice03</strong> will be powered by a Cloud9 environment (so that you can log into this device later to instance Device Defender agent). To check if this Cloud9 environment is accessible, following these steps:</p>
+<ol>
+<li>From AWS Console home, click or search for <strong>Cloud9</strong></li>
+<li>Click on <strong>Your environments</strong> on the left side to view the list of environments.  Select <strong>SensorDevice03</strong>, and click <strong>Open IDE</strong>. Wait for a few minutes for the environment to be accesible. </li>
+<li>You need to check if this Cloud9 environment has source code of AWS Device Defender Agent - so that you can install this agent later in this workshop. From the terminal, run these linux command:<div class="codehilite"><pre><span></span><code><span class="err">cd ~/environment/workshop</span>
+<span class="err">ls -l</span>
+</code></pre></div>
+
+
+<p>You should see the source code <strong>AWSIoTDeviceDefenderAgentSDK</strong> 
+ <img src="../images/cloud9check.png"/></p>
+</li>
+</ol>
+<h3 id="3-aws-iot-things">3. AWS IoT Things</h3>
+<p>Three AWS IoT Things <strong>Thing01, Thing02, Thing03</strong> are already created for you. These Things are associated with a X.509 certificate (you'll learn more why using one certificate for multiple devices isn't a best practices in <a href="/Module%202:%20Audit%20your%20IoT%20Fleet">Module 2: Audit your IoT Fleet</a>. When devices <strong>SensorDevice01,SensorDevice02, SensorDevice03</strong> connect to AWS IoT, it needs to present this X.509 certificate and it's private key to prove that it is the Things registered with AWS IoT. You'll need to validate <strong>Thing01, Thing02, Thing03</strong> configuration to understand how AWS IoT associate these Thing with devices.</p>
+<ul>
+<li>From AWS console home, click <strong>IoT Core</strong> to go to IoT management console.</li>
+<li>Click <strong>Manage, Things</strong> to view the list of IoT Things</li>
+<li>To get more information about a Thing, click on the Thing name (for example, <strong>Thing01</strong>). </li>
+<li>Each Thing need to use a X.509 certificate to authenticate with AWS IoT. To validate which certificate is associated to this <strong>Thing01</strong>, go to <strong>Security</strong>. You should see a X.509 already associates with this Thing.</li>
+</ul>
+<p><img src="../images/ThingSecurity.png"/></p>
+<ul>
+<li>This X.509 certificate need to be valid and activated. To check, click the certificate to get more information. You should see this certificate is issued by Amazon Web Services. It is currently <strong>Active</strong> with an Expiration date</li>
+</ul>
+<p><img src="../images/thingcert.png"/></p>
+<ul>
+<li>
+<p>Remember that X.509 certificate is for Authentication. Now you need to validate device's Authorization - what actions this device is allowed to perform. AWS IoT use IoT Core Policy and IAM Policy. In this workshop, we will use IoT Core Policy to grant permission to devices. To understand how AWS use IAM Policy, take a look at <a href="https://docs.aws.amazon.com/iot/latest/developerguide/iam-policies.html">this IAM policies document</a></p>
+</li>
+<li>
+<p>AWS IoT Core policies determine which operations are allowed. Operations are divided into two groups: data plane and control plane. </p>
+<ul>
+<li>Control plane API allows you to perform administrative tasks like creating or updating certificates, things, rules, and so on.</li>
+<li>Data plane API allows you send data to and receive data from AWS IoT Core.
+   If you would like to dive deeper into AWS IoT Core policies, follow <a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html">this AWS IoT Core Policies document</a> </li>
+</ul>
+</li>
+<li>
+<p>To check which actions that your AWS IoT Thing can perform, you need to check the IoT Core Policies (or Policies in short) that associate with this Thing. Each Thing can have multiple Policies. A Policy can be attached to a X.509 certificate, or an AWS IoT Thing Group. In <a href="/Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device">Module 3: Detect and response to a compromised device</a>, you will create a Policy and attach it to a Thing Group. As for now you will check an existing Policy associates with X.509 certificate.</p>
+</li>
+<li>
+<p>Go back to Certificate Details (following step 3,4, and 5 above). Click <strong>Policies</strong> to see a Policy named DevicePolicy-[your-stack-name] attached to this X-509 certificate. The naming convention DevicePolicy-[your-stack-name] is to make sure each Policy created automatically by CloudFormation will have a unique name. Click on this Policy and you will see the policy document specifies priviledges of the request that your IoT Devices send to AWS IoT.</p>
+</li>
+</ul>
+<p><img src="../images/DevicePolicy.png" width="600" height="439"/></p>
+<p>What do you think about this Policy? What would you do differently to only give appropriate permisison for the Thing associated with this certificate? To get some idea, you can look at <a href="https://docs.aws.amazon.com/iot/latest/developerguide/example-iot-policies.html">example AWS IoT policies here</a></p>
+<h3 id="3-check-if-your-devices-are-sending-data-to-aws-iot">3. Check if your devices are sending data to AWS IoT</h3>
+<p>To check if you devices are connected to AWS IoT endpoint, go to <strong>Manage, Things</strong></p>
+<ol>
+<li>Click on any Thing, for examble <strong>Thing01</strong>.</li>
+<li>Click on <strong>Activity</strong>. Under <strong>Activity</strong>, you will see the history of Thing connectivity. Click on any entry, you can find more details about the thing name, and the cert that it uses to connect to AWS IoT endpoint.</li>
+</ol>
+<p><img src="../images/thingactivity.png"/></p>
+<p>You can view the messages that devices publish to AWS IoT topics. To view these messages,  go to AWS IoT MQTT client by following these steps</p>
+<ol>
+<li>
+<p>From AWS IoT console, click on <strong>Test, Subscribe to a topic</strong></p>
+</li>
+<li>
+<p>Type in the topic name <strong>temperature-device-01</strong> that your IoT Devices send telemetry data to. In this workshop, the topic names will be "temperature-device-01", "temperature-device-02", "temperature-device-03". If you're running this workshop on your AWS account, and provide unique names for these topics when you use CloudFormation template to create resources, you will need to type in those unique topic names instead of temperature-device-01</p>
+</li>
+<li>
+<p>Click "Subscribe to topic". </p>
+</li>
+</ol>
+<p><img src="../images/mqttclient.png"/></p>
+<p>Seeing the temperature records? Yay! Your devices are connected and sending data to AWS IoT. Now your next task is to audit all Things and devices to make sure there is no bad configuration. You can do so by moving to <a href="../Module%202:%20Audit%20your%20IoT%20Fleet">Module 2: Audit your IoT Fleet</a></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Module%202%3A%20Audit%20your%20IoT%20Fleet/" class="btn btn-neutral float-right" title="Module 2: Audit your IoT Fleet">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>&copy; 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+        <span style="margin-left: 15px"><a href="../Module%202%3A%20Audit%20your%20IoT%20Fleet/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

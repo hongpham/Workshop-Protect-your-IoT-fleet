@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="aws-security-workshops@amazon.com">
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Module 2: Audit your IoT Fleet - Protect your IoT Fleet</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../stylesheets/custom.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Module 2: Audit your IoT Fleet";
+    var mkdocs_page_input_path = "Module 2: Audit your IoT Fleet/README.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Protect your IoT Fleet</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%201%3A%20Environment%20build/">Module 1: Environment setup</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Module 2: Audit your IoT Fleet</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-audit-your-iot-fleet">1. Audit your IoT Fleet</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#11-check-audit-settings">1.1 Check Audit Settings</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#12-start-an-on-demand-audit">1.2 Start an On-Demand Audit</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-mitigate-noncompliant-findings">2. Mitigate noncompliant findings</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#21-define-mitigation-actions">2.1 Define mitigation actions</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#22-apply-mitigation-actions-to-noncompliant-findings">2.2 Apply mitigation actions to noncompliant findings</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%203%3A%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics/">Module 3: Detect a compromised device using cloud-side metrics</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%204%3A%20Detect%20a%20compromised%20device%20using%20device-side%20metrics/">Module 4: Detect a compromised device using device-side metrics</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Module%205%3A%20Send%20security%20alerts%20to%20your%20favourite%20messaging%20platform/">Module 5: Send security alerts to your favourite messaging platform</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Protect your IoT Fleet</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Module 2: Audit your IoT Fleet</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/aws-samples/protect-your-iot-fleet/edit/master/docs/Module 2: Audit your IoT Fleet/README.md"> Edit on aws-samples/protect-your-iot-fleet</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="module-2-audit-your-iot-fleet">Module 2: Audit your IoT Fleet</h1>
+<p>In Module 1, you validated the environment setup for your IoT devices. Your next task is to regularly audit these devices to detect any drifts from security requirements for device configuration. As a busy Security Engineer, you are looking for the opportunity to automate the migration and auditing of thousands of IoT devices. This module will show you how to accomplish automation for audit and mitigation actions.</p>
+<ol>
+<li>
+<p><a href="#1-audit-your-iot-fleet">Audit your IoT Fleet</a></p>
+<p>1.1 <a href="#11-check-audit-settings">Check Audit settings</a></p>
+<p>1.2 <a href="#12-start-an-on-demand-audit">Start an On-Demand Audit</a></p>
+</li>
+<li>
+<p><a href="#2-mitigate-noncompliant-findings">Mitigate noncompliant findings</a></p>
+<p>2.1 <a href="#21-define-mitigation-actions">Define mitigation actions</a></p>
+<p>2.2 <a href="#22-apply-mitigation-actions-to-noncompliant-findings">Apply mitigation actions to noncompliant findings</a></p>
+</li>
+</ol>
+<h2 id="1-audit-your-iot-fleet">1. Audit your IoT Fleet</h2>
+<p>AWS provides a service called AWS IoT Device Defender to help you look at your account and device settings to ensure security measures are in place. Device Defender provides a feature called <code>Audit</code>. An <code>Audit</code> can help you detect any drift from security best practices or access policies.</p>
+<p><code>Audit</code> provides <a href="https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-audit-checks.html">14 type of checks</a>. You can configure audit settings in your AWS account to choose which checks will be available when you set up audits. These Settings are effective at regional level. That means, settings in region A will not affect region B. </p>
+<p>An Audit Settings has 3 parts:</p>
+<ul>
+<li>Service permissions: you will need to allow Device Defender to run Audit against your IoT devices. You do so by using an IAM policies to manage permissions.</li>
+<li>Enable Audit checks: you select checks to make it available for audits. You can enable or disable these at  anytime. Disabling a check means that Device Defender will not include that type of check when it runs an Audit.</li>
+<li>SNS alerts: This optional setting lets you choose a SNS topic to receive alerts from Device Defender. Alerts are always displayed in the AWS IoT console.</li>
+</ul>
+<h3 id="11-check-audit-settings">1.1 Check Audit Settings</h3>
+<p>In this module, you will run all of the checks for your IoT devices. You will need to validate if all checks are enabled in settings. Leave all the checks enabled. Depending on the scenerio below, expand one of the following dropdowns to start.</p>
+<details><summary>Option 1: Click here if you're at an AWS event where the Event Engine is being used or you ran the CloudFormation template in Module 1 in your AWS account</summary><br>
+
+   1. If you are at an AWS Sponsored event, an on-demand Audit was created in advanced for you to make sure you can see what Audit results look like if you can't create an Audit during the event. Thus Audit Settings are already created for you. You can follow steps below to validate Settings
+
+   2. Sign in to AWS Account. From the AWS console home, click **IoT Device Defender** to go to IoT console. (You can search this service in the search box if you don't see it)
+
+   3. On the left side, click **Defend, Settings** to view current settings 
+
+   4. Under **Service permissions**, you will see an IAM role in a format [CloudFormation-stack-name]-IoTAuditRole-[random-value] that gives permission to Device Defender to run audits. This role was create in advance for you using CloudFormation. This IAM role has 1 AWS managed policy **AWSIoTDeviceDefenderAudit** attached to it. Here is what this role looks like in IAM console:
+
+   <img src="../images/auditrole.png"/>
+
+   5. Under **Enable Audit checks**, you will see the list of enabled checks, severity of each checks, and what resources this checks will audit against. Click on the question mark next to the check name to learn more what it does. 
+
+   6. To disable any checks, click on the box next to it and click **Disable**. For example, this is what it looks like when you disable 'Logging disabled' and 'CA certificate expiring' check:
+
+   <img src="../images/disablecheck.png"/>
+
+   7. Disabled checks will be listed under **Disabled Audit checks session**. To enable the checks again, check the box next to check name and click **Enable**
+
+   7. The final section of Settings is **SNS alerts**. You need to enable SNS alerts to receive audit related alerts from Device Defender. Click on **Edit, Enabled**
+
+   8. Under **Topic**, select SNS topic **BadIoTDevices-<YourCFNStackName>** create previously in [Module 1](/Module%201:%20Environment%20build#available-resources). 
+
+   9. Under **Role**, select IAM role with this naming convention [CloudFormation-stack-name]-SNSTopicRole-[random-value]. This role is create by CloudFormation. It has one AWS managed policy **AWSIoTDeviceDefenderPublishFindingsToSNSMitigationAction** 
+
+   10. When you're ready, click **Update** to enable SNS alerts. Don't forget to subscribe to this SNS topic to receive noncompliant findings notification when an Audit completes
+
+    <img src="../images/snsrole.png"/>
+
+   You have completed checking setting for Device Defender Audit. Go to next session **1.2 Start an On-Demand Audit** to create and start an Audit.
+
+</details>
+
+<details><summary>Option 2: Click here if you manually configure Audit Settings very first time</summary><br>
+
+If you finished Module 1 before working on this module, an on-demand Device Defender Audit was created in advance. This option will not be suitable for you.
+
+Device Defender will prompt you to configure Audit Settings if this is the first time you [run an Audit](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-HowToProceed.html). To use AWS IoT console to start an Audit, follow these steps:
+
+1. Sign in to AWS Account. From AWS console home, click on IoT Device Defender to go to IoT console
+
+2. On the left side of IoT console, click **Defend, Audit, Get started with an audit**
+
+3. You will go through 3 steps to configure settings for Device Defender Audit. Click **Next** to start first steps **Review permissions**
+
+   <img src="../images/firstaudit1.png"/>
+
+4. In this step, you need to grant Device Defender Audits permisison to run audit against your IoT resources and policies by using IAM Role. This IAM role needs to have AWS managed policy **AWSIoTDeviceDefenderAudit**. You can create this IAM role in advance or click **Create Role** so that Device Defender can create the role for you. Click **Next** to go to **Select checks**
+
+5. Select the checks you want to enable, and click **Next** to go to the next step, **Configure SNS**
+
+6. This optional step let you choose which SNS topic will receive alerts from Device Defender. If you choose **Enabled**, you need to provide SNS topic name and IAM role that allow Device Defender to send alerts to that SNS topic. This IAM role needs to have AWS managed policy **AWSIoTDeviceDefenderPublishFindingsToSNSMitigationAction**.
+
+7. Click **Enable Audit** to start your very first Audit. Note that this first Audit is a daily audit - meaning it will run every day at specific time decided by Device Defender. To create different type of Audit (on-demand, monthly,...), click **Defend, Audit, Schedules, Create**
+
+</details>
+
+<h3 id="12-start-an-on-demand-audit">1.2 Start an On-Demand Audit</h3>
+<p>When you create a new Audit, you can choose how often the audit should run:</p>
+<ul>
+<li>On-Demand: Audit starts immediately with no repeats. This option is helpful for ad-hoc audit.</li>
+<li>Daily: scheduled audit runs every day. The actual start time of each audit is determined by the system.</li>
+<li>Weekly: scheduled audit runs every week on the day of your choice. The actual start time of each audit is determined by the system.</li>
+<li>Bi-Weekly: scheduled audit runs every two week on the day of your choice. The actual start time of each audit is determined by the system.</li>
+<li>Monthly: scheduled audit runs every month on the day of your choice. The actual start time of each audit is determined by the system.</li>
+</ul>
+<p>To start an audit immediately, you create an On-Demand Audit by following these steps:</p>
+<ul>
+<li>
+<p>Sign in to AWS Account. From AWS console home, search for <strong>IoT Device Defender</strong> and click on it to go to IoT console</p>
+</li>
+<li>
+<p>From the IoT console, click <strong>Defend</strong>, <strong>Audit</strong>, <strong>Schedules</strong>. Click <strong>Create</strong> button on the top right to create a new Audit. </p>
+</li>
+<li>
+<p>You will see the list of eligible checks can be included in this Audit. If you disable any checks in Audit Settings, you will not see that checks in this list. In this workshop, you select all of the checks (should be 14 checks in total)</p>
+</li>
+</ul>
+<p><img src="../images/Auditlist.png" width="600" height="557"/></p>
+<ul>
+<li>Click the drop down list under <strong>Set schedule</strong>. Choose <strong>Run audit now(once)</strong>. Then click <strong>Create</strong> to start the Audit immediately. Note that there is no option to name an On-Demand Audit. </li>
+</ul>
+<p><img src="../images/Auditschedule.png"/></p>
+<ul>
+<li>
+<p>To view Audit's status, go to <strong>Defend</strong>, <strong>Audit</strong>, <strong>Results</strong>. All On-Demand Audit will have the name On-demand.</p>
+</li>
+<li>
+<p>When Audit completes, Device Defender sends you an email (you need to subscribe to SNS topic in <a href="#1.1-check-audit-settings">session 1.1</a>, Option 1, step 11) To view Audit's results, click on the name of the Audit <strong>On-demand</strong></p>
+</li>
+</ul>
+<p><img src="../images/checkresult.png"/></p>
+<ul>
+<li>
+<p>Under <strong>Non-compliant checks</strong>, you should see 3 noncompliant findings under <strong>Check name</strong>:</p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-device-cert-shared.html">Device certificate shared</a>: indicates multiple, concurrent connections use the same X.509 certificate to authenticate with AWS IoT. Each device should have a unique certificate to authenticate with AWS IoT. When multiple devices use the same certificate, this might indicate that a device has been compromised. Its identity might have been cloned to further compromise the system.</p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-iot-policy-permissive.html">IoT policies overly permissive</a>: indicates an AWS IoT policy gives permissions that are too broad or unrestricted. In general, a policy for a device should grant access to resources associated with just that device and no or very few other devices.</p>
+</li>
+<li><a href="https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-logging-disabled.html">Logging disabled</a>: indicates AWS IoT logs are not enabled in Amazon CloudWatch. AWS IoT logs in CloudWatch provide visibility into behaviors in AWS IoT, including authentication failures and unexpected connects and disconnects that might indicate that a device has been compromised.</li>
+</ul>
+<blockquote>
+<p>Helpful tip: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-audit-checks.html">this Audit Checks document</a> provides instructions to help you fix noncompliant findings for 14 checks.</p>
+</blockquote>
+<ul>
+<li>
+<p>To view which resources associate which each findings, click on the check name. In this module, let's work on fixing  <strong>Device certificate shared</strong>  findings. Click on this finding to find out which device certificate are being shared, and which IoT Things are involved.</p>
+</li>
+<li>
+<p>You will see the Certificate Id that is being shared.</p>
+</li>
+</ul>
+<p><img src="../images/sharedcert.png"/></p>
+<ul>
+<li>
+<p>To find out which IoT Things are sharing this cert, go to <strong>Secure, Certificates</strong>. Click the Certificate Id that you see in previous step to view details of this certificate.</p>
+</li>
+<li>
+<p>Now click on <strong>Things</strong> to view the list of IoT Things are using this certificate</p>
+</li>
+</ul>
+<p><img src="../images/thingswithcert.png"/></p>
+<p>Now you know exactly that 3 Things <strong>Thing01, Thing02, Thing03</strong> are using the same X.509 to connect to AWS IoT. This is not a good configuration. Move to the next step to mitigate this noncompliant finding.</p>
+<h2 id="2-mitigate-noncompliant-findings">2. Mitigate noncompliant findings</h2>
+<p>There are multiple methods to automate remediation for noncompliant IoT devices after running Device Defender Audit. You can write scripts/tools to use AWS CLI/SDK to take actions on noncompliant device when you receive notification from AWS Device Defender. Another option is to use AWS Device Management to push updates/patches to your devices at scale. In this module, we will use a different approach: use Device Defender's Mitigation Actions feature to fix noncompliant devices.</p>
+<h3 id="21-define-mitigation-actions">2.1 Define mitigation actions</h3>
+<p>AWS IoT Device Defender provides predefined actions for the different audit checks. You need to configure those actions for your AWS account and then apply them to a set of findings. </p>
+<ul>
+<li>
+<p>Sign in to AWS Account. From AWS console home, go to IoT Device Defender.</p>
+</li>
+<li>
+<p>From IoT console, click <strong>Defend</strong>, <strong>Mitigation Actions</strong>. From the top right conner, click <strong>Create</strong> to create a new Mitigation Actions.</p>
+</li>
+<li>
+<p>Provide a name for this action. You can name it <strong>Update-device-certificate</strong>.</p>
+</li>
+<li>
+<p>Now you need to choose which action Device Defender will perfom. Click on the drop down list <strong>Action type</strong> to see the <a href="https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-mitigation-actions.html">list of supported actions</a>. </p>
+</li>
+<li>
+<p>Since we want to remediate noncompliant finding <strong>Device certificate shared</strong>, choose <strong>Update device certificate</strong> action type to deactivate the certificate.</p>
+</li>
+</ul>
+<p><img src="../images/ma-updatedev.png"/></p>
+<ul>
+<li>
+<p>You need to give Device Defender permisison to perform this mitigation action. Under <strong>Permission</strong>, expand <strong>Permissions</strong> and <strong>Trust relationships</strong> to look at what permission and trust relationship is required.</p>
+</li>
+<li>
+<p>To create a new IAM role with these permisison, you need to create a new one. Click <strong>Create Role</strong> and enter a role name. Then click <strong>Create role</strong>.  This role will have AWS managed policy <strong>AWSIoTDeviceDefenderAddThingsToThingGroupMitigationAction</strong></p>
+</li>
+</ul>
+<p><img src="../images/ma-permission.png"/></p>
+<ul>
+<li>
+<p>Under <strong>Parameters</strong>, you should see <strong>Deactivate</strong> is choosen as the action Device Defender should take. Note: currently Action Type Update device certificate only has one Action - Deactivate. </p>
+</li>
+<li>
+<p>Leave everything else as it is and click <strong>Save</strong>. </p>
+</li>
+</ul>
+<p>Now we can apply this mitigation actions to the audit findings.</p>
+<h3 id="22-apply-mitigation-actions-to-noncompliant-findings">2.2 Apply mitigation actions to noncompliant findings</h3>
+<p>After we define mitigation actions for Device Defender, you need to apply these actions to noncompliant findings, so that Device Defender can start remediation.</p>
+<ul>
+<li>
+<p>From left side of IoT console, navigate to <strong>Audit</strong>, <strong>Results</strong>. </p>
+</li>
+<li>
+<p>You should see multiple On-demand audit results. The latest audit should be the one you started on <a href="#1.2-start-an-on-demand-audit">step 1.2 Start an On-Demand Audit</a>. Click on this <strong>On-demand</strong> audit to view the list of findings.</p>
+</li>
+<li>
+<p>Under <strong>Non-compliant checks</strong>, click on <strong>Device certificate shared</strong> to go to findings details. You should see the cerfiticate ID associated to this finding.</p>
+</li>
+<li>
+<p>To apply mitigation actions, check the box next to finding ID, and click <strong>Start Mitigation Action</strong> on the top right corner.</p>
+</li>
+</ul>
+<p><img src="../images/startma.png"/></p>
+<ul>
+<li>Give a name for this task, then click <strong>Select options for IoT policies overly permissive</strong> to see the drop down lists of actions, and choose the mitigation action you created in the previous step. Then click <strong>Confirm</strong></li>
+</ul>
+<p><img src="../images/choosema.png"/></p>
+<ul>
+<li>
+<p>To view the status of mitigation actions task, click on <strong>Defend</strong>, <strong>Action results</strong> </p>
+</li>
+<li>
+<p>Since we use mitigation action <strong>Update device certificate</strong>, Device Defender will deactivate the Certificate. </p>
+</li>
+<li>
+<p>To double check, go to <strong>Secure</strong>, <strong>Certificates</strong>. You should see the certificate is <strong>Inactivate</strong>.</p>
+</li>
+</ul>
+<p><img src="../images/inactivecert.png"/></p>
+<p><strong>Note: If you will work on next module <a href="../Module%203:%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics">Module 3: Detect a compromised device using cloud-side metrics</a>, then you will need to re-activate this certificate.</strong></p>
+<p>Congratulations! You have mitigated a noncompliant findings in your device configuration. Your next task is to detect if a devices are being used for wrong purpose (for example, particiate in a DDoS attack). Move to <a href="../Module%203:%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics">Module 3: Detect a compromised device using cloud-side metrics</a> to learn what you can do to accomplish this task.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Module%203%3A%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics/" class="btn btn-neutral float-right" title="Module 3: Detect a compromised device using cloud-side metrics">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../Module%201%3A%20Environment%20build/" class="btn btn-neutral" title="Module 1: Environment setup"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>&copy; 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../Module%201%3A%20Environment%20build/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../Module%203%3A%20Detect%20a%20compromised%20device%20using%20cloud-side%20metrics/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
