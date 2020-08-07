@@ -107,7 +107,7 @@
 .md-typeset table:not([class]) th {
     min-width: 15rem;
     background-color: #6c6c6c !important;
-    font-size: 1.0rem;
+    font-size: 1.5rem;
 }
 
 .md-typeset table:not([class]) td {

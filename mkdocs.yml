@@ -1,3 +1,5 @@
+# Project information
+
 site_name: 'Protect your IoT Fleet'
 site_description: 'Before deploying IoT Devices into production environment, it is crucial to have a strategy to identity potential security risks, and to respond quickly to the problem. This session shows you how to address security risks when managing IoT devices at scale. Using AWS IoT Device Defender, you audit device configuration and permission to ensure that desired security settings are in place. Next, you use cloud-side metrics provided by AWS IoT to detect unusual behaviors that could be coming from a compromised device. Finally, you implement solutions to take actions on these devices, using Device Defender Mitigation Actions, and AWS Lambda.'
 
@@ -11,7 +13,13 @@ repo_url: 'https://github.com/aws-samples/protect-your-iot-fleet'
 copyright: '&copy; 2020, Amazon Web Services, Inc. or its affiliates. All rights reserved.'
 
 # Configuration
-theme: readthedocs
+theme:
+  name: material
+  logo: assets/images/aws_smile_logo.png
+  favicon: docs/assets/images/aws-favicon.ico
+  feature:
+    tabs: true
+  custom_dir: 'docs/theme'
 
 # Customization
 extra_css:
@@ -31,12 +39,14 @@ extra:
 markdown_extensions:
   - admonition
   - codehilite
-
+  - pymdownx.details
 
 # Navigation
 nav:
+  - Overview: 'README.md'
   - 'Module 1: Environment setup': 'Module 1: Environment build/README.md'
   - 'Module 2: Audit your IoT Fleet': 'Module 2: Audit your IoT Fleet/README.md'
   - 'Module 3: Detect a compromised device using cloud-side metrics': 'Module 3: Detect a compromised device using cloud-side metrics/README.md'
   - 'Module 4: Detect a compromised device using device-side metrics': 'Module 4: Detect a compromised device using device-side metrics/README.md'
   - 'Module 5: Send security alerts to your favourite messaging platform': 'Module 5: Send security alerts to your favourite messaging platform/README.md'
+

@@ -13,7 +13,6 @@ Device SensorDevice03 hasn't sent any temperature data to AWS IoT. In this step,
         cd Workshop-Protect-your-IoT-fleet/
         cd 'Module 4: Detect a compromised device using device-side metrics'
         
-**After repo is published, use CFN to download repo to Cloud9 during provisioning. Need to update git repo name after it's published. Also need to put a screen shot of these command.**
 
 * Run script bootstrap.sh to install dependencies and make this device to send data to AWS IoT (make sure you are at directory 'Module 4: Detect a compromised device using device-side metrics'). In this workshop, the default topic name is **temperature-device-03**, default device name is **SensorDevice03**. See screenshot in step 4 for an example. 
 

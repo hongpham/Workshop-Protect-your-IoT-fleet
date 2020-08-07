@@ -1,4 +1,3 @@
-eneccccjlubbcrcjnkrvrihugthkfgjfebgjueguidrd
 # Module 5: Send security alerts to your favourite messaging platform
 
 For many Security Engineers, receiving alerts in real time is critical. They need to act quickly to reduce impact of security issues. SMS message, or messaging platform such as Slack or Chime, are common tools to notify engineers when thing goes wrong.
@@ -129,7 +128,8 @@ Click **Create function**. Select **Author from Scratch**.
 
 Name this lambda function. Chose **Python 3.8** for Runtime, and choose **Create a new role with basic Lambda permissions** for Execution Role. Click **Create function**
 
-Replace the code in Lambda function with Python code below. You can also download it from [LambdaWebhookSlack.py](../LambdaWebhookSlack.py). Remember to click Save
+Replace the code in Lambda function with Python code below. You can also download it from [LambdaWebhookSlack.py](/
+LambdaWebhookSlack.py). Remember to click Save
 
 
 ```python
