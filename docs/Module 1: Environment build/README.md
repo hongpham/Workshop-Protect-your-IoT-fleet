@@ -175,31 +175,32 @@ The third IoT device **SensorDevice03** will be powered by a Cloud9 environment 
 
 Three AWS IoT Things **Thing01, Thing02, Thing03** are already created for you. These Things are associated with a X.509 certificate (you'll learn more why using one certificate for multiple devices isn't a best practices in [Module 2: Audit your IoT Fleet](/Module%202:%20Audit%20your%20IoT%20Fleet). When devices **SensorDevice01,SensorDevice02, SensorDevice03** connect to AWS IoT, it needs to present this X.509 certificate and it's private key to prove that it is the Things registered with AWS IoT. You'll need to validate **Thing01, Thing02, Thing03** configuration to understand how AWS IoT associate these Thing with devices.
 
-1. From AWS console home, click **IoT Core** to go to IoT management console.
-2. Click **Manage, Things** to view the list of IoT Things
-3. To get more information about a Thing, click on the Thing name (for example, **Thing01**). 
-4. Each Thing need to use a X.509 certificate to authenticate with AWS IoT. To validate which certificate is associated to this **Thing01**, go to **Security**. You should see a X.509 already associates with this Thing.
+- From AWS console home, click **IoT Core** to go to IoT management console.
+- Click **Manage, Things** to view the list of IoT Things
+- To get more information about a Thing, click on the Thing name (for example, **Thing01**). 
+- Each Thing need to use a X.509 certificate to authenticate with AWS IoT. To validate which certificate is associated to this **Thing01**, go to **Security**. You should see a X.509 already associates with this Thing.
+
 
 <img src="../images/ThingSecurity.png"/>
 
-5. This X.509 certificate need to be valid and activated. To check, click the certificate to get more information. You should see this certificate is issued by Amazon Web Services. It is currently **Active** with an Expiration date
+- This X.509 certificate need to be valid and activated. To check, click the certificate to get more information. You should see this certificate is issued by Amazon Web Services. It is currently **Active** with an Expiration date
 
 <img src="../images/thingcert.png"/>
 
-6. Remember that X.509 certificate is for Authentication. Now you need to validate device's Authorization - what actions this device is allowed to perform. AWS IoT use IoT Core Policy and IAM Policy. In this workshop, we will use IoT Core Policy to grant permission to devices. To understand how AWS use IAM Policy, take a look at [this IAM policies document](https://docs.aws.amazon.com/iot/latest/developerguide/iam-policies.html)
+- Remember that X.509 certificate is for Authentication. Now you need to validate device's Authorization - what actions this device is allowed to perform. AWS IoT use IoT Core Policy and IAM Policy. In this workshop, we will use IoT Core Policy to grant permission to devices. To understand how AWS use IAM Policy, take a look at [this IAM policies document](https://docs.aws.amazon.com/iot/latest/developerguide/iam-policies.html)
 
-7. AWS IoT Core policies determine which operations are allowed. Operations are divided into two groups: data plane and control plane. 
+- AWS IoT Core policies determine which operations are allowed. Operations are divided into two groups: data plane and control plane. 
     - Control plane API allows you to perform administrative tasks like creating or updating certificates, things, rules, and so on.
     - Data plane API allows you send data to and receive data from AWS IoT Core.
    If you would like to dive deeper into AWS IoT Core policies, follow [this AWS IoT Core Policies document](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) 
 
-8. To check which actions that your AWS IoT Thing can perform, you need to check the IoT Core Policies (or Policies in short) that associate with this Thing. Each Thing can have multiple Policies. A Policy can be attached to a X.509 certificate, or an AWS IoT Thing Group. In [Module 3: Detect and response to a compromised device](/Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device), you will create a Policy and attach it to a Thing Group. As for now you will check an existing Policy associates with X.509 certificate.
+- To check which actions that your AWS IoT Thing can perform, you need to check the IoT Core Policies (or Policies in short) that associate with this Thing. Each Thing can have multiple Policies. A Policy can be attached to a X.509 certificate, or an AWS IoT Thing Group. In [Module 3: Detect and response to a compromised device](/Module%203:%20Detect%20and%20response%20to%20a%20compromised%20device), you will create a Policy and attach it to a Thing Group. As for now you will check an existing Policy associates with X.509 certificate.
 
-9. Go back to Certificate Details (following step 3,4, and 5 above). Click **Policies** to see a Policy named DevicePolicy-[your-stack-name] attached to this X-509 certificate. The naming convention DevicePolicy-[your-stack-name] is to make sure each Policy created automatically by CloudFormation will have a unique name. Click on this Policy and you will see the policy document specifies priviledges of the request that your IoT Devices send to AWS IoT.
+- Go back to Certificate Details (following step 3,4, and 5 above). Click **Policies** to see a Policy named DevicePolicy-[your-stack-name] attached to this X-509 certificate. The naming convention DevicePolicy-[your-stack-name] is to make sure each Policy created automatically by CloudFormation will have a unique name. Click on this Policy and you will see the policy document specifies priviledges of the request that your IoT Devices send to AWS IoT.
 
 <img src="../images/DevicePolicy.png" width="600" height="439"/>
 
-10. What do you think about this Policy? What would you do differently to only give appropriate permisison for the Thing associated with this certificate? To get some idea, you can look at [example AWS IoT policies here](https://docs.aws.amazon.com/iot/latest/developerguide/example-iot-policies.html)
+What do you think about this Policy? What would you do differently to only give appropriate permisison for the Thing associated with this certificate? To get some idea, you can look at [example AWS IoT policies here](https://docs.aws.amazon.com/iot/latest/developerguide/example-iot-policies.html)
 
 ### 3. Check if your devices are sending data to AWS IoT
 

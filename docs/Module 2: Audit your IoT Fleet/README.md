@@ -101,43 +101,42 @@ When you create a new Audit, you can choose how often the audit should run:
 
 To start an audit immediately, you create an On-Demand Audit by following these steps:
 
-1. Sign in to AWS Account. From AWS console home, search for **IoT Device Defender** and click on it to go to IoT console
+- Sign in to AWS Account. From AWS console home, search for **IoT Device Defender** and click on it to go to IoT console
 
-2. From the IoT console, click **Defend**, **Audit**, **Schedules**. Click **Create** button on the top right to create a new Audit. 
+- From the IoT console, click **Defend**, **Audit**, **Schedules**. Click **Create** button on the top right to create a new Audit. 
 
-3. You will see the list of eligible checks can be included in this Audit. If you disable any checks in Audit Settings, you will not see that checks in this list. In this workshop, you select all of the checks (should be 14 checks in total)
+- You will see the list of eligible checks can be included in this Audit. If you disable any checks in Audit Settings, you will not see that checks in this list. In this workshop, you select all of the checks (should be 14 checks in total)
 
 <img src="../images/Auditlist.png" width="600" height="557"/>
 
-4. Click the drop down list under **Set schedule**. Choose **Run audit now(once)**. Then click **Create** to start the Audit immediately. Note that there is no option to name an On-Demand Audit. 
+- Click the drop down list under **Set schedule**. Choose **Run audit now(once)**. Then click **Create** to start the Audit immediately. Note that there is no option to name an On-Demand Audit. 
 
 <img src="../images/Auditschedule.png"/>
 
-5. To view Audit's status, go to **Defend**, **Audit**, **Results**. All On-Demand Audit will have the name On-demand.
+- To view Audit's status, go to **Defend**, **Audit**, **Results**. All On-Demand Audit will have the name On-demand.
 
-6. When Audit completes, Device Defender sends you an email (you need to subscribe to SNS topic in [session 1.1](#1.1-check-audit-settings), Option 1, step 11) To view Audit's results, click on the name of the Audit **On-demand**
+- When Audit completes, Device Defender sends you an email (you need to subscribe to SNS topic in [session 1.1](#1.1-check-audit-settings), Option 1, step 11) To view Audit's results, click on the name of the Audit **On-demand**
 
 <img src="../images/checkresult.png"/>
 
-7. Under **Non-compliant checks**, you should see 3 noncompliant findings under **Check name**:
+- Under **Non-compliant checks**, you should see 3 noncompliant findings under **Check name**:
 
-- [Device certificate shared](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-device-cert-shared.html): indicates multiple, concurrent connections use the same X.509 certificate to authenticate with AWS IoT. Each device should have a unique certificate to authenticate with AWS IoT. When multiple devices use the same certificate, this might indicate that a device has been compromised. Its identity might have been cloned to further compromise the system.
+* [Device certificate shared](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-device-cert-shared.html): indicates multiple, concurrent connections use the same X.509 certificate to authenticate with AWS IoT. Each device should have a unique certificate to authenticate with AWS IoT. When multiple devices use the same certificate, this might indicate that a device has been compromised. Its identity might have been cloned to further compromise the system.
 
-- [IoT policies overly permissive](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-iot-policy-permissive.html): indicates an AWS IoT policy gives permissions that are too broad or unrestricted. In general, a policy for a device should grant access to resources associated with just that device and no or very few other devices.
-
-- [Logging disabled](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-logging-disabled.html): indicates AWS IoT logs are not enabled in Amazon CloudWatch. AWS IoT logs in CloudWatch provide visibility into behaviors in AWS IoT, including authentication failures and unexpected connects and disconnects that might indicate that a device has been compromised.
+* [IoT policies overly permissive](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-iot-policy-permissive.html): indicates an AWS IoT policy gives permissions that are too broad or unrestricted. In general, a policy for a device should grant access to resources associated with just that device and no or very few other devices.
+* [Logging disabled](https://docs.aws.amazon.com/iot/latest/developerguide/audit-chk-logging-disabled.html): indicates AWS IoT logs are not enabled in Amazon CloudWatch. AWS IoT logs in CloudWatch provide visibility into behaviors in AWS IoT, including authentication failures and unexpected connects and disconnects that might indicate that a device has been compromised.
 
 > Helpful tip: [this Audit Checks document](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-audit-checks.html) provides instructions to help you fix noncompliant findings for 14 checks.
 
-8. To view which resources associate which each findings, click on the check name. In this module, let's work on fixing  **Device certificate shared**  findings. Click on this finding to find out which device certificate are being shared, and which IoT Things are involved.
+- To view which resources associate which each findings, click on the check name. In this module, let's work on fixing  **Device certificate shared**  findings. Click on this finding to find out which device certificate are being shared, and which IoT Things are involved.
 
-9. You will see the Certificate Id that is being shared.
+- You will see the Certificate Id that is being shared.
 
 <img src="../images/sharedcert.png"/>
 
-10. To find out which IoT Things are sharing this cert, go to **Secure, Certificates**. Click the Certificate Id that you see in previous step to view details of this certificate.
+- To find out which IoT Things are sharing this cert, go to **Secure, Certificates**. Click the Certificate Id that you see in previous step to view details of this certificate.
 
-11. Now click on **Things** to view the list of IoT Things are using this certificate
+- Now click on **Things** to view the list of IoT Things are using this certificate
 
 <img src="../images/thingswithcert.png"/>
 
@@ -152,27 +151,27 @@ There are multiple methods to automate remediation for noncompliant IoT devices 
 
 AWS IoT Device Defender provides predefined actions for the different audit checks. You need to configure those actions for your AWS account and then apply them to a set of findings. 
 
-1. Sign in to AWS Account. From AWS console home, go to IoT Device Defender.
+* Sign in to AWS Account. From AWS console home, go to IoT Device Defender.
 
-2. From IoT console, click **Defend**, **Mitigation Actions**. From the top right conner, click **Create** to create a new Mitigation Actions.
+* From IoT console, click **Defend**, **Mitigation Actions**. From the top right conner, click **Create** to create a new Mitigation Actions.
 
-3. Provide a name for this action. You can name it **Update-device-certificate**.
+* Provide a name for this action. You can name it **Update-device-certificate**.
 
-4. Now you need to choose which action Device Defender will perfom. Click on the drop down list **Action type** to see the [list of supported actions](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-mitigation-actions.html). 
+* Now you need to choose which action Device Defender will perfom. Click on the drop down list **Action type** to see the [list of supported actions](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-mitigation-actions.html). 
 
-5. Since we want to remediate noncompliant finding **Device certificate shared**, choose **Update device certificate** action type to deactivate the certificate.
+* Since we want to remediate noncompliant finding **Device certificate shared**, choose **Update device certificate** action type to deactivate the certificate.
 
 <img src="../images/ma-updatedev.png"/>
 
-6. You need to give Device Defender permisison to perform this mitigation action. Under **Permission**, expand **Permissions** and **Trust relationships** to look at what permission and trust relationship is required.
+* You need to give Device Defender permisison to perform this mitigation action. Under **Permission**, expand **Permissions** and **Trust relationships** to look at what permission and trust relationship is required.
 
-7. To create a new IAM role with these permisison, you need to create a new one. Click **Create Role** and enter a role name. Then click **Create role**.  This role will have AWS managed policy **AWSIoTDeviceDefenderAddThingsToThingGroupMitigationAction**
+* To create a new IAM role with these permisison, you need to create a new one. Click **Create Role** and enter a role name. Then click **Create role**.  This role will have AWS managed policy **AWSIoTDeviceDefenderAddThingsToThingGroupMitigationAction**
 
 <img src="../images/ma-permission.png"/>
 
-8. Under **Parameters**, you should see **Deactivate** is choosen as the action Device Defender should take. Note: currently Action Type Update device certificate only has one Action - Deactivate. 
+* Under **Parameters**, you should see **Deactivate** is choosen as the action Device Defender should take. Note: currently Action Type Update device certificate only has one Action - Deactivate. 
 
-9. Leave everything else as it is and click **Save**. 
+* Leave everything else as it is and click **Save**. 
 
 Now we can apply this mitigation actions to the audit findings.
 
@@ -180,25 +179,25 @@ Now we can apply this mitigation actions to the audit findings.
 
 After we define mitigation actions for Device Defender, you need to apply these actions to noncompliant findings, so that Device Defender can start remediation.
 
-1. From left side of IoT console, navigate to **Audit**, **Results**. 
+*  From left side of IoT console, navigate to **Audit**, **Results**. 
 
-2. You should see multiple On-demand audit results. The latest audit should be the one you started on [step 1.2 Start an On-Demand Audit](#1.2-start-an-on-demand-audit). Click on this **On-demand** audit to view the list of findings.
+* You should see multiple On-demand audit results. The latest audit should be the one you started on [step 1.2 Start an On-Demand Audit](#1.2-start-an-on-demand-audit). Click on this **On-demand** audit to view the list of findings.
 
-3. Under **Non-compliant checks**, click on **Device certificate shared** to go to findings details. You should see the cerfiticate ID associated to this finding.
+* Under **Non-compliant checks**, click on **Device certificate shared** to go to findings details. You should see the cerfiticate ID associated to this finding.
 
-4. To apply mitigation actions, check the box next to finding ID, and click **Start Mitigation Action** on the top right corner.
+* To apply mitigation actions, check the box next to finding ID, and click **Start Mitigation Action** on the top right corner.
 
 <img src="../images/startma.png"/>
 
-5. Give a name for this task, then click **Select options for IoT policies overly permissive** to see the drop down lists of actions, and choose the mitigation action you created in the previous step. Then click **Confirm**
+* Give a name for this task, then click **Select options for IoT policies overly permissive** to see the drop down lists of actions, and choose the mitigation action you created in the previous step. Then click **Confirm**
 
 <img src="../images/choosema.png"/>
 
-6. To view the status of mitigation actions task, click on **Defend**, **Action results** 
+*  To view the status of mitigation actions task, click on **Defend**, **Action results** 
 
-7. Since we use mitigation action **Update device certificate**, Device Defender will deactivate the Certificate. 
+*  Since we use mitigation action **Update device certificate**, Device Defender will deactivate the Certificate. 
 
-8. To double check, go to **Secure**, **Certificates**. You should see the certificate is **Inactivate**.
+*  To double check, go to **Secure**, **Certificates**. You should see the certificate is **Inactivate**.
 
 <img src="../images/inactivecert.png"/>
 

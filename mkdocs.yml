@@ -2,7 +2,6 @@ site_name: 'Protect your IoT Fleet'
 site_description: 'Before deploying IoT Devices into production environment, it is crucial to have a strategy to identity potential security risks, and to respond quickly to the problem. This session shows you how to address security risks when managing IoT devices at scale. Using AWS IoT Device Defender, you audit device configuration and permission to ensure that desired security settings are in place. Next, you use cloud-side metrics provided by AWS IoT to detect unusual behaviors that could be coming from a compromised device. Finally, you implement solutions to take actions on these devices, using Device Defender Mitigation Actions, and AWS Lambda.'
 
 site_author: 'aws-security-workshops@amazon.com'
-site_url: 'https://protectiotfleet.awssecworkshops.com/'
 
 # Repository
 repo_name: 'aws-samples/protect-your-iot-fleet'
